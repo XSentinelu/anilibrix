@@ -4,7 +4,10 @@ import {
   start as startSystemSleepBlocker,
   stop as stopSystemSleepBlocker
 } from '../../utils/powerSaveBlocker'
-import { getDecrypted, setEncrypted } from '@main/utils/safeStorage'
+
+import { setEncrypted } from '@main/utils/safeStorage'
+
+export const APP_DISCORD_RICH_PRESENSE = 'app:richpresense';
 
 export const APP_ABOUT = 'app:about';
 export const APP_SYSTEM_SLEEP_DISABLE = 'app:system:disable_sleep';
@@ -132,5 +135,24 @@ export const invokeSafeStorageEncrypt = (prop, data) => ipcRenderer.invoke(APP_S
 export const handleSafeStorageEncrypt = () => {
   ipcMain.handle(APP_SAFE_STORAGE_ENCRYPT_REQUEST, async (event, prop, data) => {
     return setEncrypted(prop, data)
+  })
+}
+
+/**
+ * Send activity for discord rich presence
+ *
+ * @param {object} data
+ * @return {Promise}
+ */
+export const invokeRichPresense = (data) => ipcRenderer.invoke(APP_DISCORD_RICH_PRESENSE, data);
+
+/**
+ * Listens for activity for discord rich presence
+ *
+ * @return {void}
+ */
+export const handleRichPresense = (setActivity) => {
+  ipcMain.handle(APP_DISCORD_RICH_PRESENSE, async (event, data) => {
+    return setActivity(data)
   })
 }

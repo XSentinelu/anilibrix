@@ -44,8 +44,9 @@
 </template>
 
 <script>
-  import { sendEnableSystemSleepBlockerEvent, sendDisableSystemSleepBlockerEvent } from "@main/handlers/app/appHandlers";
+import { sendEnableSystemSleepBlockerEvent, sendDisableSystemSleepBlockerEvent, invokeRichPresense } from '@main/handlers/app/appHandlers'
   import { toVideo } from "@utils/router/views";
+import { ActivityBuilder } from '@utils/activityBuilder'
 
   const props = {
     player: {
@@ -66,6 +67,7 @@
     props,
     data() {
       return {
+        activityInterval: null,
         is_mounted: false,
         is_playing: false,
         is_buffering: true,
@@ -128,10 +130,31 @@
     },
 
     beforeDestroy() {
+      if (this.activityInterval !== null) {
+        clearInterval(this.activityInterval)
+      }
       sendDisableSystemSleepBlockerEvent()
+      invokeRichPresense({})
     },
 
     created() {
+      this.activityInterval = setInterval(() => {
+        const a = new ActivityBuilder()
+        a.firstLine('Смотрит аниме')
+        a.secondLine(`[${this.episode.id}/${this.episodes.length}] ` + this.title)
+        a.firstButton('Anilibria.TV', 'https://anilibria.tv' )
+        a.start(new Date())
+        const d = new Date()
+        d.setSeconds(d.getSeconds() + (this.player.duration - this.player.currentTime))
+        a.end(d)
+        a.secondButton(
+          this.title.slice(0, 29) + (this.title.length > 29 ? '...' : ''),
+          'https://anilibria.tv/release/' + this.release.code
+        )
+        invokeRichPresense(a)
+      }, 100)
+
+      console.log('Discord rich presence', this.activityInterval)
 
       // Set initial values
       this.is_playing = this.player.playing;

@@ -1,8 +1,10 @@
 // Main process
 import path from 'path'
-import { app, BrowserWindow } from 'electron'
+import { app } from 'electron'
 import { meta, version } from '@package'
 import sentry from './utils/sentry'
+const { discordActivity } = require('./utils/discord')
+const { setActivity, destroy: destroyRichPresence } = discordActivity()
 
 // Store
 import { setUserId, getStore } from '@store'
@@ -21,7 +23,7 @@ import {
   catchAppDevtoolsTorrentEvent,
   catchAppDockNumberEvent,
   catchDisableSystemSleepBlockerEvent,
-  catchEnableSystemSleepBlockerEvent,
+  catchEnableSystemSleepBlockerEvent, handleRichPresense,
   handleSafeStorageEncrypt
 } from '@main/handlers/app/appHandlers'
 
@@ -54,7 +56,10 @@ app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 // Close app on all windows closed (relevant for mac users)
-app.on('window-all-closed', () => app.quit());
+app.on('window-all-closed', () => {
+  destroyRichPresence()
+  app.quit()
+});
 
 app.on('web-contents-created', (event, webContents) => {
   webContents.setWindowOpenHandler(openWindowInterceptor)
@@ -86,6 +91,8 @@ app.on('ready', async () => {
   const mainWindow = Main.getWindow()
   const torrentWindow = Torrent.getWindow()
 
+  mainWindow.webContents.openDevTools()
+
   require('@electron/remote/main').enable(mainWindow.webContents);
   require('@electron/remote/main').enable(torrentWindow.webContents);
 
@@ -94,7 +101,10 @@ app.on('ready', async () => {
       mainWindow.show()
       autoUpdater.checkForUpdatesAndNotify() // Auto update
     })
-    .on('close', () => app.quit()); // Main window close event
+    .on('close', () => {
+      destroyRichPresence()
+      app.quit()
+    }); // Main window close event
 
   // Create menu
   // Create tray icon
@@ -106,7 +116,7 @@ app.on('ready', async () => {
   appHandlers(); // App handlers
   torrentHandlers(); // Torrent handler
   // downloadHandlers(); // Download handlers
-});
+})
 
 /**
  * App handlers
@@ -122,6 +132,7 @@ const appHandlers = () => {
   catchEnableSystemSleepBlockerEvent(); // Disable system sleep
   catchDisableSystemSleepBlockerEvent(); // Enable system sleep
   handleSafeStorageEncrypt();
+  handleRichPresense(setActivity)
 };
 
 /**
