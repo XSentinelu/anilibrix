@@ -114,29 +114,28 @@
 
 <script>
 
-  import {mapState, mapActions} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapState('app/settings/player', {
-        _video_buffer: s => s.video.buffer,
-        _autoplay_next: s => s.autoplayNext,
-        _torrents_process: s => s.torrents.process,
-        _opening_skip_time: s => s.opening.skip_time,
-        _opening_skip_button: s => s.opening.skip_button,
-      })
-    },
+export default {
+  computed: {
+    ...mapState('app/settings/player', {
+      _video_buffer: s => s.video.buffer,
+      _autoplay_next: s => s.autoplayNext,
+      _torrents_process: s => s.torrents.process,
+      _opening_skip_time: s => s.opening.skip_time,
+      _opening_skip_button: s => s.opening.skip_button,
+    })
+  },
 
-
-    methods: {
-      ...mapActions('app/settings/player', {
-        _setVideoBuffer: 'setVideoBuffer',
-        _setAutoplayNext: 'setAutoplayNext',
-        _setTorrentsProcess: 'setTorrentsProcess',
-        _setOpeningSkipTime: 'setOpeningSkipTime',
-        _setOpeningSkipButton: 'setOpeningSkipButton',
-      }),
-    }
-
+  methods: {
+    ...mapActions('app/settings/player', {
+      _setVideoBuffer: 'setVideoBuffer',
+      _setAutoplayNext: 'setAutoplayNext',
+      _setTorrentsProcess: 'setTorrentsProcess',
+      _setOpeningSkipTime: 'setOpeningSkipTime',
+      _setOpeningSkipButton: 'setOpeningSkipButton',
+    }),
   }
+
+}
 </script>

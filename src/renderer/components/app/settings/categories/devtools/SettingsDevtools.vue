@@ -27,47 +27,47 @@
 
 <script>
 
-  // Utils
-  import {mapState, mapActions} from 'vuex'
+// Utils
+import { mapActions, mapState } from 'vuex'
 
-  // Handlers
-  import {sendAppDevtoolsMainEvent, sendAppDevtoolsTorrentEvent,} from "@main/handlers/app/appHandlers";
+// Handlers
+import { sendAppDevtoolsMainEvent, sendAppDevtoolsTorrentEvent, } from '@main/handlers/app/appHandlers'
 
-  export default {
-    computed: {
-      ...mapState('releases', {_releases: 'data'}),
+export default {
+  computed: {
+    ...mapState('releases', { _releases: 'data' }),
 
-      /**
-       * Get settings items
-       *
-       * @return array
-       */
-      settings() {
-        return [
-          {
-            title: 'Консоль приложения',
-            action: sendAppDevtoolsMainEvent,
-          },
-          {
-            title: 'Консоль торрент-сервера',
-            action: sendAppDevtoolsTorrentEvent,
-          },
-          {
-            title: 'Добавить уведомление в хранилище',
-            action: () => this._setRelease(this._releases[0])
-          },
-          {
-            title: 'Показать данные хранилища в консоли',
-            action: () => console.log(this.$store.state),
-          }
-        ]
-      },
+    /**
+     * Get settings items
+     *
+     * @return array
+     */
+    settings () {
+      return [
+        {
+          title: 'Консоль приложения',
+          action: sendAppDevtoolsMainEvent,
+        },
+        {
+          title: 'Консоль торрент-сервера',
+          action: sendAppDevtoolsTorrentEvent,
+        },
+        {
+          title: 'Добавить уведомление в хранилище',
+          action: () => this._setRelease(this._releases[0])
+        },
+        {
+          title: 'Показать данные хранилища в консоли',
+          action: () => console.log(this.$store.state),
+        }
+      ]
     },
+  },
 
-    methods: {
-      ...mapActions('notifications', {_setRelease: 'setRelease'}),
-
-    }
+  methods: {
+    ...mapActions('notifications', { _setRelease: 'setRelease' }),
 
   }
+
+}
 </script>

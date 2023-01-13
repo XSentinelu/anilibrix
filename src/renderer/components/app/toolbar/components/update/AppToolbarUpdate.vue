@@ -22,30 +22,29 @@
 
 <script>
 
-  import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapState('releases', {
-        _loading: s => s.loading,
-        _datetime: s => s.datetime,
-      }),
+export default {
+  computed: {
+    ...mapState('releases', {
+      _loading: s => s.loading,
+      _datetime: s => s.datetime,
+    }),
 
-
-      /**
-       * Get human update datetime
-       *
-       * @return {any}
-       */
-      datetime() {
-        return this._datetime
-          ? this._datetime.toLocaleString()
-          : null
-      }
-
-    },
-    methods: {
-      ...mapActions('releases', ['getReleases']),
+    /**
+     * Get human update datetime
+     *
+     * @return {any}
+     */
+    datetime () {
+      return this._datetime
+        ? this._datetime.toLocaleString()
+        : null
     }
+
+  },
+  methods: {
+    ...mapActions('releases', ['getReleases']),
   }
+}
 </script>

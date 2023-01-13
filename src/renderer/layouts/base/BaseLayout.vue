@@ -16,70 +16,70 @@
 
 <script>
 
-  import AppToolBar from "@components/app/toolbar";
+import AppToolBar from '@components/app/toolbar'
 
-  export default {
-    name: "Layout.Base",
-    components: {
-      AppToolBar
+export default {
+  name: 'Layout.Base',
+  components: {
+    AppToolBar
+  },
+  computed: {
+
+    /**
+     * Check if should show scroll
+     *
+     * @return {*|boolean}
+     */
+    showScroll () {
+      return this.$__get(this.$route, 'meta.layout.show_scroll') || false
     },
-    computed: {
 
-      /**
-       * Check if should show scroll
-       *
-       * @return {*|boolean}
-       */
-      showScroll() {
-        return this.$__get(this.$route, 'meta.layout.show_scroll') || false;
-      },
-
-
-      /**
-       * Check if is on black background
-       *
-       * @return {*|boolean}
-       */
-      isOnBlack() {
-        return this.$__get(this.$route, 'meta.layout.is_on_black') || false;
-      }
-
-
+    /**
+     * Check if is on black background
+     *
+     * @return {*|boolean}
+     */
+    isOnBlack () {
+      return this.$__get(this.$route, 'meta.layout.is_on_black') || false
     }
+
   }
+}
 </script>
 
 <style lang="scss" scoped>
 
-  .base-layout {
-    top: 40px;
-    padding: 15px 5% 30px 5%;
-    position: absolute;
-    overflow-x: hidden;
-    overflow-y: overlay;
-    width: 100%;
-    height: calc(100vh - 40px);
+.base-layout {
+  top: 40px;
+  padding: 15px 5% 30px 5%;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  width: 100%;
+  height: calc(100vh - 40px);
 
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+  }
+
+
+  &.showScroll {
     &::-webkit-scrollbar-thumb {
-      background-color: transparent;
+      background-color: #353535;
     }
+
     &::-webkit-scrollbar {
-      background-color: transparent;
-    }
-
-
-    &.showScroll {
-      &::-webkit-scrollbar-thumb {
-        background-color: #353535;
-      }
-      &::-webkit-scrollbar {
-        background-color: #1d1d1d;
-      }
-    }
-
-    &.isOnBlack {
-      background: black;
+      background-color: #1d1d1d;
     }
   }
+
+  &.isOnBlack {
+    background: black;
+  }
+}
 
 </style>

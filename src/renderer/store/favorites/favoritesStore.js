@@ -1,28 +1,28 @@
 // Proxy
-import ReleaseProxy from '@proxies/release';
-import FavoritesProxy from '@proxies/favorites';
+import ReleaseProxy from '@proxies/release'
+import FavoritesProxy from '@proxies/favorites'
 
 // Transformer
-import ReleaseTransformer from '@transformers/release';
-import EpisodesTransformer from '@transformers/episode';
+import ReleaseTransformer from '@transformers/release'
+import EpisodesTransformer from '@transformers/episode'
 
 // Utils
-import axios from 'axios';
-import { showAppError } from '@main/handlers/notifications/notificationsHandler';
+import axios from 'axios'
+import { showAppError } from '@main/handlers/notifications/notificationsHandler'
 
 // Mutations
-const ADD_ITEM = 'ADD_ITEM';
-const SET_ITEMS = 'SET_ITEMS';
-const SET_LOADING = 'SET_LOADING';
-const REMOVE_ITEM = 'REMOVE_ITEM';
-const SET_SETTINGS_SORT = 'SET_SETTINGS_SORT';
-const SET_SETTINGS_GROUP = 'SET_SETTINGS_GROUP';
-const SET_SETTINGS_SHOW_SEEN = 'SET_SETTINGS_SHOW_SEEN';
-const SET_SETTINGS_YEARS_COLLAPSED = 'SET_SETTINGS_YEARS_COLLAPSED';
+const ADD_ITEM = 'ADD_ITEM'
+const SET_ITEMS = 'SET_ITEMS'
+const SET_LOADING = 'SET_LOADING'
+const REMOVE_ITEM = 'REMOVE_ITEM'
+const SET_SETTINGS_SORT = 'SET_SETTINGS_SORT'
+const SET_SETTINGS_GROUP = 'SET_SETTINGS_GROUP'
+const SET_SETTINGS_SHOW_SEEN = 'SET_SETTINGS_SHOW_SEEN'
+const SET_SETTINGS_YEARS_COLLAPSED = 'SET_SETTINGS_YEARS_COLLAPSED'
 
 // Requests
-let REQUEST_FOR_FAVORITES = null;
-const REQUESTS_FOR_CHANGES = {};
+let REQUEST_FOR_FAVORITES = null
+const REQUESTS_FOR_CHANGES = {}
 
 export default {
   namespaced: true,
@@ -145,21 +145,24 @@ export default {
      * @param getters
      * @return {Promise<void>}
      */
-    getFavorites: async ({ commit, getters }) => {
+    getFavorites: async ({
+      commit,
+      getters
+    }) => {
       if (getters.isAuthorized) {
         try {
           // Set loading
-          commit(SET_LOADING, true);
+          commit(SET_LOADING, true)
 
           // Cancel previous request if it was stored
           // Create new request token
-          if (REQUEST_FOR_FAVORITES) REQUEST_FOR_FAVORITES.cancel();
-          REQUEST_FOR_FAVORITES = axios.CancelToken.source();
+          if (REQUEST_FOR_FAVORITES) REQUEST_FOR_FAVORITES.cancel()
+          REQUEST_FOR_FAVORITES = axios.CancelToken.source()
 
           // Get releases from server
           // Transform releases
-          const { items } = await new FavoritesProxy().getFavorites({ cancelToken: REQUEST_FOR_FAVORITES.token });
-          const releases = new ReleaseTransformer().fetchCollection(items);
+          const { items } = await new FavoritesProxy().getFavorites({ cancelToken: REQUEST_FOR_FAVORITES.token })
+          const releases = new ReleaseTransformer().fetchCollection(items)
 
           // Load episodes
           // Filter releases with episodes
@@ -180,19 +183,22 @@ export default {
             .filter(promise => promise.status === 'fulfilled')
             .map(promise => promise.value)
             .filter(release => release.episodes.length > 0)
-            .map(release => ({ ...release, poster: new ReleaseProxy().getReleasePosterPath(release.poster) }));
+            .map(release => ({
+              ...release,
+              poster: new ReleaseProxy().getReleasePosterPath(release.poster)
+            }))
 
           // Set releases
-          commit(SET_ITEMS, processedReleases);
+          commit(SET_ITEMS, processedReleases)
         } catch (error) {
           if (!axios.isCancel(error)) {
             // Show error
             // Throw error
-            showAppError('Произошла ошибка при загрузке избранных релизов');
-            throw error;
+            showAppError('Произошла ошибка при загрузке избранных релизов')
+            throw error
           }
         } finally {
-          commit(SET_LOADING, false);
+          commit(SET_LOADING, false)
         }
       }
     },
@@ -207,29 +213,33 @@ export default {
      * @param release
      * @return {Promise<void>}
      */
-    addToFavorites: async ({ dispatch, getters, commit }, release) => {
+    addToFavorites: async ({
+      dispatch,
+      getters,
+      commit
+    }, release) => {
       if (release && getters.isAuthorized) {
         try {
           // Cancel previous request if it was stored
           // Create new request token
-          if (REQUESTS_FOR_CHANGES[release.id]) REQUESTS_FOR_CHANGES[release.id].cancel();
-          REQUESTS_FOR_CHANGES[release.id] = axios.CancelToken.source();
+          if (REQUESTS_FOR_CHANGES[release.id]) REQUESTS_FOR_CHANGES[release.id].cancel()
+          REQUESTS_FOR_CHANGES[release.id] = axios.CancelToken.source()
 
           // Add release to favorites
-          commit(ADD_ITEM, release);
+          commit(ADD_ITEM, release)
 
           // Make request to server
           // On error -> rollback
-          await new FavoritesProxy().addToFavorites(release.id, { cancelToken: REQUESTS_FOR_CHANGES[release.id].token });
+          await new FavoritesProxy().addToFavorites(release.id, { cancelToken: REQUESTS_FOR_CHANGES[release.id].token })
         } catch (error) {
           if (!axios.isCancel(error)) {
             // Rollback added release
-            commit(REMOVE_ITEM, release);
+            commit(REMOVE_ITEM, release)
 
             // Show app error
             // Throw error
-            showAppError(error);
-            throw error;
+            showAppError(error)
+            throw error
           }
         }
       }
@@ -245,29 +255,33 @@ export default {
      * @param release
      * @return {Promise<void>}
      */
-    removeFromFavorites: async ({ dispatch, getters, commit }, release) => {
+    removeFromFavorites: async ({
+      dispatch,
+      getters,
+      commit
+    }, release) => {
       if (release && getters.isAuthorized) {
         try {
           // Cancel previous request if it was stored
           // Create new request token
-          if (REQUESTS_FOR_CHANGES[release.id]) REQUESTS_FOR_CHANGES[release.id].cancel();
-          REQUESTS_FOR_CHANGES[release.id] = axios.CancelToken.source();
+          if (REQUESTS_FOR_CHANGES[release.id]) REQUESTS_FOR_CHANGES[release.id].cancel()
+          REQUESTS_FOR_CHANGES[release.id] = axios.CancelToken.source()
 
           // Remove release from favorites
-          commit(REMOVE_ITEM, release);
+          commit(REMOVE_ITEM, release)
 
           // Make request to server
           // On error -> rollback
-          await new FavoritesProxy().removeFromFavorites(release.id, { cancelToken: REQUESTS_FOR_CHANGES[release.id].token });
+          await new FavoritesProxy().removeFromFavorites(release.id, { cancelToken: REQUESTS_FOR_CHANGES[release.id].token })
         } catch (error) {
           if (!axios.isCancel(error)) {
             // Rollback removed release
-            commit(ADD_ITEM, release);
+            commit(ADD_ITEM, release)
 
             // Show app error
             // Throw error
-            showAppError(error);
-            throw error;
+            showAppError(error)
+            throw error
           }
         }
       }
@@ -280,14 +294,17 @@ export default {
      * @param state
      * @param year
      */
-    setSettingsYearsCollapsed: ({ commit, state }, year) => {
-      const years = [...state.settings.years_collapsed];
-      const yearIndex = years.findIndex(item => item === year);
+    setSettingsYearsCollapsed: ({
+      commit,
+      state
+    }, year) => {
+      const years = [...state.settings.years_collapsed]
+      const yearIndex = years.findIndex(item => item === year)
 
-      if (yearIndex > -1) years.splice(yearIndex, 1);
-      if (yearIndex === -1) years.push(year);
+      if (yearIndex > -1) years.splice(yearIndex, 1)
+      if (yearIndex === -1) years.push(year)
 
-      commit(SET_SETTINGS_YEARS_COLLAPSED, years);
+      commit(SET_SETTINGS_YEARS_COLLAPSED, years)
     },
 
     /**

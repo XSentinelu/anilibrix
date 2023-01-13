@@ -13,19 +13,19 @@
 
 <script>
 
-  import Release from './../../components/release'
+import Release from './../../components/release'
 
-  const props = {
-    releases: {
-      type: Array,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Release,
-    }
+const props = {
+  releases: {
+    type: Array,
+    default: null
   }
+}
+
+export default {
+  props,
+  components: {
+    Release,
+  }
+}
 </script>

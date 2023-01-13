@@ -36,103 +36,103 @@
 
 <script>
 
-  import Credentials from './components/credentials'
-  import PlayerSettings from './categories/player'
+import Credentials from './components/credentials'
+import PlayerSettings from './categories/player'
 
-  import SystemSettings from './categories/system'
-  import ActionsSettings from './categories/actions'
-  import DevtoolsSettings from './categories/devtools'
-  import AnilibriaSettings from './categories/app'
+import SystemSettings from './categories/system'
+import ActionsSettings from './categories/actions'
+import DevtoolsSettings from './categories/devtools'
+import AnilibriaSettings from './categories/app'
 
-  import SystemBarPlaceholder from './../systembar/placeholder'
+import SystemBarPlaceholder from './../systembar/placeholder'
 
-  import {AppPlatformMixin} from '@mixins/app'
-  import {mapState, mapActions} from 'vuex'
+import { AppPlatformMixin } from '@mixins/app'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    mixins: [AppPlatformMixin],
-    components: {
-      Credentials,
-      SystemBarPlaceholder
+export default {
+  mixins: [AppPlatformMixin],
+  components: {
+    Credentials,
+    SystemBarPlaceholder
+  },
+  computed: {
+    ...mapState('app', { _drawer: s => s.drawer }),
+    ...mapState('app/settings/system', { _devtools: s => s.devtools }),
+
+    /**
+     * Get categories components
+     *
+     * @return Array
+     */
+    categories () {
+      return [
+        PlayerSettings,
+        SystemSettings,
+        ActionsSettings,
+        AnilibriaSettings,
+        this._devtools ? DevtoolsSettings : null
+      ].filter(category => category)
     },
-    computed: {
-      ...mapState('app', {_drawer: s => s.drawer}),
-      ...mapState('app/settings/system', {_devtools: s => s.devtools}),
+
+    drawer: {
 
       /**
-       * Get categories components
+       * Get drawer state
        *
-       * @return Array
+       * @return boolean
        */
-      categories() {
-        return [
-          PlayerSettings,
-          SystemSettings,
-          ActionsSettings,
-          AnilibriaSettings,
-          this._devtools ? DevtoolsSettings : null
-        ].filter(category => category)
+      get () {
+        return !!this._drawer
       },
 
-      drawer: {
-
-        /**
-         * Get drawer state
-         *
-         * @return boolean
-         */
-        get() {
-          return !!this._drawer;
-        },
-
-        /**
-         * Set drawer state
-         *
-         * @param state
-         * @return void
-         */
-        set(state) {
-          this._setDrawer(state);
-        }
+      /**
+       * Set drawer state
+       *
+       * @param state
+       * @return void
+       */
+      set (state) {
+        this._setDrawer(state)
       }
-
-    },
-
-    methods: {
-      ...mapActions('app', {_setDrawer: 'setDrawer'}),
     }
 
+  },
+
+  methods: {
+    ...mapActions('app', { _setDrawer: 'setDrawer' }),
   }
+
+}
 </script>
 
 <style>
-  /*
-    See: https://github.com/buefy/buefy/issues/2096
-    See: https://stackoverflow.com/questions/14677490/blurry-text-after-using-css-transform-scale-in-chrome
-  */
-  .v-navigation-drawer__content {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
+/*
+  See: https://github.com/buefy/buefy/issues/2096
+  See: https://stackoverflow.com/questions/14677490/blurry-text-after-using-css-transform-scale-in-chrome
+*/
+.v-navigation-drawer__content {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
 </style>
 
 <style lang="scss" scoped>
-  .settings {
+.settings {
 
-    ::v-deep {
-      .v-navigation-drawer__content {
-        overflow-y: scroll;
-      }
-    }
-
-
-    ::-webkit-scrollbar-thumb {
-      background-color: black;
-    }
-
-    ::-webkit-scrollbar {
-      background-color: transparent;
+  ::v-deep {
+    .v-navigation-drawer__content {
+      overflow-y: scroll;
     }
   }
+
+
+  ::-webkit-scrollbar-thumb {
+    background-color: black;
+  }
+
+  ::-webkit-scrollbar {
+    background-color: transparent;
+  }
+}
 
 </style>

@@ -20,7 +20,7 @@
 
     <template v-slot:item="{item}">
       <v-list-item-avatar>
-        <v-img :src="item.poster" />
+        <v-img :src="item.poster"/>
       </v-list-item-avatar>
       <v-list-item-content :style="{maxWidth: $refs.search.$el.clientWidth + 'px'}">
         <v-list-item-title v-text="item.names.ru"/>
@@ -33,92 +33,90 @@
 
 <script>
 
-  import __debounce from 'lodash/debounce'
-  import {toRelease} from "@utils/router/views";
-  import {mapState, mapActions} from 'vuex';
+import __debounce from 'lodash/debounce'
+import { toRelease } from '@utils/router/views'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    data() {
-      return {
-        items: [],
-        search: null,
-        loading: false,
-        visible: false,
-      }
-    },
+export default {
+  data () {
+    return {
+      items: [],
+      search: null,
+      loading: false,
+      visible: false,
+    }
+  },
 
-    computed: {
-      ...mapState('app', {_is_searching: 'is_searching'}),
-    },
+  computed: {
+    ...mapState('app', { _is_searching: 'is_searching' }),
+  },
 
-    methods: {
-      ...mapActions('app', {_setSearching: 'setSearching'}),
+  methods: {
+    ...mapActions('app', { _setSearching: 'setSearching' }),
 
+    /**
+     * Get releases
+     *
+     * @param searchQuery
+     */
+    getReleases: __debounce(async function (searchQuery) {
 
-      /**
-       * Get releases
-       *
-       * @param searchQuery
-       */
-      getReleases: __debounce(async function(searchQuery) {
+      // Set loading state
+      // Get releases from server
+      this.loading = true
+      this.items = await this.$store.dispatchPromise('releases/searchReleases', searchQuery)
 
-        // Set loading state
-        // Get releases from server
-        this.loading = true;
-        this.items = await this.$store.dispatchPromise('releases/searchReleases', searchQuery);
+      // Reset loading
+      this.loading = false
 
-        // Reset loading
-        this.loading = false;
+    }, 1000),
 
-      }, 1000),
+    /**
+     * Open release view
+     *
+     * @param release
+     * @return void
+     */
+    toRelease (release) {
+      if (release) {
 
+        // Reset input
+        // Go to release page
+        this.$refs.search.setValue(undefined)
+        toRelease(release)
 
-      /**
-       * Open release view
-       *
-       * @param release
-       * @return void
-       */
-      toRelease(release) {
-        if (release) {
-
-          // Reset input
-          // Go to release page
-          this.$refs.search.setValue(undefined);
-          toRelease(release);
-
-          // Reset items
-          this.items = [];
-          this.visible = false;
-          this._setSearching(false);
-        }
-      }
-
-    },
-
-    watch: {
-
-      search: {
-        handler(search) {
-          if (search && search.length >= 3) {
-
-            // Get releases
-            this.getReleases(search);
-
-            // Check if metrics is available
-            // Hit metrics event
-            if(this.$metrika) {
-              this.$metrika.hit(`/search?query=${search}`);
-            }
-
-          } else {
-
-            // Reset items
-            this.items = [];
-          }
-        }
-
+        // Reset items
+        this.items = []
+        this.visible = false
+        this._setSearching(false)
       }
     }
+
+  },
+
+  watch: {
+
+    search: {
+      handler (search) {
+        if (search && search.length >= 3) {
+
+          // Get releases
+          this.getReleases(search)
+
+          // Check if metrics is available
+          // Hit metrics event
+          if (this.$metrika) {
+            this.$metrika.hit(`/search?query=${search}`)
+          }
+
+        } else {
+
+          // Reset items
+          this.items = []
+        }
+      }
+
+    }
   }
+}
 </script>

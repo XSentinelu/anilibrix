@@ -12,44 +12,43 @@
 
 <script>
 
-  import Year from './components/year'
+import Year from './components/year'
 
-  const props = {
-    releases: {
-      type: Array,
-      default: null
+const props = {
+  releases: {
+    type: Array,
+    default: null
+  }
+}
+
+export default {
+  props,
+  components: {
+    Year
+  },
+  computed: {
+
+    /**
+     * Get years groups
+     *
+     * @return {array}
+     */
+    years () {
+      const years = {};
+
+      (this.releases || []).forEach(release => {
+        const year = release.year
+        years[year] = { ...years[year] }
+        years[year].year = year
+        years[year].releases = [...(years[year].releases || []), ...[release]]
+      })
+
+      return Object
+        .values(years)
+        .sort((a, b) => b.year - a.year)
     }
-  };
-
-  export default {
-    props,
-    components: {
-      Year
-    },
-    computed: {
-
-      /**
-       * Get years groups
-       *
-       * @return {array}
-       */
-      years() {
-        const years = {};
-
-        (this.releases || []).forEach(release => {
-          const year = release.year;
-          years[year] = {...years[year]};
-          years[year].year = year;
-          years[year].releases = [...(years[year].releases || []), ...[release]]
-        });
-
-        return Object
-          .values(years)
-          .sort((a, b) => b.year - a.year);
-      }
-
-    }
-
 
   }
+
+}
 </script>

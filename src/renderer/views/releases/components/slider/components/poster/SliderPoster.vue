@@ -26,42 +26,39 @@
 
 <script>
 
-  const props = {
-    release: {
-      type: Object,
-      default: null
-    },
-    active: {
-      type: Boolean,
-      default: false
-    }
-  };
-
-  export default {
-    props,
-    computed: {
-
-
-      /**
-       * Get get
-       *
-       * @return {string}
-       */
-      key() {
-        return `poster:${this.release ? this.release.id : null}`
-      },
-
-
-      /**
-       * Get poster full src
-       *
-       * @return {string|null}
-       */
-      src() {
-        return this.$__get(this.release, 'poster');
-      }
-
-
-    }
+const props = {
+  release: {
+    type: Object,
+    default: null
+  },
+  active: {
+    type: Boolean,
+    default: false
   }
+}
+
+export default {
+  props,
+  computed: {
+
+    /**
+     * Get get
+     *
+     * @return {string}
+     */
+    key () {
+      return `poster:${this.release ? this.release.id : null}`
+    },
+
+    /**
+     * Get poster full src
+     *
+     * @return {string|null}
+     */
+    src () {
+      return this.$__get(this.release, 'poster')
+    }
+
+  }
+}
 </script>

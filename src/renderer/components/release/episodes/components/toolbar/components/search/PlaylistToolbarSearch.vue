@@ -11,15 +11,15 @@
 
 <script>
 
-  const props = {
-    search: {
-      type: String,
-      default: null
-    }
-  };
-
-  export default {
-    props,
+const props = {
+  search: {
+    type: String,
+    default: null
   }
+}
+
+export default {
+  props,
+}
 
 </script>

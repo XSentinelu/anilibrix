@@ -10,7 +10,10 @@ export default {
    * @param v
    * @return {*}
    */
-  set: (s, { k, v }) => __set(s, k, v),
+  set: (s, {
+    k,
+    v
+  }) => __set(s, k, v),
 
   /**
    * Push value to array in store with provided key
@@ -20,7 +23,10 @@ export default {
    * @param v
    * @return {*}
    */
-  push: (s, { k, v }) => s[k].push(v),
+  push: (s, {
+    k,
+    v
+  }) => s[k].push(v),
 
   /**
    * Unshift value to array in store with provided key
@@ -30,6 +36,9 @@ export default {
    * @param v
    * @return {*}
    */
-  unshift: (s, { k, v }) => s[k].unshift(v)
+  unshift: (s, {
+    k,
+    v
+  }) => s[k].unshift(v)
 
 }

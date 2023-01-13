@@ -100,31 +100,30 @@
 
 <script>
 
-  import {mapState, mapActions} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
+export default {
 
-    computed: {
-      ...mapState('app/settings/system', {
-        _ads: s => s.ads.enabled,
-        _ads_maximum: s => s.ads.maximum,
-        _updates_enabled: s => s.updates.enabled,
-        _updates_timeout: s => s.updates.timeout,
-        _notifications_system: s => s.notifications.system,
-      })
-    },
+  computed: {
+    ...mapState('app/settings/system', {
+      _ads: s => s.ads.enabled,
+      _ads_maximum: s => s.ads.maximum,
+      _updates_enabled: s => s.updates.enabled,
+      _updates_timeout: s => s.updates.timeout,
+      _notifications_system: s => s.notifications.system,
+    })
+  },
 
-    methods: {
-      ...mapActions('app/settings/system', {
-        _setAds: 'setAds',
-        _setUpdates: 'setUpdates',
-        _setAdsMaximum: 'setAdsMaximum',
-        _setUpdatesTimeout: 'setUpdatesTimeout',
-        _setSystemNotifications: 'setSystemNotifications',
-      }),
+  methods: {
+    ...mapActions('app/settings/system', {
+      _setAds: 'setAds',
+      _setUpdates: 'setUpdates',
+      _setAdsMaximum: 'setAdsMaximum',
+      _setUpdatesTimeout: 'setUpdatesTimeout',
+      _setSystemNotifications: 'setSystemNotifications',
+    }),
 
-    },
+  },
 
-
-  }
+}
 </script>

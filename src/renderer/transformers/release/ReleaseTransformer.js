@@ -1,8 +1,8 @@
 // Transformers
-import BaseTransformer from '@transformers/BaseTransformer';
+import BaseTransformer from '@transformers/BaseTransformer'
 
 // Utils
-import stripHtml from 'string-strip-html';
+import stripHtml from 'string-strip-html'
 
 export default class ReleaseTransformer extends BaseTransformer {
   /**
@@ -11,7 +11,7 @@ export default class ReleaseTransformer extends BaseTransformer {
    * @param release
    * @returns {{}}
    */
-  fetch(release) {
+  fetch (release) {
     return {
       id: this.get(release, 'id'),
       year: this.get(release, 'year'),
@@ -39,12 +39,16 @@ export default class ReleaseTransformer extends BaseTransformer {
    * @param release
    * @return {{system: null, human: string, timestamp: *}}
    */
-  _getReleaseDatetime(release) {
-    const timestamp = this.get(release, 'last');
-    const system = timestamp ? new Date(timestamp * 1000) : null;
-    const human = system ? new Intl.DateTimeFormat(undefined, {}).format(system) : null;
+  _getReleaseDatetime (release) {
+    const timestamp = this.get(release, 'last')
+    const system = timestamp ? new Date(timestamp * 1000) : null
+    const human = system ? new Intl.DateTimeFormat(undefined, {}).format(system) : null
 
-    return { timestamp, system, human }
+    return {
+      timestamp,
+      system,
+      human
+    }
   }
 
   /**
@@ -54,7 +58,7 @@ export default class ReleaseTransformer extends BaseTransformer {
    * @return {*}
    * @private
    */
-  _stripHtml(value) {
-    return value ? stripHtml(value) : null;
+  _stripHtml (value) {
+    return value ? stripHtml(value) : null
   }
 }

@@ -10,14 +10,14 @@ import account from './account'
 import releases from './releases'
 import favorites from './favorites'
 
-Vue.use(Router);
+Vue.use(Router)
 
 // Suppress router push errors
 // Overwrite native push function
-const push = Router.prototype.push;
+const push = Router.prototype.push
 Router.prototype.push = function (location) {
-  push.call(this, location).catch(() => null);
-};
+  push.call(this, location).catch(() => null)
+}
 
 const router = new Router({
   routes: [].concat(
@@ -30,6 +30,6 @@ const router = new Router({
     releases,
     favorites
   )
-});
+})
 
-export default router;
+export default router

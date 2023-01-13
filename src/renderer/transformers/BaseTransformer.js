@@ -8,8 +8,8 @@ export default class BaseTransformer {
    * @param items The items to be transformed.
    * @returns {Array} The transformed items.
    */
-  fetchCollection(items) {
-    return (items || []).map(item => this.fetch(item));
+  fetchCollection (items) {
+    return (items || []).map(item => this.fetch(item))
   }
 
   /**
@@ -18,8 +18,8 @@ export default class BaseTransformer {
    * @param item
    * @returns {*}
    */
-  fetchItem(item) {
-    return this.fetch(item);
+  fetchItem (item) {
+    return this.fetch(item)
   }
 
   /**
@@ -27,7 +27,7 @@ export default class BaseTransformer {
    *
    * @param item
    */
-  fetch(item) {
+  fetch (item) {
     //
   }
 
@@ -39,7 +39,7 @@ export default class BaseTransformer {
    * @param fallback
    * @returns {*}
    */
-  get(source, search, fallback = null) {
-    return get(source, search, fallback);
+  get (source, search, fallback = null) {
+    return get(source, search, fallback)
   }
 }

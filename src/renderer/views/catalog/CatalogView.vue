@@ -39,113 +39,110 @@
 
 <script>
 
-  import Loader from './components/loader'
-  import Toolbar from './components/toolbar'
-  import Filters from './components/filters'
-  import Release from './components/release'
+import Loader from './components/loader'
+import Toolbar from './components/toolbar'
+import Filters from './components/filters'
+import Release from './components/release'
 
-  import {toRelease} from "@utils/router/views";
-  import {mapActions, mapState} from 'vuex'
+import { toRelease } from '@utils/router/views'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    name: "Catalog.View",
-    meta: {title: 'Каталог'},
-    components: {
-      Loader,
-      Toolbar,
-      Filters,
-      Release,
+export default {
+  name: 'Catalog.View',
+  meta: { title: 'Каталог' },
+  components: {
+    Loader,
+    Toolbar,
+    Filters,
+    Release,
+  },
+
+  data () {
+    return {
+      settings: false,
+    }
+  },
+
+  computed: {
+    ...mapState('catalog', {
+      _page: s => s.items.page,
+      _items: s => s.items.data,
+      _loading: s => s.items.loading,
+      _perPage: s => s.items.perPage,
+      _pagination: s => s.items.pagination,
+      _is_initialized: s => s.is_initialized,
+    }),
+
+    /**
+     * Check if last items from server is equals to pet page items
+     * That means that there are more items on server
+     *
+     * @return {boolean}
+     */
+    hasMoreItems () {
+      return this.$__get(this._pagination, 'lastItems', 0) === this._perPage
     },
 
-    data() {
-      return {
-        settings: false,
-      }
+  },
+
+  methods: {
+    ...mapActions('catalog', {
+      _getCatalogItems: 'getCatalogItems',
+      _setPaginationPage: 'setPaginationPage',
+      _clearCatalogReleases: 'clearCatalogReleases',
+    }),
+
+    /**
+     * Go to release
+     *
+     * @return void
+     */
+    toRelease,
+
+    /**
+     * Show releases
+     * Reset releases
+     *
+     */
+    async showReleases () {
+      await this._clearCatalogReleases()
+      await this._setPaginationPage(1)
+      await this._getCatalogItems()
     },
 
-    computed: {
-      ...mapState('catalog', {
-        _page: s => s.items.page,
-        _items: s => s.items.data,
-        _loading: s => s.items.loading,
-        _perPage: s => s.items.perPage,
-        _pagination: s => s.items.pagination,
-        _is_initialized: s => s.is_initialized,
-      }),
-
-
-      /**
-       * Check if last items from server is equals to pet page items
-       * That means that there are more items on server
-       *
-       * @return {boolean}
-       */
-      hasMoreItems() {
-        return this.$__get(this._pagination, 'lastItems', 0) === this._perPage;
-      },
-
+    /**
+     * Load more releases from next page
+     *
+     * @return void
+     */
+    async loadReleases () {
+      await this._setPaginationPage(this._page + 1)
+      await this._getCatalogItems()
     },
 
-    methods: {
-      ...mapActions('catalog', {
-        _getCatalogItems: 'getCatalogItems',
-        _setPaginationPage: 'setPaginationPage',
-        _clearCatalogReleases: 'clearCatalogReleases',
-      }),
+  },
 
+  created () {
 
-      /**
-       * Go to release
-       *
-       * @return void
-       */
-      toRelease,
+    // Show releases on initial load
+    if (this._is_initialized === false) this.showReleases()
 
-      /**
-       * Show releases
-       * Reset releases
-       *
-       */
-      async showReleases() {
-        await this._clearCatalogReleases();
-        await this._setPaginationPage(1);
-        await this._getCatalogItems();
-      },
+  },
 
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (from && from.name === 'release') {
+        const fromReleaseId = vm.$__get(from, 'params.releaseId')
+        const releaseContainer = vm.$refs[fromReleaseId]
 
-      /**
-       * Load more releases from next page
-       *
-       * @return void
-       */
-      async loadReleases() {
-        await this._setPaginationPage(this._page + 1);
-        await this._getCatalogItems();
-      },
-
-    },
-
-    created() {
-
-      // Show releases on initial load
-      if (this._is_initialized === false) this.showReleases();
-
-    },
-
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        if (from && from.name === 'release') {
-          const fromReleaseId = vm.$__get(from, 'params.releaseId');
-          const releaseContainer = vm.$refs[fromReleaseId];
-
-          // If div container is found
-          // Scroll into view
-          if (releaseContainer && releaseContainer[0]) {
-            releaseContainer[0].$el.scrollIntoView({block: "center"});
-          }
+        // If div container is found
+        // Scroll into view
+        if (releaseContainer && releaseContainer[0]) {
+          releaseContainer[0].$el.scrollIntoView({ block: 'center' })
         }
-      })
-    },
+      }
+    })
+  },
 
-  }
+}
 </script>

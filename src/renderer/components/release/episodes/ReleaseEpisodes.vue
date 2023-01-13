@@ -30,88 +30,85 @@
 
 <script>
 
-  // Episodes
-  import Loader from './components/loader'
-  import Episode from './components/episode'
-  import Toolbar from './components/toolbar'
+// Episodes
+import Loader from './components/loader'
+import Episode from './components/episode'
+import Toolbar from './components/toolbar'
 
-  // Release
-  import ReleaseProgress from './../progress'
+// Release
+import ReleaseProgress from './../progress'
 
-  // Utils
-  import Fuse from "fuse.js";
-  import __orderBy from 'lodash/orderBy'
-  import {mapState} from 'vuex'
+// Utils
+import Fuse from 'fuse.js'
+import __orderBy from 'lodash/orderBy'
+import { mapState } from 'vuex'
 
-  const props = {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    release: {
-      type: Object,
-      default: null
-    },
-    episodes: {
-      type: Array,
-      default: null,
-    },
-    playing: {
-      type: Object,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Loader,
-      Episode,
-      Toolbar,
-      ReleaseProgress,
-    },
-
-    data() {
-      return {
-        search: null,
-      }
-    },
-
-    computed: {
-      ...mapState('app/settings/player', {_sort: s => s.episodes.order}),
-
-      /**
-       * Get playlist
-       *
-       * @return Array
-       */
-      playlist() {
-        return __orderBy(this.episodes || [], ['id'], [this._sort]);
-      },
-
-
-      /**
-       * Create searchable entity
-       *
-       * @return Object
-       */
-      playlistSearchable() {
-        return new Fuse(this.playlist, {keys: ['title']});
-      },
-
-
-      /**
-       * Get playlist items
-       *
-       * @return {any}
-       */
-      playlistSearched() {
-        return this.search
-          ? this.playlistSearchable.search(this.search)
-          : this.playlist;
-      },
-
-
-    }
+const props = {
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  release: {
+    type: Object,
+    default: null
+  },
+  episodes: {
+    type: Array,
+    default: null,
+  },
+  playing: {
+    type: Object,
+    default: null
   }
+}
+
+export default {
+  props,
+  components: {
+    Loader,
+    Episode,
+    Toolbar,
+    ReleaseProgress,
+  },
+
+  data () {
+    return {
+      search: null,
+    }
+  },
+
+  computed: {
+    ...mapState('app/settings/player', { _sort: s => s.episodes.order }),
+
+    /**
+     * Get playlist
+     *
+     * @return Array
+     */
+    playlist () {
+      return __orderBy(this.episodes || [], ['id'], [this._sort])
+    },
+
+    /**
+     * Create searchable entity
+     *
+     * @return Object
+     */
+    playlistSearchable () {
+      return new Fuse(this.playlist, { keys: ['title'] })
+    },
+
+    /**
+     * Get playlist items
+     *
+     * @return {any}
+     */
+    playlistSearched () {
+      return this.search
+        ? this.playlistSearchable.search(this.search)
+        : this.playlist
+    },
+
+  }
+}
 </script>

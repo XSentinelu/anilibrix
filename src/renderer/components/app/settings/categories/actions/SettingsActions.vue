@@ -39,80 +39,84 @@
 
 <script>
 
-  import ExitDialog from './dialogs/exit'
-  import CacheDialog from './dialogs/cache'
+import ExitDialog from './dialogs/exit'
+import CacheDialog from './dialogs/cache'
 
-  export default {
-    data() {
-      return {
-        isMounted: false,
-      }
-    },
+export default {
+  data () {
+    return {
+      isMounted: false,
+    }
+  },
 
-    computed: {
+  computed: {
 
-      /**
-       * Get settings items
-       *
-       * @return array
-       */
-      settings() {
-        return [
-          {
-            title: 'Перезагрузить приложение',
-            value: this.shortcuts['reload'],
-            action: () => require('@electron/remote').getCurrentWindow().reload(),
-          },
-          {
-            title: 'Свернуть приложение',
-            value: this.shortcuts['minimize'],
-            action: () => require('@electron/remote').getCurrentWindow().minimize(),
-          },
-          {
-            title: 'Закрыть приложение',
-            value: this.shortcuts['close'],
-            action: () => this.$refs.exit[0].showDialog(),
-          },
-          {
-            title: 'Сбросить кеш и настройки приложения',
-            action: () => this.$refs.cache[0].showDialog(),
-          }
-        ]
-      },
-
-
-      /**
-       * Get dialogs
-       *
-       * @return Array
-       */
-      dialogs() {
-        return [
-          {component: ExitDialog, ref: 'exit'},
-          {component: CacheDialog, ref: 'cache'}
-        ]
-      },
-
-
-      /**
-       * Get actions shortcuts
-       *
-       * @return {object}
-       */
-      shortcuts() {
-        return {
-          'close': process.platform === 'darwin' ? '⌘Q' : 'Alt + Q',
-          'reload': process.platform === 'darwin' ? '⌘⇧R' : 'Ctrl + Shift + R',
-          'minimize': process.platform === 'darwin' ? '⌘M' : 'Ctrl + M',
-          'fullscreen': process.platform === 'darwin' ? '⌃⌘F' : 'Ctrl + F',
+    /**
+     * Get settings items
+     *
+     * @return array
+     */
+    settings () {
+      return [
+        {
+          title: 'Перезагрузить приложение',
+          value: this.shortcuts['reload'],
+          action: () => require('@electron/remote').getCurrentWindow().reload(),
+        },
+        {
+          title: 'Свернуть приложение',
+          value: this.shortcuts['minimize'],
+          action: () => require('@electron/remote').getCurrentWindow().minimize(),
+        },
+        {
+          title: 'Закрыть приложение',
+          value: this.shortcuts['close'],
+          action: () => this.$refs.exit[0].showDialog(),
+        },
+        {
+          title: 'Сбросить кеш и настройки приложения',
+          action: () => this.$refs.cache[0].showDialog(),
         }
-      }
-
+      ]
     },
 
-    mounted() {
-      this.isMounted = true;
+    /**
+     * Get dialogs
+     *
+     * @return Array
+     */
+    dialogs () {
+      return [
+        {
+          component: ExitDialog,
+          ref: 'exit'
+        },
+        {
+          component: CacheDialog,
+          ref: 'cache'
+        }
+      ]
+    },
+
+    /**
+     * Get actions shortcuts
+     *
+     * @return {object}
+     */
+    shortcuts () {
+      return {
+        'close': process.platform === 'darwin' ? '⌘Q' : 'Alt + Q',
+        'reload': process.platform === 'darwin' ? '⌘⇧R' : 'Ctrl + Shift + R',
+        'minimize': process.platform === 'darwin' ? '⌘M' : 'Ctrl + M',
+        'fullscreen': process.platform === 'darwin' ? '⌃⌘F' : 'Ctrl + F',
+      }
     }
 
+  },
+
+  mounted () {
+    this.isMounted = true
   }
+
+}
 </script>

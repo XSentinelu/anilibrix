@@ -1,89 +1,89 @@
 export default () => {
-  function createShader(gl, type, source) {
-    var shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
+  function createShader (gl, type, source) {
+    var shader = gl.createShader(type)
+    gl.shaderSource(shader, source)
 
-    gl.compileShader(shader);
+    gl.compileShader(shader)
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      throw new Error(gl.getShaderInfoLog(shader));
+      throw new Error(gl.getShaderInfoLog(shader))
     }
 
-    return shader;
+    return shader
   }
 
-  function createProgram(gl, vertexSource, fragmentSource) {
-    var program = gl.createProgram();
+  function createProgram (gl, vertexSource, fragmentSource) {
+    var program = gl.createProgram()
 
-    var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexSource);
-    var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource);
+    var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexSource)
+    var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentSource)
 
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
+    gl.attachShader(program, vertexShader)
+    gl.attachShader(program, fragmentShader)
 
-    gl.linkProgram(program);
+    gl.linkProgram(program)
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error(gl.getProgramInfoLog(program));
+      throw new Error(gl.getProgramInfoLog(program))
     }
 
-    var wrapper = { program: program };
+    var wrapper = { program: program }
 
-    var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+    var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES)
     for (var i = 0; i < numAttributes; i++) {
-      var attribute = gl.getActiveAttrib(program, i);
-      wrapper[attribute.name] = gl.getAttribLocation(program, attribute.name);
+      var attribute = gl.getActiveAttrib(program, i)
+      wrapper[attribute.name] = gl.getAttribLocation(program, attribute.name)
     }
-    var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+    var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
     for (var i$1 = 0; i$1 < numUniforms; i$1++) {
-      var uniform = gl.getActiveUniform(program, i$1);
-      wrapper[uniform.name] = gl.getUniformLocation(program, uniform.name);
+      var uniform = gl.getActiveUniform(program, i$1)
+      wrapper[uniform.name] = gl.getUniformLocation(program, uniform.name)
     }
 
-    return wrapper;
+    return wrapper
   }
 
-  function createTexture(gl, filter, data, width, height) {
-    var texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+  function createTexture (gl, filter, data, width, height) {
+    var texture = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter)
     if (data instanceof Uint8Array) {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data)
     } else {
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data)
     }
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    return texture;
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    return texture
   }
 
-  function bindTexture(gl, texture, unit) {
-    gl.activeTexture(gl.TEXTURE0 + unit);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+  function bindTexture (gl, texture, unit) {
+    gl.activeTexture(gl.TEXTURE0 + unit)
+    gl.bindTexture(gl.TEXTURE_2D, texture)
   }
 
-  function updateTexture(gl, texture, src) {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+  function updateTexture (gl, texture, src) {
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src)
   }
 
-  function createBuffer(gl, data) {
-    var buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-    return buffer;
+  function createBuffer (gl, data) {
+    var buffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW)
+    return buffer
   }
 
-  function bindAttribute(gl, buffer, attribute, numComponents) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.enableVertexAttribArray(attribute);
-    gl.vertexAttribPointer(attribute, numComponents, gl.FLOAT, false, 0, 0);
+  function bindAttribute (gl, buffer, attribute, numComponents) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.enableVertexAttribArray(attribute)
+    gl.vertexAttribPointer(attribute, numComponents, gl.FLOAT, false, 0, 0)
   }
 
-  function bindFramebuffer(gl, framebuffer, texture) {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+  function bindFramebuffer (gl, framebuffer, texture) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer)
     if (texture) {
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
     }
   }
 
@@ -97,7 +97,7 @@ void main() {
     v_tex_pos = a_pos;
     gl_Position = vec4(1.0 - 2.0 * a_pos, 0, 1);
 }
-`;
+`
   const scaleFrag = `
 precision mediump float;
 
@@ -120,7 +120,7 @@ void main() {
     gl_FragColor = interp(1.0 - v_tex_pos);
     //gl_FragColor = texture2D(u_texture, 1.0 - v_tex_pos);
 }
-`;
+`
   const lumFrag = `
 precision mediump float;
 
@@ -136,7 +136,7 @@ void main() {
 	float lum = getLum(rgb);
     gl_FragColor = vec4(lum);
 }
-`;
+`
   const pushFrag = `
 precision mediump float;
 
@@ -253,7 +253,7 @@ void main() {
 
     gl_FragColor = lightestColor;
 }
-`;
+`
   const gradFrag = `
 precision mediump float;
 
@@ -308,7 +308,7 @@ void main() {
 
     gl_FragColor = vec4(1.0 - clamp(sqrt(xgrad * xgrad + ygrad * ygrad), 0.0, 1.0));
 }
-`;
+`
   const finalFrag = `
 precision mediump float;
 
@@ -427,7 +427,7 @@ void main() {
 
     gl_FragColor = cc;
 }
-`;
+`
   const drawFrag = `
 precision mediump float;
 
@@ -440,187 +440,187 @@ void main() {
     vec4 colorOrig = texture2D(u_textureOrig, vec2(1.0 - v_tex_pos.x, v_tex_pos.y));
     gl_FragColor = vec4(color.rgb, colorOrig.a);
 }
-`;
+`
 
-  function Scaler(gl) {
-    this.gl = gl;
+  function Scaler (gl) {
+    this.gl = gl
 
-    this.inputTex = null;
-    this.inputMov = null;
-    this.inputWidth = 0;
-    this.inputHeight = 0;
+    this.inputTex = null
+    this.inputMov = null
+    this.inputWidth = 0
+    this.inputHeight = 0
 
-    this.quadBuffer = createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
-    this.framebuffer = gl.createFramebuffer();
+    this.quadBuffer = createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]))
+    this.framebuffer = gl.createFramebuffer()
 
-    this.scaleProgram = createProgram(gl, quadVert, scaleFrag);
-    this.lumProgram = createProgram(gl, quadVert, lumFrag);
-    this.pushProgram = createProgram(gl, quadVert, pushFrag);
-    this.gradProgram = createProgram(gl, quadVert, gradFrag);
-    this.finalProgram = createProgram(gl, quadVert, finalFrag);
-    this.drawProgram = createProgram(gl, quadVert, drawFrag);
+    this.scaleProgram = createProgram(gl, quadVert, scaleFrag)
+    this.lumProgram = createProgram(gl, quadVert, lumFrag)
+    this.pushProgram = createProgram(gl, quadVert, pushFrag)
+    this.gradProgram = createProgram(gl, quadVert, gradFrag)
+    this.finalProgram = createProgram(gl, quadVert, finalFrag)
+    this.drawProgram = createProgram(gl, quadVert, drawFrag)
 
-    this.tempTexture = null;
-    this.tempTexture2 = null;
-    this.tempTexture3 = null;
+    this.tempTexture = null
+    this.tempTexture2 = null
+    this.tempTexture3 = null
 
-    this.bold = 6.0;
-    this.blur = 2.0;
+    this.bold = 6.0
+    this.blur = 2.0
   }
 
   Scaler.prototype.inputVideo = function (mov) {
-    const gl = this.gl;
+    const gl = this.gl
 
-    const width = mov.videoWidth;
-    const height = mov.videoHeight;
+    const width = mov.videoWidth
+    const height = mov.videoHeight
 
-    this.inputWidth = width;
-    this.inputHeight = height;
+    this.inputWidth = width
+    this.inputHeight = height
 
-    const emptyPixels = new Uint8Array(width * height * 4);
-    this.inputTex = createTexture(gl, gl.LINEAR, emptyPixels, width, height);
-    this.inputMov = mov;
+    const emptyPixels = new Uint8Array(width * height * 4)
+    this.inputTex = createTexture(gl, gl.LINEAR, emptyPixels, width, height)
+    this.inputMov = mov
   }
 
   Scaler.prototype.resize = function (scale) {
-    const gl = this.gl;
+    const gl = this.gl
 
-    const width = Math.round(this.inputWidth * scale);
-    const height = Math.round(this.inputHeight * scale);
+    const width = Math.round(this.inputWidth * scale)
+    const height = Math.round(this.inputHeight * scale)
 
-    gl.canvas.width = width;
-    gl.canvas.height = height;
+    gl.canvas.width = width
+    gl.canvas.height = height
 
     const emptyPixels = new Uint8Array(width * height * 4)
-    this.scaleTexture = createTexture(gl, gl.LINEAR, emptyPixels, width, height);
-    this.tempTexture = createTexture(gl, gl.LINEAR, emptyPixels, width, height);
-    this.tempTexture2 = createTexture(gl, gl.LINEAR, emptyPixels, width, height);
-    this.tempTexture3 = createTexture(gl, gl.LINEAR, emptyPixels, width, height);
+    this.scaleTexture = createTexture(gl, gl.LINEAR, emptyPixels, width, height)
+    this.tempTexture = createTexture(gl, gl.LINEAR, emptyPixels, width, height)
+    this.tempTexture2 = createTexture(gl, gl.LINEAR, emptyPixels, width, height)
+    this.tempTexture3 = createTexture(gl, gl.LINEAR, emptyPixels, width, height)
   }
 
   Scaler.prototype.render = function () {
     if (!this.inputTex) {
-      return;
+      return
     }
 
-    const gl = this.gl;
-    const scalePgm = this.scaleProgram;
-    const lumPgm = this.lumProgram;
-    const pushPgm = this.pushProgram;
-    const gradPgm = this.gradProgram;
-    const finalPgm = this.finalProgram;
-    const drawPgm = this.drawProgram;
+    const gl = this.gl
+    const scalePgm = this.scaleProgram
+    const lumPgm = this.lumProgram
+    const pushPgm = this.pushProgram
+    const gradPgm = this.gradProgram
+    const finalPgm = this.finalProgram
+    const drawPgm = this.drawProgram
 
     if (this.inputMov) {
-      updateTexture(gl, this.inputTex, this.inputMov);
+      updateTexture(gl, this.inputTex, this.inputMov)
     }
 
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.STENCIL_TEST);
+    gl.disable(gl.DEPTH_TEST)
+    gl.disable(gl.STENCIL_TEST)
 
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
     // First upscaling with Bicubic interpolation.
-    bindFramebuffer(gl, this.framebuffer, this.scaleTexture);
+    bindFramebuffer(gl, this.framebuffer, this.scaleTexture)
 
-    gl.useProgram(scalePgm.program);
+    gl.useProgram(scalePgm.program)
 
-    bindAttribute(gl, this.quadBuffer, scalePgm.a_pos, 2);
-    bindTexture(gl, this.inputTex, 0);
-    gl.uniform1i(scalePgm.u_texture, 0);
-    gl.uniform2f(scalePgm.u_size, this.inputWidth, this.inputHeight);
+    bindAttribute(gl, this.quadBuffer, scalePgm.a_pos, 2)
+    bindTexture(gl, this.inputTex, 0)
+    gl.uniform1i(scalePgm.u_texture, 0)
+    gl.uniform2f(scalePgm.u_size, this.inputWidth, this.inputHeight)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: scaleTexture
-    bindFramebuffer(gl, this.framebuffer, this.tempTexture);
+    bindFramebuffer(gl, this.framebuffer, this.tempTexture)
 
-    gl.useProgram(lumPgm.program);
+    gl.useProgram(lumPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, lumPgm.a_pos, 2);
-    bindTexture(gl, this.scaleTexture, 0);
-    gl.uniform1i(lumPgm.u_texture, 0);
+    bindAttribute(gl, this.quadBuffer, lumPgm.a_pos, 2)
+    bindTexture(gl, this.scaleTexture, 0)
+    gl.uniform1i(lumPgm.u_texture, 0)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: scaleTexture
     // PostKernel: tempTexture
-    bindFramebuffer(gl, this.framebuffer, this.tempTexture2);
+    bindFramebuffer(gl, this.framebuffer, this.tempTexture2)
 
-    gl.useProgram(pushPgm.program);
+    gl.useProgram(pushPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, pushPgm.a_pos, 2);
-    bindTexture(gl, this.scaleTexture, 0);
-    bindTexture(gl, this.tempTexture, 1);
-    gl.uniform1i(pushPgm.u_texture, 0);
-    gl.uniform1i(pushPgm.u_textureTemp, 1);
-    gl.uniform1f(pushPgm.u_scale, gl.canvas.width / this.inputWidth);
-    gl.uniform2f(pushPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);
-    gl.uniform1f(pushPgm.u_bold, this.bold);
+    bindAttribute(gl, this.quadBuffer, pushPgm.a_pos, 2)
+    bindTexture(gl, this.scaleTexture, 0)
+    bindTexture(gl, this.tempTexture, 1)
+    gl.uniform1i(pushPgm.u_texture, 0)
+    gl.uniform1i(pushPgm.u_textureTemp, 1)
+    gl.uniform1f(pushPgm.u_scale, gl.canvas.width / this.inputWidth)
+    gl.uniform2f(pushPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height)
+    gl.uniform1f(pushPgm.u_bold, this.bold)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: tempTexture2
     // PostKernel: tempTexture
-    bindFramebuffer(gl, this.framebuffer, this.tempTexture);
+    bindFramebuffer(gl, this.framebuffer, this.tempTexture)
 
-    gl.useProgram(lumPgm.program);
+    gl.useProgram(lumPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, lumPgm.a_pos, 2);
-    bindTexture(gl, this.tempTexture2, 0);
-    gl.uniform1i(lumPgm.u_texture, 0);
+    bindAttribute(gl, this.quadBuffer, lumPgm.a_pos, 2)
+    bindTexture(gl, this.tempTexture2, 0)
+    gl.uniform1i(lumPgm.u_texture, 0)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: tempTexture2
     // PostKernel: tempTexture
-    bindFramebuffer(gl, this.framebuffer, this.tempTexture3);
+    bindFramebuffer(gl, this.framebuffer, this.tempTexture3)
 
-    gl.useProgram(gradPgm.program);
+    gl.useProgram(gradPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, gradPgm.a_pos, 2);
-    bindTexture(gl, this.tempTexture2, 0);
-    bindTexture(gl, this.tempTexture, 1);
-    gl.uniform1i(gradPgm.u_texture, 0);
-    gl.uniform1i(gradPgm.u_textureTemp, 1);
-    gl.uniform2f(gradPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);
+    bindAttribute(gl, this.quadBuffer, gradPgm.a_pos, 2)
+    bindTexture(gl, this.tempTexture2, 0)
+    bindTexture(gl, this.tempTexture, 1)
+    gl.uniform1i(gradPgm.u_texture, 0)
+    gl.uniform1i(gradPgm.u_textureTemp, 1)
+    gl.uniform2f(gradPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: tempTexture2
     // PostKernel: tempTexture3
-    bindFramebuffer(gl, this.framebuffer, this.tempTexture);
+    bindFramebuffer(gl, this.framebuffer, this.tempTexture)
 
-    gl.useProgram(finalPgm.program);
+    gl.useProgram(finalPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, finalPgm.a_pos, 2);
-    bindTexture(gl, this.tempTexture2, 0);
-    bindTexture(gl, this.tempTexture3, 1);
-    gl.uniform1i(finalPgm.u_texture, 0);
-    gl.uniform1i(finalPgm.u_textureTemp, 1);
-    gl.uniform1f(finalPgm.u_scale, gl.canvas.width / this.inputWidth);
-    gl.uniform2f(finalPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);
-    gl.uniform1f(finalPgm.u_blur, this.blur);
+    bindAttribute(gl, this.quadBuffer, finalPgm.a_pos, 2)
+    bindTexture(gl, this.tempTexture2, 0)
+    bindTexture(gl, this.tempTexture3, 1)
+    gl.uniform1i(finalPgm.u_texture, 0)
+    gl.uniform1i(finalPgm.u_textureTemp, 1)
+    gl.uniform1f(finalPgm.u_scale, gl.canvas.width / this.inputWidth)
+    gl.uniform2f(finalPgm.u_pt, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height)
+    gl.uniform1f(finalPgm.u_blur, this.blur)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
 
     // Scaled: tempTexture
     // PostKernel: tempTexture3
-    bindFramebuffer(gl, null);
+    bindFramebuffer(gl, null)
 
-    gl.useProgram(drawPgm.program);
+    gl.useProgram(drawPgm.program)
 
-    bindAttribute(gl, this.quadBuffer, drawPgm.a_pos, 2);
-    bindTexture(gl, this.tempTexture, 0);
-    bindTexture(gl, this.inputTex, 1);
-    gl.uniform1i(drawPgm.u_texture, 0);
-    gl.uniform1i(drawPgm.u_textureOrig, 1);
+    bindAttribute(gl, this.quadBuffer, drawPgm.a_pos, 2)
+    bindTexture(gl, this.tempTexture, 0)
+    bindTexture(gl, this.inputTex, 1)
+    gl.uniform1i(drawPgm.u_texture, 0)
+    gl.uniform1i(drawPgm.u_textureOrig, 1)
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
-  };
-  let scaler = null;
-  let bold = 6;
-  let blur = 2;
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
+  }
+  let scaler = null
+  let bold = 6
+  let blur = 2
 
   /**
    * Initialize scaling
@@ -631,38 +631,44 @@ void main() {
    * @param boldAmount
    * @param blurAmount
    */
-  function init({ video, board, scale = 1.5, boldAmount = 6, blurAmount = 2 }) {
-    const gl = board.getContext('webgl');
+  function init ({
+    video,
+    board,
+    scale = 1.5,
+    boldAmount = 6,
+    blurAmount = 2
+  }) {
+    const gl = board.getContext('webgl')
 
-    video.preload = 'auto';
-    video.autoload = true;
+    video.preload = 'auto'
+    video.autoload = true
 
     // Set scale amount
-    bold = parseFloat(boldAmount);
-    blur = parseFloat(blurAmount);
+    bold = parseFloat(boldAmount)
+    blur = parseFloat(blurAmount)
 
     // Create scaler
     // Set video
     // Resize video
-    scaler = new Scaler(gl);
-    scaler.inputVideo(video);
-    scaler.resize(parseFloat(scale));
+    scaler = new Scaler(gl)
+    scaler.inputVideo(video)
+    scaler.resize(parseFloat(scale))
 
     /**
      * Render frame
      * Use bold and blur parameters
      *
      */
-    function render() {
+    function render () {
       if (scaler) {
-        scaler.bold = bold;
-        scaler.blur = blur;
-        scaler.render();
+        scaler.bold = bold
+        scaler.blur = blur
+        scaler.render()
       }
-      requestAnimationFrame(render);
+      requestAnimationFrame(render)
     }
 
-    requestAnimationFrame(render);
+    requestAnimationFrame(render)
   }
 
   /**
@@ -671,9 +677,9 @@ void main() {
    * @param boldAmount
    * @param blurAmount
    */
-  function updateParameters(boldAmount, blurAmount) {
-    bold = boldAmount;
-    blur = blurAmount;
+  function updateParameters (boldAmount, blurAmount) {
+    bold = boldAmount
+    blur = blurAmount
   }
 
   return {

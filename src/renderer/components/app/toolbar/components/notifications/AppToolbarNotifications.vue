@@ -59,34 +59,33 @@
 
 <script>
 
-  import NotificationItem from './components/item'
-  import {mapState, mapActions} from 'vuex'
+import NotificationItem from './components/item'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    components: {
-      NotificationItem
-    },
-    computed: {
-      ...mapState('notifications', {_items: s => s.items}),
+export default {
+  components: {
+    NotificationItem
+  },
+  computed: {
+    ...mapState('notifications', { _items: s => s.items }),
 
-
-      /**
-       * Get unseen notifications
-       *
-       * @return {number}
-       */
-      unseen() {
-        return this._items.filter(item => item.is_seen === false).length
-      }
-
-    },
-
-    methods: {
-      ...mapActions('notifications', {
-        _setSeen: 'setSeen',
-        _clearNotifications: 'clearNotifications'
-      })
+    /**
+     * Get unseen notifications
+     *
+     * @return {number}
+     */
+    unseen () {
+      return this._items.filter(item => item.is_seen === false).length
     }
 
+  },
+
+  methods: {
+    ...mapActions('notifications', {
+      _setSeen: 'setSeen',
+      _clearNotifications: 'clearNotifications'
+    })
   }
+
+}
 </script>

@@ -3,7 +3,7 @@
 
     <v-card-text class="caption">
       <v-layout class="with-divider">
-        <div>Версия {{app.version}}</div>
+        <div>Версия {{ app.version }}</div>
         <a href="#" @click.prevent="sendAppAboutEvent">О приложении</a>
       </v-layout>
       <div>Весь материал в приложении представлен исключительно для домашнего ознакомительного просмотра.</div>
@@ -17,102 +17,99 @@
 
 <script>
 
-  import app from '@/../package'
-  import {mapActions} from 'vuex'
-  import {sendAppAboutEvent} from "@main/handlers/app/appHandlers";
+import app from '@/../package'
+import { mapActions } from 'vuex'
+import { sendAppAboutEvent } from '@main/handlers/app/appHandlers'
 
-  export default {
-    computed: {
+export default {
+  computed: {
 
-      /**
-       * Get application data
-       *
-       * @return object
-       */
-      app() {
-        return {
-          version: app.version
-        }
-      },
-
-
-      /**
-       * Anilibria link
-       *
-       * @return {string}
-       */
-      anilibria() {
-        return app.meta.links.anilibria
-      },
-
-      /**
-       * Github link
-       *
-       * @return {string}
-       */
-      github() {
-        return app.repository.url
+    /**
+     * Get application data
+     *
+     * @return object
+     */
+    app () {
+      return {
+        version: app.version
       }
     },
 
-    methods: {
-      ...mapActions('app/settings/system', {_toggleDevtools: 'toggleDevtools'}),
+    /**
+     * Anilibria link
+     *
+     * @return {string}
+     */
+    anilibria () {
+      return app.meta.links.anilibria
+    },
 
-      /**
-       * Show about panel
-       *
-       * @return void
-       */
-      sendAppAboutEvent,
-
-
-      /**
-       * Toggle devtools
-       *
-       * @return void
-       */
-      toggleDevtools() {
-        this._toggleDevtools();
-      }
-
-
+    /**
+     * Github link
+     *
+     * @return {string}
+     */
+    github () {
+      return app.repository.url
     }
+  },
+
+  methods: {
+    ...mapActions('app/settings/system', { _toggleDevtools: 'toggleDevtools' }),
+
+    /**
+     * Show about panel
+     *
+     * @return void
+     */
+    sendAppAboutEvent,
+
+    /**
+     * Toggle devtools
+     *
+     * @return void
+     */
+    toggleDevtools () {
+      this._toggleDevtools()
+    }
+
   }
+}
 </script>
 
 
 <style lang="scss" scoped>
 
-  .credentials {
-    &__data {
+.credentials {
+  &__data {
 
-      a {
-        color: inherit;
-        text-decoration: none;
+    a {
+      color: inherit;
+      text-decoration: none;
 
-        &:hover {
-          text-decoration: underline;
-        }
+      &:hover {
+        text-decoration: underline;
       }
+    }
 
-      .with-divider {
-        > * {
+    .with-divider {
+      > * {
+        &::after {
+          content: "-";
+          display: inline-block;
+          padding: 0 3px;
+          text-decoration: none;
+        }
+
+        &:last-child {
           &::after {
-            content: "-";
-            display: inline-block;
-            padding: 0 3px;
-            text-decoration: none;
-          }
-
-          &:last-child {
-            &::after {
-              content: none;
-            }
+            content: none;
           }
         }
       }
     }
   }
+}
 
 </style>
 

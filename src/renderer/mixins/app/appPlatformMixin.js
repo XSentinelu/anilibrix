@@ -1,5 +1,5 @@
 export default {
-  data() {
+  data () {
     return {
       is_fullscreen: false
     }
@@ -12,8 +12,8 @@ export default {
      *
      * @return {boolean}
      */
-    isOnFullscreen() {
-      return !!this.is_fullscreen;
+    isOnFullscreen () {
+      return !!this.is_fullscreen
     },
 
     /**
@@ -21,8 +21,8 @@ export default {
      *
      * @return {boolean}
      */
-    isMac() {
-      return process.platform === 'darwin';
+    isMac () {
+      return process.platform === 'darwin'
     },
 
     /**
@@ -30,8 +30,8 @@ export default {
      *
      * @return {boolean}
      */
-    isWindows() {
-      return process.platform === 'win32';
+    isWindows () {
+      return process.platform === 'win32'
     },
 
     /**
@@ -39,8 +39,8 @@ export default {
      *
      * @return {boolean}
      */
-    isMacOnFullscreen() {
-      return !!(this.isMac && this.isOnFullscreen);
+    isMacOnFullscreen () {
+      return !!(this.isMac && this.isOnFullscreen)
     }
   },
 
@@ -51,24 +51,24 @@ export default {
      *
      * @return void
      */
-    setFullscreenState() {
-      this.is_fullscreen = require('@electron/remote').getCurrentWindow().isFullScreen();
+    setFullscreenState () {
+      this.is_fullscreen = require('@electron/remote').getCurrentWindow().isFullScreen()
     }
 
   },
 
-  created() {
+  created () {
     // Check if window is fullscreen
-    this.setFullscreenState();
+    this.setFullscreenState()
 
     // Set fullscreen events
-    require('@electron/remote').getCurrentWindow().on('enter-full-screen', this.setFullscreenState);
-    require('@electron/remote').getCurrentWindow().on('leave-full-screen', this.setFullscreenState);
+    require('@electron/remote').getCurrentWindow().on('enter-full-screen', this.setFullscreenState)
+    require('@electron/remote').getCurrentWindow().on('leave-full-screen', this.setFullscreenState)
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     // Remove fullscreen events
-    require('@electron/remote').getCurrentWindow().off('enter-full-screen', this.setFullscreenState);
-    require('@electron/remote').getCurrentWindow().off('leave-full-screen', this.setFullscreenState);
+    require('@electron/remote').getCurrentWindow().off('enter-full-screen', this.setFullscreenState)
+    require('@electron/remote').getCurrentWindow().off('leave-full-screen', this.setFullscreenState)
   }
 }

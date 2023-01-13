@@ -7,17 +7,17 @@ export default {
      *
      * @param e
      */
-    handleKeyboardEvents(e) {
+    handleKeyboardEvents (e) {
       //
     }
 
   },
 
-  mounted() {
-    document.addEventListener('keydown', this.handleKeyboardEvents);
+  mounted () {
+    document.addEventListener('keydown', this.handleKeyboardEvents)
   },
 
-  destroyed() {
-    document.removeEventListener('keydown', this.handleKeyboardEvents);
+  destroyed () {
+    document.removeEventListener('keydown', this.handleKeyboardEvents)
   }
 }

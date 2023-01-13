@@ -1,8 +1,8 @@
-const PUSH_TO_RELEASES = 'PUSH_TO_RELEASES';
-const SORT_NOTIFICATIONS = 'SORT_NOTIFICATIONS';
-const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS';
-const FILTER_NOTIFICATIONS = 'FILTER_NOTIFICATIONS';
-const SET_NOTIFICATIONS_SEEN_STATUS = 'SET_NOTIFICATIONS_SEEN_STATUS';
+const PUSH_TO_RELEASES = 'PUSH_TO_RELEASES'
+const SORT_NOTIFICATIONS = 'SORT_NOTIFICATIONS'
+const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS'
+const FILTER_NOTIFICATIONS = 'FILTER_NOTIFICATIONS'
+const SET_NOTIFICATIONS_SEEN_STATUS = 'SET_NOTIFICATIONS_SEEN_STATUS'
 
 export default {
   namespaced: true,
@@ -45,7 +45,10 @@ export default {
      * @param s
      * @return {*}
      */
-    [SET_NOTIFICATIONS_SEEN_STATUS]: s => (s.items = s.items.map(item => ({ ...item, is_seen: true }))),
+    [SET_NOTIFICATIONS_SEEN_STATUS]: s => (s.items = s.items.map(item => ({
+      ...item,
+      is_seen: true
+    }))),
 
     /**
      * Clear notifications
@@ -70,13 +73,18 @@ export default {
       if (release && release.episodes[0]) {
         // Add notification
         // Push release to releases items
-        commit(PUSH_TO_RELEASES, { release, episode: release.episodes[0], is_seen: false, datetime: new Date() });
+        commit(PUSH_TO_RELEASES, {
+          release,
+          episode: release.episodes[0],
+          is_seen: false,
+          datetime: new Date()
+        })
       }
 
       // Filter notifications
       // Sort notifications
-      commit(FILTER_NOTIFICATIONS);
-      commit(SORT_NOTIFICATIONS);
+      commit(FILTER_NOTIFICATIONS)
+      commit(SORT_NOTIFICATIONS)
     },
 
     /**

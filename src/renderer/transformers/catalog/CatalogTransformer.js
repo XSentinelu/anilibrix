@@ -1,5 +1,5 @@
-import stripHtml from 'string-strip-html';
-import BaseTransformer from '@transformers/BaseTransformer';
+import stripHtml from 'string-strip-html'
+import BaseTransformer from '@transformers/BaseTransformer'
 
 export default class CatalogTransformer extends BaseTransformer {
   /**
@@ -8,7 +8,7 @@ export default class CatalogTransformer extends BaseTransformer {
    * @param release
    * @returns {{}}
    */
-  fetch(release) {
+  fetch (release) {
     return {
       id: this.get(release, 'id'),
       year: this.get(release, 'year'),
@@ -30,7 +30,7 @@ export default class CatalogTransformer extends BaseTransformer {
    * @return {*}
    * @private
    */
-  _stripHtml(value) {
-    return value ? stripHtml(value) : null;
+  _stripHtml (value) {
+    return value ? stripHtml(value) : null
   }
 }

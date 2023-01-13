@@ -1,4 +1,4 @@
-import AdsView from '@views/ads';
+import AdsView from '@views/ads'
 
 export default [
   {

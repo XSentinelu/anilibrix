@@ -19,38 +19,38 @@
 
 <script>
 
-  import {mapState, mapActions} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapState('catalog', {
-        _items: s => s.filters.years.items,
-        _value: s => s.filters.years.value,
-        _loading: s => s.filters.years.loading,
-      })
-    },
+export default {
+  computed: {
+    ...mapState('catalog', {
+      _items: s => s.filters.years.items,
+      _value: s => s.filters.years.value,
+      _loading: s => s.filters.years.loading,
+    })
+  },
 
-    methods: {
-      ...mapActions('catalog', {
-        _setFilterValue: 'setFilterValue',
-        _getCatalogYearsFilter: 'getCatalogYearsFilter'
-      })
-    },
+  methods: {
+    ...mapActions('catalog', {
+      _setFilterValue: 'setFilterValue',
+      _getCatalogYearsFilter: 'getCatalogYearsFilter'
+    })
+  },
 
-    created() {
-      this._getCatalogYearsFilter();
-    }
+  created () {
+    this._getCatalogYearsFilter()
   }
+}
 </script>
 
 <style lang="scss" scoped>
 
-  .filter {
-    ::v-deep {
-      .v-chip {
-        border-radius: 4px;
-      }
+.filter {
+  ::v-deep {
+    .v-chip {
+      border-radius: 4px;
     }
   }
+}
 
 </style>

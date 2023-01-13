@@ -5,8 +5,8 @@ export function discordActivity () {
   let closed = false
 
   const assembleClient = (timeout = 5000, old = true) => {
-    if (old && client !== null && client.transport.socket !== null) client.destroy();
-    client = new RPC.Client({ transport: 'ipc' });
+    if (old && client !== null && client.transport.socket !== null) client.destroy()
+    client = new RPC.Client({ transport: 'ipc' })
     client.on('error', (err) => console.log(err))
     client.on('ready', () => {
       console.log('Discord rich presence ready')
@@ -14,9 +14,9 @@ export function discordActivity () {
       client.transport.socket.on('close', () => {
         if (closed) return
         console.log('Discord rich presence reconnect')
-        assembleClient();
-      });
-    });
+        assembleClient()
+      })
+    })
 
     setTimeout(async () => {
       try {
@@ -31,14 +31,16 @@ export function discordActivity () {
     }, timeout)
   }
 
-  assembleClient(1000, false);
+  assembleClient(1000, false)
 
   process.on('unhandledRejection', (e) => {
     if (e.message === 'Could not connect') {
-      console.log('Discord rich presence: Could not connect ! Retrying...');
-      assembleClient();
-    } else throw e
-  });
+      console.log('Discord rich presence: Could not connect ! Retrying...')
+      assembleClient()
+    } else {
+      throw e
+    }
+  })
 
   let activity = {}
 

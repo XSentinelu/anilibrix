@@ -7,6 +7,12 @@ import HttpsProxyAgent from 'https-proxy-agent'
  * @param port
  * @return {HttpsProxyAgent}
  */
-export default ({ host, port }) => {
-  return new HttpsProxyAgent({ host, port });
+export default ({
+  host,
+  port
+}) => {
+  return new HttpsProxyAgent({
+    host,
+    port
+  })
 }

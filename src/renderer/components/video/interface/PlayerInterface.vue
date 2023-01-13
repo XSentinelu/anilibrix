@@ -62,238 +62,228 @@
 
 <script>
 
-  import PlayerPlay from './components/play'
-  import PlayerNext from './components/next'
-  import PlayerLabel from './components/label'
-  import PlayerLinks from './components/links'
-  import PlayerMouse from './components/mouse'
-  import PlayerTorrent from './components/torrent'
-  import PlayerKeyboard from './components/keyboard'
-  import PlayerHeadline from './components/headline'
-  import PlayerTimeline from './components/timeline'
-  import PlayerControls from './components/controls'
-  import PlayerEpisodes from './components/episodes'
-  import PlayerBuffering from './components/buffering'
+import PlayerPlay from './components/play'
+import PlayerNext from './components/next'
+import PlayerLabel from './components/label'
+import PlayerLinks from './components/links'
+import PlayerMouse from './components/mouse'
+import PlayerTorrent from './components/torrent'
+import PlayerKeyboard from './components/keyboard'
+import PlayerHeadline from './components/headline'
+import PlayerTimeline from './components/timeline'
+import PlayerControls from './components/controls'
+import PlayerEpisodes from './components/episodes'
+import PlayerBuffering from './components/buffering'
 
-  import screenfull from "screenfull";
-  import {AppMouseHandlerMixin, AppKeyboardHandlerMixin} from '@mixins/app'
+import screenfull from 'screenfull'
+import { AppKeyboardHandlerMixin, AppMouseHandlerMixin } from '@mixins/app'
 
-  const props = {
-    player: {
-      type: Object,
-      default: null
-    },
-    source: {
-      type: Object,
-      default: null
-    },
-    release: {
-      type: Object,
-      default: null
-    },
-    episode: {
-      type: Object,
-      default: null
+const props = {
+  player: {
+    type: Object,
+    default: null
+  },
+  source: {
+    type: Object,
+    default: null
+  },
+  release: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null
+  }
+}
+
+export default {
+  props,
+  mixins: [
+    AppMouseHandlerMixin,
+    AppKeyboardHandlerMixin,
+  ],
+  components: {
+    PlayerPlay,
+    PlayerNext,
+    PlayerLinks,
+    PlayerMouse,
+    PlayerLabel,
+    PlayerTorrent,
+    PlayerKeyboard,
+    PlayerHeadline,
+    PlayerTimeline,
+    PlayerControls,
+    PlayerEpisodes,
+    PlayerBuffering,
+  },
+
+  data () {
+    return {
+      video: null,
+      visible: true,
+      visible_handler: null,
     }
-  };
+  },
 
+  methods: {
 
-  export default {
-    props,
-    mixins: [
-      AppMouseHandlerMixin,
-      AppKeyboardHandlerMixin,
-    ],
-    components: {
-      PlayerPlay,
-      PlayerNext,
-      PlayerLinks,
-      PlayerMouse,
-      PlayerLabel,
-      PlayerTorrent,
-      PlayerKeyboard,
-      PlayerHeadline,
-      PlayerTimeline,
-      PlayerControls,
-      PlayerEpisodes,
-      PlayerBuffering,
+    /**
+     * Show player controls
+     *
+     * @return void
+     */
+    showInterface () {
+
+      // Show controls
+      // Send event to show cursor
+      this.visible = true
+      this.$emit('show:cursor')
+
+      // Clear previous interval
+      // Create new interval
+      if (this.visible_handler) clearTimeout(this.visible_handler)
+      this.visible_handler = setTimeout(() => {
+
+        // Hide interface
+        // Send event to hide cursor
+        this.visible = false
+        this.$emit('hide:cursor')
+
+      }, 2500)
     },
 
-    data() {
-      return {
-        video: null,
-        visible: true,
-        visible_handler: null,
-      }
+    /**
+     * Handle mouse move
+     * Show interface on mouse move
+     *
+     * @return {void}
+     */
+    handleMouseEvents () {
+      this.showInterface()
     },
 
-    methods: {
-
-      /**
-       * Show player controls
-       *
-       * @return void
-       */
-      showInterface() {
-
-        // Show controls
-        // Send event to show cursor
-        this.visible = true;
-        this.$emit('show:cursor');
-
-        // Clear previous interval
-        // Create new interval
-        if (this.visible_handler) clearTimeout(this.visible_handler);
-        this.visible_handler = setTimeout(() => {
-
-          // Hide interface
-          // Send event to hide cursor
-          this.visible = false;
-          this.$emit('hide:cursor');
-
-        }, 2500)
-      },
-
-      /**
-       * Handle mouse move
-       * Show interface on mouse move
-       *
-       * @return {void}
-       */
-      handleMouseEvents() {
-        this.showInterface();
-      },
-
-
-      /**
-       * Handler mouse scroll
-       * Show interface on mouse move
-       */
-      handleMouseScroll() {
-        this.showInterface();
-      },
-
-      /**
-       * Handle keyboard move
-       * Show interface on mouse move
-       *
-       * @return {void}
-       */
-      handleKeyboardEvents() {
-        this.showInterface();
-      },
-
-
-      /**
-       * Enter fullscreen mode
-       * Fullscreen div container with player and controls
-       *
-       * @return {void}
-       */
-      toggleFullscreen() {
-        screenfull.toggle(document.getElementsByName('body')[0]);
-      },
-
-
-      /**
-       * Toggle pip
-       *
-       * @return {void}
-       */
-      togglePIP() {
-        this.player.pip = !this.player.pip;
-      },
-
-
-      /**
-       * Toggle player play state
-       *
-       * @return {void}
-       */
-      togglePlay() {
-        this.player.togglePlay();
-      },
-
-
-      /**
-       * Set player speed
-       *
-       * @param speed
-       */
-      setSpeed(speed) {
-        this.player.speed = speed;
-      },
-
-
-      /**
-       * Set player time
-       *
-       * @return void
-       */
-      setTime(time) {
-        this.player.currentTime = time;
-      },
-
-
-      /**
-       * Set source
-       *
-       * @param source
-       */
-      setSource(source) {
-        this.$emit('set:source', source);
-      },
-
-
-      /**
-       * Set volume
-       *
-       * @param volume
-       */
-      setVolume(volume) {
-        this.player.volume = volume;
-      }
-
+    /**
+     * Handler mouse scroll
+     * Show interface on mouse move
+     */
+    handleMouseScroll () {
+      this.showInterface()
     },
 
-    mounted() {
-
-      // Hide / Show controls
-      this.showInterface();
-
-      // Get video element
-      this.video = document.getElementsByClassName('plyr')[0];
-
-      // Add some event listeners
-      // Set player click event
-      // Toggle player state
-      this.video.addEventListener('click', this.togglePlay);
-      this.video.addEventListener('dblclick', this.toggleFullscreen);
-
+    /**
+     * Handle keyboard move
+     * Show interface on mouse move
+     *
+     * @return {void}
+     */
+    handleKeyboardEvents () {
+      this.showInterface()
     },
 
+    /**
+     * Enter fullscreen mode
+     * Fullscreen div container with player and controls
+     *
+     * @return {void}
+     */
+    toggleFullscreen () {
+      screenfull.toggle(document.getElementsByName('body')[0])
+    },
 
-    beforeDestroy() {
+    /**
+     * Toggle pip
+     *
+     * @return {void}
+     */
+    togglePIP () {
+      this.player.pip = !this.player.pip
+    },
 
-      // Remove player listeners
-      this.video.removeEventListener('click', this.togglePlay);
-      this.video.removeEventListener('dblclick', this.toggleFullscreen);
+    /**
+     * Toggle player play state
+     *
+     * @return {void}
+     */
+    togglePlay () {
+      this.player.togglePlay()
+    },
 
+    /**
+     * Set player speed
+     *
+     * @param speed
+     */
+    setSpeed (speed) {
+      this.player.speed = speed
+    },
+
+    /**
+     * Set player time
+     *
+     * @return void
+     */
+    setTime (time) {
+      this.player.currentTime = time
+    },
+
+    /**
+     * Set source
+     *
+     * @param source
+     */
+    setSource (source) {
+      this.$emit('set:source', source)
+    },
+
+    /**
+     * Set volume
+     *
+     * @param volume
+     */
+    setVolume (volume) {
+      this.player.volume = volume
     }
+
+  },
+
+  mounted () {
+
+    // Hide / Show controls
+    this.showInterface()
+
+    // Get video element
+    this.video = document.getElementsByClassName('plyr')[0]
+
+    // Add some event listeners
+    // Set player click event
+    // Toggle player state
+    this.video.addEventListener('click', this.togglePlay)
+    this.video.addEventListener('dblclick', this.toggleFullscreen)
+
+  },
+
+  beforeDestroy () {
+
+    // Remove player listeners
+    this.video.removeEventListener('click', this.togglePlay)
+    this.video.removeEventListener('dblclick', this.toggleFullscreen)
 
   }
+
+}
 </script>
 
 <style scoped lang="scss">
 
-  .interface {
-    width: 100%;
-    bottom: 0;
-    z-index: 10;
-    position: absolute;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 50%, rgba(255, 255, 255, 0) 100%);
-    user-select: none;
+.interface {
+  width: 100%;
+  bottom: 0;
+  z-index: 10;
+  position: absolute;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 50%, rgba(255, 255, 255, 0) 100%);
+  user-select: none;
 
-  }
+}
 
 </style>

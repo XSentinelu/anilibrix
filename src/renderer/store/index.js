@@ -7,7 +7,7 @@ import { getInitialState } from '@utils/store/state'
 import createPromiseAction from '@plugins/vuex-promise-action'
 import createPersistedState from 'vuex-persistedstate'
 import { createSharedMutations } from 'vuex-electron'
-import { getItem, setItem, removeItem } from '@utils/store/storage'
+import { getItem, removeItem, setItem } from '@utils/store/storage'
 
 import app from './app'
 import release from './release'
@@ -16,7 +16,7 @@ import releases from './releases'
 import favorites from './favorites'
 import notifications from './notifications'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const modules = {
   app,
@@ -25,12 +25,15 @@ const modules = {
   releases,
   favorites,
   notifications
-};
+}
 
 // Get debug state
 // Create storage instance
-const debug = process.env.NODE_ENV !== 'production';
-const storage = new Storage({ name: 'anilibrix', clearInvalidConfig: true });
+const debug = process.env.NODE_ENV !== 'production'
+const storage = new Storage({
+  name: 'anilibrix',
+  clearInvalidConfig: true
+})
 
 // Create store instance
 const store = new Vuex.Store({
@@ -63,17 +66,22 @@ const store = new Vuex.Store({
      *
      * @return void
      */
-    RESET_STORE(s) {
+    RESET_STORE (s) {
       // Get app persisted states
-      const account = s.app.account;
-      const watch = s.app.watch;
+      const account = s.app.account
+      const watch = s.app.watch
 
       // Get initial state
-      const state = getInitialState(modules);
+      const state = getInitialState(modules)
 
       // Replace store
       // Merge initial with persisted
-      this.replaceState(__merge(state, { app: { account, watch } }));
+      this.replaceState(__merge(state, {
+        app: {
+          account,
+          watch
+        }
+      }))
     }
   },
 
@@ -90,14 +98,14 @@ const store = new Vuex.Store({
     RESET_STORE: async ({ commit }) => await commit('RESET_STORE')
   }
 
-});
+})
 
 /**
  * Get store
  *
  * @return {Store<unknown>}
  */
-export const getStore = () => store;
+export const getStore = () => store
 
 /**
  * Set user's id on app startup

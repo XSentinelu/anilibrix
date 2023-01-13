@@ -48,8 +48,6 @@
       </v-tooltip>
 
 
-
-
       <!-- Torrent -->
       <v-tooltip v-if="source.type === 'torrent'" right :attach="$refs.links">
         <template v-slot:activator="{on}">
@@ -77,89 +75,89 @@
 
 <script>
 
-  import {mapState} from 'vuex'
-  import {toRelease, toReleases, toFavorites} from "@utils/router/views";
+import { mapState } from 'vuex'
+import { toFavorites, toRelease, toReleases } from '@utils/router/views'
 
-  const props = {
-    player: {
-      type: Object,
-      default: null
-    },
-    release: {
-      type: Object,
-      default: null
-    },
-    source: {
-      type: Object,
-      default: null
-    },
-    episodes: {
-      type: Function,
-      default: null
-    },
-    torrent: {
-      type: Function,
-      default: null
-    },
-    upscale: {
-      type: Function,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    data() {
-      return {
-        isMounted: false
-      }
-    },
-    computed: {
-      ...mapState('app/settings/player', {
-        _opening_skip_time: s => s.opening.skip_time,
-        _opening_skip_button: s => s.opening.skip_button,
-      }),
-
-      /**
-       * Get release poster src
-       *
-       * @return {string}
-       */
-      src() {
-        return this.$__get(this.release, 'poster');
-      },
-
-      /**
-       * Get title
-       *
-       * @return {string}
-       */
-      title() {
-        return this.$__get(this.release, 'names.ru');
-      }
-
-    },
-    methods: {
-
-      toRelease,
-      toReleases,
-      toFavorites,
-
-      /**
-       * Skip opening
-       *
-       * @return {void}
-       */
-      skipOpening() {
-        this.$emit('set:time', this.player.currentTime + (this._opening_skip_time || 0));
-      }
-    },
-
-    mounted() {
-
-      // Set mounted state
-      this.isMounted = true;
-
-    }
+const props = {
+  player: {
+    type: Object,
+    default: null
+  },
+  release: {
+    type: Object,
+    default: null
+  },
+  source: {
+    type: Object,
+    default: null
+  },
+  episodes: {
+    type: Function,
+    default: null
+  },
+  torrent: {
+    type: Function,
+    default: null
+  },
+  upscale: {
+    type: Function,
+    default: null
   }
+}
+
+export default {
+  props,
+  data () {
+    return {
+      isMounted: false
+    }
+  },
+  computed: {
+    ...mapState('app/settings/player', {
+      _opening_skip_time: s => s.opening.skip_time,
+      _opening_skip_button: s => s.opening.skip_button,
+    }),
+
+    /**
+     * Get release poster src
+     *
+     * @return {string}
+     */
+    src () {
+      return this.$__get(this.release, 'poster')
+    },
+
+    /**
+     * Get title
+     *
+     * @return {string}
+     */
+    title () {
+      return this.$__get(this.release, 'names.ru')
+    }
+
+  },
+  methods: {
+
+    toRelease,
+    toReleases,
+    toFavorites,
+
+    /**
+     * Skip opening
+     *
+     * @return {void}
+     */
+    skipOpening () {
+      this.$emit('set:time', this.player.currentTime + (this._opening_skip_time || 0))
+    }
+  },
+
+  mounted () {
+
+    // Set mounted state
+    this.isMounted = true
+
+  }
+}
 </script>

@@ -1,9 +1,9 @@
 import { aboutTemplate } from './../menu/appMenu'
-import { Menu, nativeImage, Tray } from 'electron';
+import { Menu, nativeImage, Tray } from 'electron'
 
 export default class {
-  constructor() {
-    this._tray = null;
+  constructor () {
+    this._tray = null
   }
 
   /**
@@ -11,8 +11,8 @@ export default class {
    *
    * @return Array
    */
-  getTemplate() {
-    return [...aboutTemplate];
+  getTemplate () {
+    return [...aboutTemplate]
   }
 
   /**
@@ -22,12 +22,12 @@ export default class {
    * @param iconPath
    * @return this
    */
-  createTrayIcon({ iconPath }) {
-    this._tray = new Tray(nativeImage.createFromPath(iconPath));
-    this._tray.setContextMenu(Menu.buildFromTemplate(this.getTemplate()));
-    this._tray.setIgnoreDoubleClickEvents(true);
+  createTrayIcon ({ iconPath }) {
+    this._tray = new Tray(nativeImage.createFromPath(iconPath))
+    this._tray.setContextMenu(Menu.buildFromTemplate(this.getTemplate()))
+    this._tray.setIgnoreDoubleClickEvents(true)
 
-    return this;
+    return this
   };
 
   /**
@@ -36,9 +36,9 @@ export default class {
    * @param tooltip
    * @return this
    */
-  setTooltip(tooltip) {
-    this._tray.setToolTip(tooltip);
+  setTooltip (tooltip) {
+    this._tray.setToolTip(tooltip)
 
-    return this;
+    return this
   }
 }

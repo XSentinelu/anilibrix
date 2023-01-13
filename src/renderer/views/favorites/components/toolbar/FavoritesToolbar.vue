@@ -31,23 +31,23 @@
 
 <script>
 
-  const props = {
-    search: {
-      type: String,
-      default: null
-    },
-    settings: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    }
-  };
-
-  export default {
-    props,
-
+const props = {
+  search: {
+    type: String,
+    default: null
+  },
+  settings: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   }
+}
+
+export default {
+  props,
+
+}
 </script>

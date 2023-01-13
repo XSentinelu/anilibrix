@@ -1,12 +1,12 @@
 import __get from 'lodash/get'
 import router from '@router'
 
-const VIDEO_VIEW = 'video';
-const BLANK_VIEW = 'blank';
-const RELEASE_VIEW = 'release';
-const RELEASES_VIEW = 'releases';
-const FAVORITES_VIEW = 'favorites';
-const ACCOUNT_LOGIN_VIEW = 'account.login';
+const VIDEO_VIEW = 'video'
+const BLANK_VIEW = 'blank'
+const RELEASE_VIEW = 'release'
+const RELEASES_VIEW = 'releases'
+const FAVORITES_VIEW = 'favorites'
+const ACCOUNT_LOGIN_VIEW = 'account.login'
 
 /**
  * Go to login view
@@ -16,9 +16,9 @@ const ACCOUNT_LOGIN_VIEW = 'account.login';
  */
 export const toLogin = () => {
   if (router.currentRoute.name !== ACCOUNT_LOGIN_VIEW) {
-    return router.push({ name: ACCOUNT_LOGIN_VIEW });
+    return router.push({ name: ACCOUNT_LOGIN_VIEW })
   }
-};
+}
 
 /**
  * To favorites
@@ -27,9 +27,9 @@ export const toLogin = () => {
  */
 export const toFavorites = () => {
   if (router.currentRoute.name !== FAVORITES_VIEW) {
-    return router.push({ name: FAVORITES_VIEW });
+    return router.push({ name: FAVORITES_VIEW })
   }
-};
+}
 
 /**
  * Go to release
@@ -39,15 +39,18 @@ export const toFavorites = () => {
  */
 export const toRelease = (release = null) => {
   if (release) {
-    const releaseId = __get(release, 'id');
-    const releaseName = __get(release, 'names.original');
+    const releaseId = __get(release, 'id')
+    const releaseName = __get(release, 'names.original')
 
     return router.push({
       name: RELEASE_VIEW,
-      params: { releaseId, releaseName }
-    });
+      params: {
+        releaseId,
+        releaseName
+      }
+    })
   }
-};
+}
 
 /**
  * Go to releases
@@ -55,8 +58,8 @@ export const toRelease = (release = null) => {
  * @return {Promise<Route>}
  */
 export const toReleases = () => {
-  return router.push({ name: RELEASES_VIEW });
-};
+  return router.push({ name: RELEASES_VIEW })
+}
 
 /**
  * Go to video
@@ -68,15 +71,20 @@ export const toReleases = () => {
  */
 export const toVideo = (release = null, episode = null, params = {}) => {
   if (release && episode) {
-    const key = `${release.id}:${episode.id}`;
-    const releaseName = __get(release, 'names.original');
+    const key = `${release.id}:${episode.id}`
+    const releaseName = __get(release, 'names.original')
 
     return router.push({
       name: VIDEO_VIEW,
-      params: { key, release, episode, releaseName, ...params }
-    });
+      params: {
+        key,
+        release,
+        episode,
+        releaseName, ...params
+      }
+    })
   }
-};
+}
 
 /**
  * Go to blank view
@@ -86,5 +94,11 @@ export const toVideo = (release = null, episode = null, params = {}) => {
  * @return {Promise<Route>}
  */
 export const toBlank = (message = null, referer = null) => {
-  return router.push({ name: BLANK_VIEW, params: { message, referer } })
+  return router.push({
+    name: BLANK_VIEW,
+    params: {
+      message,
+      referer
+    }
+  })
 }

@@ -36,96 +36,91 @@
 
 <script>
 
-  import Loader from './components/loader'
-  import Favorite from './../favorite'
+import Loader from './components/loader'
+import Favorite from './../favorite'
 
-  const props = {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    release: {
-      type: Object,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Loader,
-      Favorite
-    },
-    computed: {
-
-      /**
-       * Get title
-       *
-       * @return {string|null}
-       */
-      title() {
-        return this.$__get(this.release, 'names.ru')
-      },
-
-      /**
-       * Get original title
-       *
-       * @return {string|null}
-       */
-      original() {
-        return this.$__get(this.release, 'names.original')
-      },
-
-
-      /**
-       * Get release genres
-       *
-       * @return {string}
-       */
-      genres() {
-        return (this.$__get(this.release, 'genres') || []).join(' | ')
-      },
-
-
-      /**
-       * Get year
-       *
-       * @return {string|number|null}
-       */
-      year() {
-        return this.$__get(this.release, 'year');
-      },
-
-
-      /**
-       * Get release type
-       *
-       * @return {string|null}
-       */
-      type() {
-        return this.$__get(this.release, 'type')
-      },
-
-
-      /**
-       * Get release description
-       *
-       * @return {*}
-       */
-      description() {
-        return this.$__get(this.release, 'description')
-      },
-
-
-      /**
-       * Get release poster
-       *
-       * @return {*}
-       */
-      poster() {
-        return this.$__get(this.release, 'poster')
-      }
-
-    }
+const props = {
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  release: {
+    type: Object,
+    default: null
   }
+}
+
+export default {
+  props,
+  components: {
+    Loader,
+    Favorite
+  },
+  computed: {
+
+    /**
+     * Get title
+     *
+     * @return {string|null}
+     */
+    title () {
+      return this.$__get(this.release, 'names.ru')
+    },
+
+    /**
+     * Get original title
+     *
+     * @return {string|null}
+     */
+    original () {
+      return this.$__get(this.release, 'names.original')
+    },
+
+    /**
+     * Get release genres
+     *
+     * @return {string}
+     */
+    genres () {
+      return (this.$__get(this.release, 'genres') || []).join(' | ')
+    },
+
+    /**
+     * Get year
+     *
+     * @return {string|number|null}
+     */
+    year () {
+      return this.$__get(this.release, 'year')
+    },
+
+    /**
+     * Get release type
+     *
+     * @return {string|null}
+     */
+    type () {
+      return this.$__get(this.release, 'type')
+    },
+
+    /**
+     * Get release description
+     *
+     * @return {*}
+     */
+    description () {
+      return this.$__get(this.release, 'description')
+    },
+
+    /**
+     * Get release poster
+     *
+     * @return {*}
+     */
+    poster () {
+      return this.$__get(this.release, 'poster')
+    }
+
+  }
+}
 </script>

@@ -20,11 +20,11 @@
           <v-list-item :key="k" :disabled="loading" @click.stop="item.action">
 
             <!-- Icon -->
-            <v-icon class="mr-2" color="grey">{{item.icon}}</v-icon>
+            <v-icon class="mr-2" color="grey">{{ item.icon }}</v-icon>
 
             <!-- Item -->
             <v-list-item-content>
-              <v-list-item-title>{{item.title}}</v-list-item-title>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
 
           </v-list-item>
@@ -37,100 +37,103 @@
 
 <script>
 
-  import {mapActions} from 'vuex'
+import { mapActions } from 'vuex'
 
-  const props = {
-    release: {
-      type: Object,
-      default: null
-    },
-    episode: {
-      type: Object,
-      default: null
-    },
-    container: {
-      type: HTMLDivElement,
-      default: null,
-    }
-  };
-
-  export default {
-    props,
-    data() {
-      return {
-        loading: false,
-        visible: false,
-      }
-    },
-    computed: {
-
-      actions() {
-        return [
-          {
-            icon: 'mdi-check',
-            title: 'Отметить серию как просмотренную',
-            action: this.setWatched,
-            visible: true,
-          },
-          {
-            icon: 'mdi-close',
-            title: 'Снять отметку о просмотре',
-            action: this.removeWatched,
-            visible: true,
-          }
-        ].filter(item => item.visible)
-      }
-
-    },
-
-
-    methods: {
-      ...mapActions('app/watch', {
-        _setWatchedEpisode: 'setWatchedEpisode',
-        _removeWatchedEpisode: 'removeWatchedEpisode'
-      }),
-
-
-      /**
-       * Set episode watch data
-       *
-       * @return {Promise<void>}
-       */
-      async setWatched() {
-
-        // Get data for watched episode action
-        // Prepare payload
-        const release_id = this.release.id;
-        const episode_id = this.episode.id;
-        const payload = {release_id, episode_id, percentage: 100};
-
-        // Set watched episode data
-        await this._setWatchedEpisode(payload);
-
-        // Deactivate menu
-        this.visible = false;
-      },
-
-
-      /**
-       * Remove watch package data
-       *
-       * @return {Promise<void>}
-       */
-      async removeWatched() {
-
-        // Remove watch data
-        const release_id = this.release.id;
-        const episode_id = this.episode.id;
-        const payload = {release_id, episode_id};
-
-        await this._removeWatchedEpisode(payload);
-
-        // Deactivate menu
-        this.visible = false;
-      }
-
-
-    }
+const props = {
+  release: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null
+  },
+  container: {
+    type: HTMLDivElement,
+    default: null,
   }
+}
+
+export default {
+  props,
+  data () {
+    return {
+      loading: false,
+      visible: false,
+    }
+  },
+  computed: {
+
+    actions () {
+      return [
+        {
+          icon: 'mdi-check',
+          title: 'Отметить серию как просмотренную',
+          action: this.setWatched,
+          visible: true,
+        },
+        {
+          icon: 'mdi-close',
+          title: 'Снять отметку о просмотре',
+          action: this.removeWatched,
+          visible: true,
+        }
+      ].filter(item => item.visible)
+    }
+
+  },
+
+  methods: {
+    ...mapActions('app/watch', {
+      _setWatchedEpisode: 'setWatchedEpisode',
+      _removeWatchedEpisode: 'removeWatchedEpisode'
+    }),
+
+    /**
+     * Set episode watch data
+     *
+     * @return {Promise<void>}
+     */
+    async setWatched () {
+
+      // Get data for watched episode action
+      // Prepare payload
+      const release_id = this.release.id
+      const episode_id = this.episode.id
+      const payload = {
+        release_id,
+        episode_id,
+        percentage: 100
+      }
+
+      // Set watched episode data
+      await this._setWatchedEpisode(payload)
+
+      // Deactivate menu
+      this.visible = false
+    },
+
+    /**
+     * Remove watch package data
+     *
+     * @return {Promise<void>}
+     */
+    async removeWatched () {
+
+      // Remove watch data
+      const release_id = this.release.id
+      const episode_id = this.episode.id
+      const payload = {
+        release_id,
+        episode_id
+      }
+
+      await this._removeWatchedEpisode(payload)
+
+      // Deactivate menu
+      this.visible = false
+    }
+
+  }
+}
 </script>

@@ -1,9 +1,9 @@
 import __get from 'lodash/get'
-import store from '@store/index';
+import store from '@store/index'
 import axios from '@plugins/axios'
 
 import FormData from 'form-data'
-import { version, meta } from '@package'
+import { meta, version } from '@package'
 
 export default class BaseProxy {
   /**
@@ -15,14 +15,19 @@ export default class BaseProxy {
    *
    * @returns {Promise} The result in a promise.
    */
-  async submit(method, url, parameters = {}) {
+  async submit (method, url, parameters = {}) {
     // Set headers
     // Add user-agent
-    const headers = { ...parameters.headers, ...this.getRequestHeaders() };
+    const headers = { ...parameters.headers, ...this.getRequestHeaders() }
 
     // Make request
     // eslint-disable-next-line no-return-await
-    return await axios.request({ url, method, ...parameters, headers, timeout: 15000 });
+    return await axios.request({
+      url,
+      method, ...parameters,
+      headers,
+      timeout: 15000
+    })
   }
 
   /**
@@ -31,15 +36,15 @@ export default class BaseProxy {
    * @param response
    * @return {*}
    */
-  handleResponse(response) {
-    const data = __get(response, 'data', null);
-    const status = __get(response, 'status', false);
-    const message = __get(response, 'error.message', 'Ошибка при запросе');
+  handleResponse (response) {
+    const data = __get(response, 'data', null)
+    const status = __get(response, 'status', false)
+    const message = __get(response, 'error.message', 'Ошибка при запросе')
 
     if (status === true) {
-      return data;
+      return data
     } else {
-      throw new Error(message);
+      throw new Error(message)
     }
   }
 
@@ -48,8 +53,8 @@ export default class BaseProxy {
    *
    * @return {string}
    */
-  getApiEndpoint() {
-    return process.env.API_ENDPOINT_URL;
+  getApiEndpoint () {
+    return process.env.API_ENDPOINT_URL
   }
 
   /**
@@ -57,8 +62,8 @@ export default class BaseProxy {
    *
    * @return {string}
    */
-  getStaticEndpoint() {
-    return process.env.STATIC_ENDPOINT_URL;
+  getStaticEndpoint () {
+    return process.env.STATIC_ENDPOINT_URL
   }
 
   /**
@@ -67,16 +72,16 @@ export default class BaseProxy {
    * @param data
    * @return {FormData}
    */
-  getFormDataObject(data = null) {
+  getFormDataObject (data = null) {
     // Create form data object
-    const formData = new FormData();
+    const formData = new FormData()
 
     // Set data
     Object.keys(data || {})
-      .forEach(key => formData.append(key, typeof (data[key]) === 'object' ? JSON.stringify(data[key]) : data[key]));
+      .forEach(key => formData.append(key, typeof (data[key]) === 'object' ? JSON.stringify(data[key]) : data[key]))
 
     // Return form data
-    return formData;
+    return formData
   }
 
   /**
@@ -84,20 +89,20 @@ export default class BaseProxy {
    *
    * @return {{}}
    */
-  getRequestHeaders() {
+  getRequestHeaders () {
     // Create headers
-    const headers = {};
+    const headers = {}
 
     // Set header user agent
-    headers['user-agent'] = `${meta.name}/${version}`;
+    headers['user-agent'] = `${meta.name}/${version}`
 
     // Set header session
     // Set session in cookies
-    const session = __get(store, 'state.app.account.session');
+    const session = __get(store, 'state.app.account.session')
     if (session && session.length > 0) {
-      headers.Cookie = `PHPSESSID=${session}; Path=/; Secure; HttpOnly`;
+      headers.Cookie = `PHPSESSID=${session}; Path=/; Secure; HttpOnly`
     }
 
-    return headers;
+    return headers
   }
 }

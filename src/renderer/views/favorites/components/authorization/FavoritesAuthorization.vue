@@ -25,21 +25,21 @@
 
 <script>
 
-  // Utils
-  import {toLogin} from "@utils/router/views";
+// Utils
+import { toLogin } from '@utils/router/views'
 
-  // Image
-  import LibriaTyan02 from '@assets/images/libria-tyan/LibriaTyan02.svg'
+// Image
+import LibriaTyan02 from '@assets/images/libria-tyan/LibriaTyan02.svg'
 
-  export default {
-    data() {
-      return {
-        image: LibriaTyan02,
-      }
-    },
-    methods: {
-      toLogin,
+export default {
+  data () {
+    return {
+      image: LibriaTyan02,
     }
+  },
+  methods: {
+    toLogin,
   }
+}
 
 </script>

@@ -37,13 +37,13 @@ export const aboutTemplate = [
     role: 'quit',
     label: 'Закрыть приложение'
   }
-];
+]
 
 export default class AppMenu {
-  constructor() {
-    this._menu = null;
-    this._mainWindow = null;
-    this._torrentWindow = null;
+  constructor () {
+    this._menu = null
+    this._mainWindow = null
+    this._torrentWindow = null
   }
 
   /**
@@ -51,15 +51,15 @@ export default class AppMenu {
    *
    * @return AppMenu
    */
-  init() {
+  init () {
     // Build from template
-    this._menu = Menu.buildFromTemplate(this._getMenuTemplate());
+    this._menu = Menu.buildFromTemplate(this._getMenuTemplate())
 
     // Set menu
     this._mainWindow.setMenu(this._menu)
     this._torrentWindow.setMenu(this._menu)
 
-    return this;
+    return this
   }
 
   /**
@@ -69,11 +69,11 @@ export default class AppMenu {
    * @param torrent
    * @return {AppMenu}
    */
-  setWindows(main = null, torrent = null) {
-    this._mainWindow = main;
-    this._torrentWindow = torrent;
+  setWindows (main = null, torrent = null) {
+    this._mainWindow = main
+    this._torrentWindow = torrent
 
-    return this;
+    return this
   }
 
   /**
@@ -82,7 +82,7 @@ export default class AppMenu {
    * @return Array
    * @private
    */
-  _getMenuTemplate() {
+  _getMenuTemplate () {
     return [
       {
         label: meta.name,
@@ -129,6 +129,6 @@ export default class AppMenu {
           { role: 'selectall' }
         ]
       }
-    ];
+    ]
   }
 };

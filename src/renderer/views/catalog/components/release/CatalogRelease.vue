@@ -20,7 +20,7 @@
 
         <!-- Description -->
         <v-card-text v-if="description" class="pt-0 grey--text">
-          <v-clamp max-height="85px">{{description}}</v-clamp>
+          <v-clamp max-height="85px">{{ description }}</v-clamp>
         </v-card-text>
       </div>
 
@@ -30,105 +30,99 @@
 
 <script>
 
-  import VClamp from 'vue-clamp'
-  import Favorite from '@components/release/favorite'
-  import RProgress from '@components/release/progress'
+import VClamp from 'vue-clamp'
+import Favorite from '@components/release/favorite'
+import RProgress from '@components/release/progress'
 
-  const props = {
-    release: {
-      type: Object,
-      default: null,
+const props = {
+  release: {
+    type: Object,
+    default: null,
+  },
+}
+
+export default {
+  props,
+  components: {
+    VClamp,
+    Favorite,
+    RProgress,
+  },
+  computed: {
+
+    /**
+     * Get image
+     *
+     * @return {*}
+     */
+    src () {
+      return this.$__get(this.release, 'poster')
     },
-  };
 
-  export default {
-    props,
-    components: {
-      VClamp,
-      Favorite,
-      RProgress,
+    /**
+     * Get title
+     *
+     * @return {string}
+     */
+    title () {
+      return this.$__get(this.release, 'names.ru')
     },
-    computed: {
 
-      /**
-       * Get image
-       *
-       * @return {*}
-       */
-      src() {
-        return this.$__get(this.release, 'poster')
-      },
+    /**
+     * Get subtitle
+     *
+     * @return {string}
+     */
+    subtitle () {
+      return this.$__get(this.release, 'names.original')
+    },
 
+    /**
+     * Get release genres
+     *
+     * @return {string}
+     */
+    genres () {
+      return (this.$__get(this.release, 'genres') || []).join(' | ')
+    },
 
-      /**
-       * Get title
-       *
-       * @return {string}
-       */
-      title() {
-        return this.$__get(this.release, 'names.ru');
-      },
+    /**
+     * Get release year
+     *
+     * @return {*}
+     */
+    year () {
+      return this.$__get(this.release, 'year')
+    },
 
+    /**
+     * Get release type
+     *
+     * @return {*}
+     */
+    type () {
+      return this.$__get(this.release, 'type')
+    },
 
-      /**
-       * Get subtitle
-       *
-       * @return {string}
-       */
-      subtitle() {
-        return this.$__get(this.release, 'names.original')
-      },
+    /**
+     * Get release description
+     *
+     * @return {*}
+     */
+    description () {
+      return this.$__get(this.release, 'description')
+    },
 
-
-      /**
-       * Get release genres
-       *
-       * @return {string}
-       */
-      genres() {
-        return (this.$__get(this.release, 'genres') || []).join(' | ');
-      },
-
-
-      /**
-       * Get release year
-       *
-       * @return {*}
-       */
-      year() {
-        return this.$__get(this.release, 'year');
-      },
-
-      /**
-       * Get release type
-       *
-       * @return {*}
-       */
-      type() {
-        return this.$__get(this.release, 'type');
-      },
-
-
-      /**
-       * Get release description
-       *
-       * @return {*}
-       */
-      description() {
-        return this.$__get(this.release, 'description');
-      },
-
-
-      /**
-       * Get release episodes
-       *
-       * @return {*|*[]}
-       */
-      episodes() {
-        return this.$__get(this.release, 'episodes') || [];
-      }
-
+    /**
+     * Get release episodes
+     *
+     * @return {*|*[]}
+     */
+    episodes () {
+      return this.$__get(this.release, 'episodes') || []
     }
+
   }
+}
 
 </script>

@@ -1,11 +1,4 @@
-import {
-  toVideo,
-  toBlank,
-  toLogin,
-  toRelease,
-  toReleases,
-  toFavorites
-} from './routerViews'
+import { toBlank, toFavorites, toLogin, toRelease, toReleases, toVideo } from './routerViews'
 
 export {
   toVideo,

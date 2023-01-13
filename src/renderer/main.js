@@ -24,12 +24,20 @@ import '@assets/scss/style.scss'
 // Import entry component
 import App from './App'
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 // Initialize sentry
 // Initialize yandex metrika
-Vue.use(sentry, { dsn: process.env.SENTRY_DSN, store, source: 'app' });
-Vue.use(yandex, { id: process.env.YANDEX_TRACKING_ID, store, router });
+Vue.use(sentry, {
+  dsn: process.env.SENTRY_DSN,
+  store,
+  source: 'app'
+})
+Vue.use(yandex, {
+  id: process.env.YANDEX_TRACKING_ID,
+  store,
+  router
+})
 
 /* eslint-disable no-new */
 const app = new Vue({
@@ -38,7 +46,7 @@ const app = new Vue({
   vuetify,
   template: '<App/>',
   components: { App }
-});
+})
 
 // Mount app to html
-app.$mount('#anilibrix');
+app.$mount('#anilibrix')

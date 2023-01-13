@@ -7,17 +7,17 @@
 
 <script>
 
-  export default {
-    name: "LoaderLogo"
-  }
+export default {
+  name: 'LoaderLogo'
+}
 </script>
 
 <style scoped lang="scss">
 
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: white;
-  }
+svg {
+  width: 100%;
+  height: 100%;
+  fill: white;
+}
 
 </style>

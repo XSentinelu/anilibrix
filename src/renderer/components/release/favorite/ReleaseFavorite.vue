@@ -16,43 +16,42 @@
 
 <script>
 
-  import {mapState, mapGetters, mapActions} from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
-  const props = {
-    release: {
-      type: Object,
-      default: null
-    },
-    color: {
-      type: String,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    computed: {
-      ...mapState('favorites', {_loading: s => s.loading}),
-      ...mapGetters('app/account', {_isAuthorized: 'isAuthorized'}),
-
-
-      /**
-       * Check if provided release is in favorite
-       *
-       * @return {*}
-       */
-      isInFavorite() {
-        return this.$store.getters['favorites/isInFavorite'](this.release);
-      }
-
-    },
-
-    methods: {
-      ...mapActions('favorites', {
-        _addToFavorites: 'addToFavorites',
-        _removeFromFavorites: 'removeFromFavorites'
-      })
-    },
+const props = {
+  release: {
+    type: Object,
+    default: null
+  },
+  color: {
+    type: String,
+    default: null
   }
+}
+
+export default {
+  props,
+  computed: {
+    ...mapState('favorites', { _loading: s => s.loading }),
+    ...mapGetters('app/account', { _isAuthorized: 'isAuthorized' }),
+
+    /**
+     * Check if provided release is in favorite
+     *
+     * @return {*}
+     */
+    isInFavorite () {
+      return this.$store.getters['favorites/isInFavorite'](this.release)
+    }
+
+  },
+
+  methods: {
+    ...mapActions('favorites', {
+      _addToFavorites: 'addToFavorites',
+      _removeFromFavorites: 'removeFromFavorites'
+    })
+  },
+}
 </script>
 

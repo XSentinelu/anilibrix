@@ -27,43 +27,43 @@
 
 <script>
 
-  import Speed from './components/speed'
-  import Volume from './components/volume'
-  import Quality from './components/quality'
+import Speed from './components/speed'
+import Volume from './components/volume'
+import Quality from './components/quality'
 
-  const props = {
-    player: {
-      type: Object,
-      default: null
-    },
-    source: {
-      type: Object,
-      default: null
-    },
-    episode: {
-      type: Object,
-      default: null
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Speed,
-      Volume,
-      Quality,
-    },
-
-    data() {
-      return {
-        is_mounted: false
-      }
-    },
-
-    mounted() {
-      this.is_mounted = true;
-    },
-
+const props = {
+  player: {
+    type: Object,
+    default: null
+  },
+  source: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null
   }
+}
+
+export default {
+  props,
+  components: {
+    Speed,
+    Volume,
+    Quality,
+  },
+
+  data () {
+    return {
+      is_mounted: false
+    }
+  },
+
+  mounted () {
+    this.is_mounted = true
+  },
+
+}
 
 </script>

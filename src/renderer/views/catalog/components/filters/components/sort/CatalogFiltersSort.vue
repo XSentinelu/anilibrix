@@ -13,24 +13,30 @@
 
 <script>
 
-  import {mapState, mapActions} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    data() {
-      return {
-        items: [
-          {title: 'По новизне', value: 1},
-          {title: 'По популярности', value: 2},
-        ]
-      }
-    },
-    computed: {
-      ...mapState('catalog', {_value: s => s.filters.sort.value})
-    },
+export default {
+  data () {
+    return {
+      items: [
+        {
+          title: 'По новизне',
+          value: 1
+        },
+        {
+          title: 'По популярности',
+          value: 2
+        },
+      ]
+    }
+  },
+  computed: {
+    ...mapState('catalog', { _value: s => s.filters.sort.value })
+  },
 
-    methods: {
-      ...mapActions('catalog', {_setFilterValue: 'setFilterValue'})
-    },
+  methods: {
+    ...mapActions('catalog', { _setFilterValue: 'setFilterValue' })
+  },
 
-  }
+}
 </script>

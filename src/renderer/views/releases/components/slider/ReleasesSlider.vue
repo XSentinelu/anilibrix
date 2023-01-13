@@ -38,46 +38,46 @@
 
 <script>
 
-  import Loader from './components/loader'
-  import Poster from './components/poster'
-  import Control from './components/control'
+import Loader from './components/loader'
+import Poster from './components/poster'
+import Control from './components/control'
 
-  const props = {
-    value: {
-      type: Number,
-      default: null
-    },
-    releases: {
-      type: Array,
-      default: null
-    },
-    loading: {
-      type: Boolean,
-      default: true,
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Loader,
-      Poster,
-      Control,
-    }
+const props = {
+  value: {
+    type: Number,
+    default: null
+  },
+  releases: {
+    type: Array,
+    default: null
+  },
+  loading: {
+    type: Boolean,
+    default: true,
   }
+}
+
+export default {
+  props,
+  components: {
+    Loader,
+    Poster,
+    Control,
+  }
+}
 
 </script>
 
 <style scoped lang="scss">
 
-  .release__slider {
-    position: relative;
+.release__slider {
+  position: relative;
 
-    ::v-deep .v-slide-group {
-      &__prev, &__next {
-        display: none !important;
-      }
+  ::v-deep .v-slide-group {
+    &__prev, &__next {
+      display: none !important;
     }
   }
+}
 
 </style>

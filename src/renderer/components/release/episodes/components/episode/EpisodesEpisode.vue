@@ -1,5 +1,5 @@
 <template>
-  <v-list-item two-line ref="container" @click="$emit('click')" >
+  <v-list-item two-line ref="container" @click="$emit('click')">
 
     <v-list-item-content>
       <v-list-item-title v-text="episode.title"/>
@@ -18,7 +18,7 @@
         </v-layout>
 
         <!-- Actions -->
-        <actions v-bind="{episode, release, container}" />
+        <actions v-bind="{episode, release, container}"/>
 
       </v-layout>
     </v-list-item-action>
@@ -28,42 +28,42 @@
 
 <script>
 
-  import Quality from './components/quality'
-  import Watched from './components/watched'
-  import Playing from './components/playing'
-  import Actions from './components/actions'
+import Quality from './components/quality'
+import Watched from './components/watched'
+import Playing from './components/playing'
+import Actions from './components/actions'
 
-  const props = {
-    release: {
-      type: Object,
-      default: null
-    },
-    episode: {
-      type: Object,
-      default: null,
-    },
-    isPlaying: {
-      type: Boolean,
-      default: false,
-    }
-  };
-
-  export default {
-    props,
-    components: {
-      Quality,
-      Watched,
-      Playing,
-      Actions,
-    },
-    data() {
-      return {
-        container: null
-      }
-    },
-
-    mounted() {
-      this.container = this.$refs.container.$el;
-    }
+const props = {
+  release: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null,
+  },
+  isPlaying: {
+    type: Boolean,
+    default: false,
   }
+}
+
+export default {
+  props,
+  components: {
+    Quality,
+    Watched,
+    Playing,
+    Actions,
+  },
+  data () {
+    return {
+      container: null
+    }
+  },
+
+  mounted () {
+    this.container = this.$refs.container.$el
+  }
+}
 </script>

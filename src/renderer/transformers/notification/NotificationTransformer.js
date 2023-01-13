@@ -1,4 +1,4 @@
-import BaseTransformer from '@transformers/BaseTransformer';
+import BaseTransformer from '@transformers/BaseTransformer'
 
 export default class NotificationTransformer extends BaseTransformer {
   /**
@@ -7,7 +7,7 @@ export default class NotificationTransformer extends BaseTransformer {
    * @param release
    * @returns {{}}
    */
-  fetch(release) {
+  fetch (release) {
     return {
       ...release,
       notification: {

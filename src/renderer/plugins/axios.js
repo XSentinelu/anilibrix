@@ -13,10 +13,10 @@ import Axios from 'axios'
 import store from '@store'
 
 // Set cookies
-Axios.defaults.withCredentials = true;
+Axios.defaults.withCredentials = true
 
 // Create axios
-const axios = Axios.create();
+const axios = Axios.create()
 
 /**
  * Error handler function
@@ -32,15 +32,17 @@ const responseErrorHandler = async error => {
     // If server responded with not authorized:
     if (error.response.status === 401) {
       // Clear session and profile data
-      await store.dispatch('app/account/setSession');
-      await store.dispatch('app/account/setProfile');
+      await store.dispatch('app/account/setSession')
+      await store.dispatch('app/account/setProfile')
     }
-  } else console.log(error)
+  } else {
+    console.log(error)
+  }
 
-  return Promise.reject(error);
-};
+  return Promise.reject(error)
+}
 
 // Add request && response interceptors
-axios.interceptors.response.use(request => request, responseErrorHandler);
+axios.interceptors.response.use(request => request, responseErrorHandler)
 
 export default axios;

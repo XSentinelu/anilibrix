@@ -64,99 +64,109 @@
 
 <script>
 
-  import {
-    openDownload,
-    cancelDownload,
-    startedDownload,
-    progressDownload,
-  } from "@main/handlers/download/downloadHandlers";
+import { cancelDownload, openDownload, progressDownload, startedDownload, } from '@main/handlers/download/downloadHandlers'
 
-  export default {
-    data() {
-      return {
-        files: [],
-        is_visible: false,
-      }
+export default {
+  data () {
+    return {
+      files: [],
+      is_visible: false,
+    }
+  },
+
+  methods: {
+
+    /**
+     * Close downloaded bar
+     *
+     * @return {void}
+     */
+    closeDownloadedBar () {
+      this.is_visible = false
+      this.files = []
     },
 
-    methods: {
+    /**
+     * Cancel file download
+     *
+     * @param id
+     */
+    cancelFileDownload ({ id }) {
 
-      /**
-       * Close downloaded bar
-       *
-       * @return {void}
-       */
-      closeDownloadedBar() {
-        this.is_visible = false;
-        this.files = [];
-      },
+      // Send cancel event
+      // Remove from store
+      cancelDownload(id)
+      this.files.splice(this.files.findIndex(file => file.id === id), 1)
 
-
-      /**
-       * Cancel file download
-       *
-       * @param id
-       */
-      cancelFileDownload({id}) {
-
-        // Send cancel event
-        // Remove from store
-        cancelDownload(id);
-        this.files.splice(this.files.findIndex(file => file.id === id), 1);
-
-        // If now files left -> close bar
-        if (this.files.length === 0) {
-          this.closeDownloadedBar();
-        }
-
-      },
-
-
-      /**
-       * Open file
-       *
-       * @param id
-       * @param progress
-       */
-      openFile({id, progress}) {
-        if (progress.percent >= 1) {
-          openDownload(id);
-        }
+      // If now files left -> close bar
+      if (this.files.length === 0) {
+        this.closeDownloadedBar()
       }
 
     },
 
-
-    created() {
-
-      // Started download
-      // Get new downloaded item
-      startedDownload(({id, release, episode, source, progress}) => {
-        this.is_visible = true;
-        this.files.push({id, release, episode, source, progress});
-      });
-
-      // Get file progress
-      // Set current progress for related file
-      progressDownload(({id, progress}) => {
-        const file = this.files.find(file => file.id === id);
-        if (file) {
-          file.progress = progress;
-        }
-      })
+    /**
+     * Open file
+     *
+     * @param id
+     * @param progress
+     */
+    openFile ({
+      id,
+      progress
+    }) {
+      if (progress.percent >= 1) {
+        openDownload(id)
+      }
     }
 
+  },
+
+  created () {
+
+    // Started download
+    // Get new downloaded item
+    startedDownload(({
+      id,
+      release,
+      episode,
+      source,
+      progress
+    }) => {
+      this.is_visible = true
+      this.files.push({
+        id,
+        release,
+        episode,
+        source,
+        progress
+      })
+    })
+
+    // Get file progress
+    // Set current progress for related file
+    progressDownload(({
+      id,
+      progress
+    }) => {
+      const file = this.files.find(file => file.id === id)
+      if (file) {
+        file.progress = progress
+      }
+    })
   }
+
+}
 </script>
 
 <style scoped lang="scss">
 
-  .downloads {
-    width: 100%;
-    height: 60px;
-    background: #353535;
-    position: absolute;
-    bottom: 0;
-    padding: 0 5%;
-  }
+.downloads {
+  width: 100%;
+  height: 60px;
+  background: #353535;
+  position: absolute;
+  bottom: 0;
+  padding: 0 5%;
+}
 </style>

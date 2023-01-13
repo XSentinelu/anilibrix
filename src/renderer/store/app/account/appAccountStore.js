@@ -1,18 +1,17 @@
 // Proxy
-import AccountProxy from '@proxies/account';
+import AccountProxy from '@proxies/account'
 
 // Utils
 import __get from 'lodash/get'
 import { v4 as uuid } from 'uuid'
 
 // Handlers
-import { showAppError } from '@main/handlers/notifications/notificationsHandler';
+import { showAppError } from '@main/handlers/notifications/notificationsHandler'
 import * as safeStorage from '@main/utils/safeStorage'
-import { invokeSafeStorageEncrypt } from '@main/handlers/app/appHandlers'
 
-const SET_USER_ID = 'SET_USER_ID';
-const SET_SESSION = 'SET_SESSION';
-const SET_PROFILE = 'SET_PROFILE';
+const SET_USER_ID = 'SET_USER_ID'
+const SET_SESSION = 'SET_SESSION'
+const SET_PROFILE = 'SET_PROFILE'
 
 export default {
   namespaced: true,
@@ -66,9 +65,9 @@ export default {
      * @param avatar
      */
     [SET_PROFILE]: (s, profile) => {
-      s.profile.id = __get(profile, 'id') || null;
-      s.profile.login = __get(profile, 'login') || null;
-      s.profile.avatar = __get(profile, 'avatar') || null;
+      s.profile.id = __get(profile, 'id') || null
+      s.profile.login = __get(profile, 'login') || null
+      s.profile.avatar = __get(profile, 'avatar') || null
     }
 
   },
@@ -84,19 +83,28 @@ export default {
      * @param password
      * @return {Promise<void>}
      */
-    login: async ({ commit, dispatch }, { login, password }) => {
+    login: async ({
+      commit,
+      dispatch
+    }, {
+      login,
+      password
+    }) => {
       try {
         // Reset session and profile
-        await dispatch('setSession', null);
-        await dispatch('setProfile', null);
+        await dispatch('setSession', null)
+        await dispatch('setProfile', null)
 
         // Try to login with provided credentials
-        return await new AccountProxy().login({ login, password });
+        return await new AccountProxy().login({
+          login,
+          password
+        })
       } catch (error) {
         // Show app error
         // Throw error
-        showAppError(error);
-        throw error;
+        showAppError(error)
+        throw error
       }
     },
     /**
@@ -107,19 +115,19 @@ export default {
      */
     logout: async ({ dispatch }) => {
       try {
-        await new AccountProxy().logout();
+        await new AccountProxy().logout()
       } catch (error) {
         // Show app error
         // Throw error
         // showAppError('Произошла ошибка при деавторизации пользователя');
-        throw error;
+        throw error
       } finally {
         // Clear session
         // Clear profile data
         // Even if logout error
         // Reset session and profile
-        await dispatch('setSession', null);
-        await dispatch('setProfile', null);
+        await dispatch('setSession', null)
+        await dispatch('setProfile', null)
         safeStorage.remove('user.login')
         safeStorage.remove('user.password')
       }
@@ -133,16 +141,20 @@ export default {
     getProfile: async ({ dispatch }) => {
       async function getProfile () {
         // Create request to get profile data
-        const profile = await new AccountProxy().getProfile();
+        const profile = await new AccountProxy().getProfile()
 
         // Get profile data from response
         // Get profile avatar
-        const id = __get(profile, 'id');
-        const login = __get(profile, 'login');
-        const avatar = new AccountProxy().getAvatarPath(__get(profile, 'avatar'));
+        const id = __get(profile, 'id')
+        const login = __get(profile, 'login')
+        const avatar = new AccountProxy().getAvatarPath(__get(profile, 'avatar'))
 
         // Set profile data
-        await dispatch('setProfile', { id, login, avatar });
+        await dispatch('setProfile', {
+          id,
+          login,
+          avatar
+        })
       }
 
       try {
@@ -153,7 +165,10 @@ export default {
 
         if (login !== false && password !== false) {
           // Make login request with credentials
-          const session = await dispatch('login', { login, password });
+          const session = await dispatch('login', {
+            login,
+            password
+          })
           await dispatch('setSession', session)
           await getProfile()
           return
@@ -161,11 +176,11 @@ export default {
 
         // Reset session and profile on error
         // Reset session and profile
-        await dispatch('setSession', null);
-        await dispatch('setProfile', null);
+        await dispatch('setSession', null)
+        await dispatch('setProfile', null)
 
         // Throw error
-        throw error;
+        throw error
       }
     },
 
@@ -177,8 +192,11 @@ export default {
      * @param state
      * @param uuid
      */
-    setUserId: ({ commit, state }) => {
-      if (state.userId === null) commit(SET_USER_ID, uuid());
+    setUserId: ({
+      commit,
+      state
+    }) => {
+      if (state.userId === null) commit(SET_USER_ID, uuid())
     },
 
     /**

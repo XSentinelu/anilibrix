@@ -18,41 +18,41 @@
 
 <script>
 
-  import {meta, repository} from '@package'
+import { meta, repository } from '@package'
 
-  export default {
-    computed: {
+export default {
+  computed: {
 
-      /**
-       * Get settings items
-       *
-       * @return array
-       */
-      settings() {
-        return [
-          {
-            title: 'Анилибрия',
-            value: meta.links.anilibria,
-            action: () => require('@electron/remote').shell.openExternal(meta.links.anilibria),
-          },
-          {
-            title: 'Поддержать проект',
-            value: 'Яндекс.Деньги, QIWI, PayPal',
-            action: () => require('@electron/remote').shell.openExternal(meta.links.donate)
-          },
-          {
-            title: 'Telegram-канал',
-            value: '@anilibrix',
-            action: () => require('@electron/remote').shell.openExternal(meta.links.telegram)
-          },
-          {
-            title: 'Исходный код',
-            value: '/anilibrix',
-            action: () => require('@electron/remote').shell.openExternal(repository.url)
-          },
-        ]
-      },
-    }
+    /**
+     * Get settings items
+     *
+     * @return array
+     */
+    settings () {
+      return [
+        {
+          title: 'Анилибрия',
+          value: meta.links.anilibria,
+          action: () => require('@electron/remote').shell.openExternal(meta.links.anilibria),
+        },
+        {
+          title: 'Поддержать проект',
+          value: 'Яндекс.Деньги, QIWI, PayPal',
+          action: () => require('@electron/remote').shell.openExternal(meta.links.donate)
+        },
+        {
+          title: 'Telegram-канал',
+          value: '@anilibrix',
+          action: () => require('@electron/remote').shell.openExternal(meta.links.telegram)
+        },
+        {
+          title: 'Исходный код',
+          value: '/anilibrix',
+          action: () => require('@electron/remote').shell.openExternal(repository.url)
+        },
+      ]
+    },
   }
+}
 
 </script>

@@ -1,4 +1,4 @@
-import __throttle from 'lodash/throttle';
+import __throttle from 'lodash/throttle'
 
 /**
  * Get item from persisted storage
@@ -6,7 +6,7 @@ import __throttle from 'lodash/throttle';
  * @param storage
  * @return {function(*=): *}
  */
-export const getItem = (storage) => (key) => storage.get(key);
+export const getItem = (storage) => (key) => storage.get(key)
 
 /**
  * Set value for provided key to persisted storage
@@ -16,11 +16,11 @@ export const getItem = (storage) => (key) => storage.get(key);
  */
 export const setItem = (storage) => __throttle((key, value) => {
   try {
-    storage.set(key, value);
+    storage.set(key, value)
   } catch {
     //
   }
-}, 2500);
+}, 2500)
 
 /**
  * Remove value from storage
@@ -30,8 +30,8 @@ export const setItem = (storage) => __throttle((key, value) => {
  */
 export const removeItem = (storage) => __throttle((key) => {
   try {
-    storage.delete(key);
+    storage.delete(key)
   } catch {
     //
   }
-}, 2500);
+}, 2500)

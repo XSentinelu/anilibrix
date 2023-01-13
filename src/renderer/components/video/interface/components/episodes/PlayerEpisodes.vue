@@ -26,70 +26,70 @@
 
 <script>
 
-  import Episodes from '@components/release/episodes'
-  import AppSystemBarPlaceholder from '@components/app/systembar/placeholder'
+import Episodes from '@components/release/episodes'
+import AppSystemBarPlaceholder from '@components/app/systembar/placeholder'
 
-  import {AppPlatformMixin} from '@mixins/app'
-  import {toVideo} from "@utils/router/views";
+import { AppPlatformMixin } from '@mixins/app'
+import { toVideo } from '@utils/router/views'
 
-  const props = {
-    release: {
-      type: Object,
-      default: null
-    },
-    episode: {
-      type: Object,
-      default: null
+const props = {
+  release: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null
+  }
+}
+
+export default {
+  props,
+  mixins: [AppPlatformMixin],
+  components: {
+    Episodes,
+    AppSystemBarPlaceholder
+  },
+
+  data () {
+    return {
+      visible: false,
     }
-  };
+  },
 
-  export default {
-    props,
-    mixins: [AppPlatformMixin],
-    components: {
-      Episodes,
-      AppSystemBarPlaceholder
-    },
+  computed: {
 
-    data() {
-      return {
-        visible: false,
-      }
-    },
-
-    computed: {
-
-      /**
-       * Get episodes
-       *
-       * @return {*|*[]}
-       */
-      episodes() {
-        return this.$__get(this.release, 'episodes') || [];
-      }
-
-    },
-
-    methods: {
-
-      /**
-       * Show playlist
-       *
-       * @return void
-       */
-      show() {
-        this.visible = true;
-      },
-
-      /**
-       * To video episode
-       *
-       * @param episode
-       * @param release
-       */
-      toVideo,
-
+    /**
+     * Get episodes
+     *
+     * @return {*|*[]}
+     */
+    episodes () {
+      return this.$__get(this.release, 'episodes') || []
     }
+
+  },
+
+  methods: {
+
+    /**
+     * Show playlist
+     *
+     * @return void
+     */
+    show () {
+      this.visible = true
+    },
+
+    /**
+     * To video episode
+     *
+     * @param episode
+     * @param release
+     */
+    toVideo,
 
   }
+
+}
 </script>

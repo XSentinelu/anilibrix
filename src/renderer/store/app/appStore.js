@@ -2,9 +2,9 @@ import watch from './watch'
 import account from './account'
 import settings from './settings'
 
-const SET_DRAWER = 'SET_DRAWER';
-const SET_SEARCHING = 'SET_SEARCHING';
-const SET_WELCOME_VIEW = 'SET_WELCOME_VIEW';
+const SET_DRAWER = 'SET_DRAWER'
+const SET_SEARCHING = 'SET_SEARCHING'
+const SET_WELCOME_VIEW = 'SET_WELCOME_VIEW'
 
 export default {
   namespaced: true,

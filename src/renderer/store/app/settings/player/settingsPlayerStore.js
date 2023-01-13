@@ -1,13 +1,13 @@
-const SET_QUALITY = 'SET_QUALITY';
-const SET_VIDEO_BUFFER = 'SET_VIDEO_BUFFER';
-const SET_UPSCALE_BOLD = 'SET_UPSCALE_BOLD';
-const SET_UPSCALE_BLUR = 'SET_UPSCALE_BLUR';
-const SET_EPISODES_SORT = 'SET_EPISODES_SORT';
-const SET_AUTOPLAY_NEXT = 'SET_AUTOPLAY_NEXT';
-const SET_UPSCALE_PROCESS = 'SET_UPSCALE_PROCESS';
-const SET_TORRENTS_PROCESS = 'SET_TORRENTS_PROCESS';
-const SET_OPENING_SKIP_TIME = 'SET_OPENING_SKIP_TIME';
-const SET_OPENING_SKIP_BUTTON = 'SET_OPENING_SKIP_BUTTON';
+const SET_QUALITY = 'SET_QUALITY'
+const SET_VIDEO_BUFFER = 'SET_VIDEO_BUFFER'
+const SET_UPSCALE_BOLD = 'SET_UPSCALE_BOLD'
+const SET_UPSCALE_BLUR = 'SET_UPSCALE_BLUR'
+const SET_EPISODES_SORT = 'SET_EPISODES_SORT'
+const SET_AUTOPLAY_NEXT = 'SET_AUTOPLAY_NEXT'
+const SET_UPSCALE_PROCESS = 'SET_UPSCALE_PROCESS'
+const SET_TORRENTS_PROCESS = 'SET_TORRENTS_PROCESS'
+const SET_OPENING_SKIP_TIME = 'SET_OPENING_SKIP_TIME'
+const SET_OPENING_SKIP_BUTTON = 'SET_OPENING_SKIP_BUTTON'
 
 export default {
   namespaced: true,
@@ -176,9 +176,12 @@ export default {
      * @param bold
      * @param blur
      */
-    setUpscaleParameters: ({ commit }, { bold, blur }) => {
-      commit(SET_UPSCALE_BLUR, blur);
-      commit(SET_UPSCALE_BOLD, bold);
+    setUpscaleParameters: ({ commit }, {
+      bold,
+      blur
+    }) => {
+      commit(SET_UPSCALE_BLUR, blur)
+      commit(SET_UPSCALE_BOLD, bold)
     },
 
     /**

@@ -21,42 +21,40 @@
 
 <script>
 
-  import {mapState} from 'vuex';
+import { mapState } from 'vuex'
 
-  const props = {
-    settings: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    }
-  };
+const props = {
+  settings: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  }
+}
 
-  export default {
-    props,
-    computed: {
-      ...mapState('catalog', {
-        _genres: s => s.filters.genres.value,
-        _years: s => s.filters.years.value,
-      }),
+export default {
+  props,
+  computed: {
+    ...mapState('catalog', {
+      _genres: s => s.filters.genres.value,
+      _years: s => s.filters.years.value,
+    }),
 
+    /**
+     * Check if have active filters
+     *
+     * @return {boolean}
+     */
+    hasFilters () {
+      const years = this._years || []
+      const genres = this._genres || []
 
-      /**
-       * Check if have active filters
-       *
-       * @return {boolean}
-       */
-      hasFilters() {
-        const years = this._years || [];
-        const genres = this._genres || [];
-
-        return (years.length + genres.length) > 0;
-      }
-
-
+      return (years.length + genres.length) > 0
     }
 
   }
+
+}
 </script>

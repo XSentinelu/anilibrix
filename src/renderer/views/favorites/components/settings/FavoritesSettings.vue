@@ -63,41 +63,55 @@
 
 <script>
 
-  import {mapState, mapActions} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    data() {
-      return {
-        sort: [
-          {title: 'По названию', value: 'title'},
-          {title: 'По дате добавления в избранное', value: 'original'},
-          {title: 'По дате обновления релизов', value: 'updates'}
-        ],
-        group: [
-          {title: 'Без группировки', value: 'original'},
-          {title: 'По годам', value: 'years'},
-        ]
-      }
-    },
-
-    computed: {
-      ...mapState('favorites', {
-        _sort: s => s.settings.sort,
-        _group: s => s.settings.group,
-        _show_seen: s => s.settings.show_seen,
-      })
-    },
-
-    methods: {
-
-      ...mapActions('favorites', {
-        _setSettingsSort: 'setSettingsSort',
-        _setSettingsGroup: 'setSettingsGroup',
-        _setSettingsShowSeen: 'setSettingsShowSeen',
-      })
-
-
+export default {
+  data () {
+    return {
+      sort: [
+        {
+          title: 'По названию',
+          value: 'title'
+        },
+        {
+          title: 'По дате добавления в избранное',
+          value: 'original'
+        },
+        {
+          title: 'По дате обновления релизов',
+          value: 'updates'
+        }
+      ],
+      group: [
+        {
+          title: 'Без группировки',
+          value: 'original'
+        },
+        {
+          title: 'По годам',
+          value: 'years'
+        },
+      ]
     }
+  },
+
+  computed: {
+    ...mapState('favorites', {
+      _sort: s => s.settings.sort,
+      _group: s => s.settings.group,
+      _show_seen: s => s.settings.show_seen,
+    })
+  },
+
+  methods: {
+
+    ...mapActions('favorites', {
+      _setSettingsSort: 'setSettingsSort',
+      _setSettingsGroup: 'setSettingsGroup',
+      _setSettingsShowSeen: 'setSettingsShowSeen',
+    })
 
   }
+
+}
 </script>

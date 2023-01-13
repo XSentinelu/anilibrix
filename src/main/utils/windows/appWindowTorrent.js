@@ -28,8 +28,8 @@ class TorrentWindow extends Window {
   getWindowUrl () {
     return process.env.NODE_ENV === 'development'
       ? 'http://localhost:9080/webtorrent.html'
-      : `file://${__dirname}/webtorrent.html`;
+      : `file://${__dirname}/webtorrent.html`
   }
 }
 
-export default new TorrentWindow();
+export default new TorrentWindow()

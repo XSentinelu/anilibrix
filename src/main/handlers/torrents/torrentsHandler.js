@@ -1,14 +1,14 @@
-import { Main, Torrent } from '@main/utils/windows';
-import { ipcMain, ipcRenderer } from 'electron';
+import { Main, Torrent } from '@main/utils/windows'
+import { ipcMain, ipcRenderer } from 'electron'
 
-export const TORRENT_PARSE = 'torrent:parse';
-export const TORRENT_CLEAR = 'torrent:clear';
-export const TORRENT_ERROR = 'torrent:error';
-export const TORRENT_START = 'torrent:start';
-export const TORRENT_SERVER = 'torrent:server';
-export const TORRENT_DESTROY = 'torrent:destroy';
-export const TORRENT_DOWNLOAD = 'torrent:download';
-export const TORRENT_PARSED_DATA = 'torrent:data';
+export const TORRENT_PARSE = 'torrent:parse'
+export const TORRENT_CLEAR = 'torrent:clear'
+export const TORRENT_ERROR = 'torrent:error'
+export const TORRENT_START = 'torrent:start'
+export const TORRENT_SERVER = 'torrent:server'
+export const TORRENT_DESTROY = 'torrent:destroy'
+export const TORRENT_DOWNLOAD = 'torrent:download'
+export const TORRENT_PARSED_DATA = 'torrent:data'
 
 /**
  * Broadcast torrent events
@@ -17,20 +17,38 @@ export const TORRENT_PARSED_DATA = 'torrent:data';
  */
 export const broadcastTorrentEvents = () => {
   const communications = [
-    { channel: TORRENT_CLEAR, window: () => Main },
-    { channel: TORRENT_ERROR, window: () => Main },
-    { channel: TORRENT_START, window: () => Torrent },
-    { channel: TORRENT_SERVER, window: () => Main },
-    { channel: TORRENT_DESTROY, window: () => Torrent },
-    { channel: TORRENT_DOWNLOAD, window: () => Main }
-  ];
+    {
+      channel: TORRENT_CLEAR,
+      window: () => Main
+    },
+    {
+      channel: TORRENT_ERROR,
+      window: () => Main
+    },
+    {
+      channel: TORRENT_START,
+      window: () => Torrent
+    },
+    {
+      channel: TORRENT_SERVER,
+      window: () => Main
+    },
+    {
+      channel: TORRENT_DESTROY,
+      window: () => Torrent
+    },
+    {
+      channel: TORRENT_DOWNLOAD,
+      window: () => Main
+    }
+  ]
 
   communications.forEach(communication => {
     ipcMain.on(communication.channel, (e, payload) =>
       communication.window().sendToWindow(communication.channel, payload)
     )
-  });
-};
+  })
+}
 
 /**
  * Send torrent data to parse
@@ -40,7 +58,10 @@ export const broadcastTorrentEvents = () => {
  * @param blob
  */
 // eslint-disable-next-line camelcase
-export const sendTorrentParse = (torrent_id, blob) => Torrent.sendToWindow(TORRENT_PARSE, { torrent_id, blob });
+export const sendTorrentParse = (torrent_id, blob) => Torrent.sendToWindow(TORRENT_PARSE, {
+  torrent_id,
+  blob
+})
 
 /**
  * Catch torrent parse
@@ -48,7 +69,7 @@ export const sendTorrentParse = (torrent_id, blob) => Torrent.sendToWindow(TORRE
  *
  * @param callback
  */
-export const catchTorrentParse = (callback) => ipcRenderer.on(TORRENT_PARSE, (e, payload) => callback(payload));
+export const catchTorrentParse = (callback) => ipcRenderer.on(TORRENT_PARSE, (e, payload) => callback(payload))
 
 /**
  * Send torrent parsed data
@@ -58,7 +79,7 @@ export const catchTorrentParse = (callback) => ipcRenderer.on(TORRENT_PARSE, (e,
  * @param data
  */
 // eslint-disable-next-line camelcase
-export const sendTorrentParsedData = (torrent_id, data) => ipcRenderer.send(`${TORRENT_PARSED_DATA}:${torrent_id}`, JSON.stringify(data));
+export const sendTorrentParsedData = (torrent_id, data) => ipcRenderer.send(`${TORRENT_PARSED_DATA}:${torrent_id}`, JSON.stringify(data))
 
 /**
  * Catch parsed torrent data
@@ -68,7 +89,7 @@ export const sendTorrentParsedData = (torrent_id, data) => ipcRenderer.send(`${T
  * @param callback
  */
 // eslint-disable-next-line camelcase
-export const catchTorrentParsedData = (torrent_id, callback) => ipcMain.on(`${TORRENT_PARSED_DATA}:${torrent_id}`, (e, data) => callback(JSON.parse(data)));
+export const catchTorrentParsedData = (torrent_id, callback) => ipcMain.on(`${TORRENT_PARSED_DATA}:${torrent_id}`, (e, data) => callback(JSON.parse(data)))
 
 /**
  * Send torrent server
@@ -76,7 +97,7 @@ export const catchTorrentParsedData = (torrent_id, callback) => ipcMain.on(`${TO
  *
  * @param payload
  */
-export const sendTorrentServer = (payload) => ipcRenderer.send(TORRENT_SERVER, JSON.stringify(payload));
+export const sendTorrentServer = (payload) => ipcRenderer.send(TORRENT_SERVER, JSON.stringify(payload))
 
 /**
  * Catch torrent server
@@ -84,7 +105,7 @@ export const sendTorrentServer = (payload) => ipcRenderer.send(TORRENT_SERVER, J
  * @param callback
  * @return {Electron.IpcRenderer}
  */
-export const catchTorrentServer = (callback) => ipcRenderer.on(TORRENT_SERVER, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentServer = (callback) => ipcRenderer.on(TORRENT_SERVER, (e, payload) => callback(JSON.parse(payload)))
 
 /**
  * Send torrent download
@@ -92,7 +113,7 @@ export const catchTorrentServer = (callback) => ipcRenderer.on(TORRENT_SERVER, (
  *
  * @param payload
  */
-export const sendTorrentDownload = (payload) => ipcRenderer.send(TORRENT_DOWNLOAD, JSON.stringify(payload));
+export const sendTorrentDownload = (payload) => ipcRenderer.send(TORRENT_DOWNLOAD, JSON.stringify(payload))
 
 /**
  * Catch torrent download
@@ -100,7 +121,7 @@ export const sendTorrentDownload = (payload) => ipcRenderer.send(TORRENT_DOWNLOA
  *
  * @param callback
  */
-export const catchTorrentDownload = (callback) => ipcRenderer.on(TORRENT_DOWNLOAD, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentDownload = (callback) => ipcRenderer.on(TORRENT_DOWNLOAD, (e, payload) => callback(JSON.parse(payload)))
 
 /**
  * Send torrent clear
@@ -108,7 +129,7 @@ export const catchTorrentDownload = (callback) => ipcRenderer.on(TORRENT_DOWNLOA
  *
  * @param payload
  */
-export const sendTorrentClear = (payload) => ipcRenderer.send(TORRENT_CLEAR, JSON.stringify(payload));
+export const sendTorrentClear = (payload) => ipcRenderer.send(TORRENT_CLEAR, JSON.stringify(payload))
 
 /**
  * Catch torrent clear
@@ -116,7 +137,7 @@ export const sendTorrentClear = (payload) => ipcRenderer.send(TORRENT_CLEAR, JSO
  * @param callback
  * @return {Electron.IpcRenderer}
  */
-export const catchTorrentClear = (callback) => ipcRenderer.on(TORRENT_CLEAR, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentClear = (callback) => ipcRenderer.on(TORRENT_CLEAR, (e, payload) => callback(JSON.parse(payload)))
 
 /**
  * Send torrent error
@@ -124,7 +145,7 @@ export const catchTorrentClear = (callback) => ipcRenderer.on(TORRENT_CLEAR, (e,
  *
  * @param payload
  */
-export const sendTorrentError = (payload) => ipcRenderer.send(TORRENT_ERROR, JSON.stringify(payload));
+export const sendTorrentError = (payload) => ipcRenderer.send(TORRENT_ERROR, JSON.stringify(payload))
 
 /**
  * Catch torrent clear
@@ -132,7 +153,7 @@ export const sendTorrentError = (payload) => ipcRenderer.send(TORRENT_ERROR, JSO
  * @param callback
  * @return {Electron.IpcRenderer}
  */
-export const catchTorrentError = (callback) => ipcRenderer.on(TORRENT_ERROR, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentError = (callback) => ipcRenderer.on(TORRENT_ERROR, (e, payload) => callback(JSON.parse(payload)))
 
 /**
  * Send torrent start
@@ -140,7 +161,10 @@ export const catchTorrentError = (callback) => ipcRenderer.on(TORRENT_ERROR, (e,
  * @param torrentId
  * @param fileIndex
  */
-export const sendTorrentStart = (torrentId, fileIndex) => ipcRenderer.send(TORRENT_START, JSON.stringify({ torrentId, fileIndex }));
+export const sendTorrentStart = (torrentId, fileIndex) => ipcRenderer.send(TORRENT_START, JSON.stringify({
+  torrentId,
+  fileIndex
+}))
 
 /**
  * Catch torrent start
@@ -148,14 +172,14 @@ export const sendTorrentStart = (torrentId, fileIndex) => ipcRenderer.send(TORRE
  *
  * @param callback
  */
-export const catchTorrentStart = (callback) => ipcRenderer.on(TORRENT_START, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentStart = (callback) => ipcRenderer.on(TORRENT_START, (e, payload) => callback(JSON.parse(payload)))
 
 /**
  * Send torrent destroy
  *
  * @param payload
  */
-export const sendTorrentDestroy = (payload) => ipcRenderer.send(TORRENT_DESTROY, JSON.stringify(payload));
+export const sendTorrentDestroy = (payload) => ipcRenderer.send(TORRENT_DESTROY, JSON.stringify(payload))
 
 /**
  * Catch torrent destroy
@@ -163,4 +187,4 @@ export const sendTorrentDestroy = (payload) => ipcRenderer.send(TORRENT_DESTROY,
  *
  * @param callback
  */
-export const catchTorrentDestroy = (callback) => ipcRenderer.on(TORRENT_DESTROY, (e, payload) => callback(JSON.parse(payload)));
+export const catchTorrentDestroy = (callback) => ipcRenderer.on(TORRENT_DESTROY, (e, payload) => callback(JSON.parse(payload)))

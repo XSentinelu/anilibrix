@@ -10,16 +10,17 @@
 // Install `electron-debug` with `devtron`
 // require('electron-debug')({ showDevTools: true });
 
-
-
 // Install `vue-devtools`
 require('electron').app.on('ready', () => {
 
-  const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
+  const {
+    default: installExtension,
+    VUEJS_DEVTOOLS
+  } = require('electron-devtools-installer')
 
-  installExtension(VUEJS_DEVTOOLS, {loadExtensionOptions: {allowFileAccess: true}})
+  installExtension(VUEJS_DEVTOOLS, { loadExtensionOptions: { allowFileAccess: true } })
     .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
+    .catch((err) => console.log('An error occurred: ', err))
 })
 
 // Require `main` process to boot app

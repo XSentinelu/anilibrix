@@ -1,8 +1,8 @@
-import { Main } from '@main/utils/windows';
-import { ipcRenderer } from 'electron';
+import { Main } from '@main/utils/windows'
+import { ipcRenderer } from 'electron'
 
-export const APP_ERROR = 'app:error';
-export const APP_NOTIFICATION_RELEASE = 'app:notification:release';
+export const APP_ERROR = 'app:error'
+export const APP_NOTIFICATION_RELEASE = 'app:notification:release'
 
 /**
  * Send app error
@@ -10,7 +10,7 @@ export const APP_NOTIFICATION_RELEASE = 'app:notification:release';
  * @param error
  * @return {MainWindow}
  */
-export const showAppError = (error) => Main.sendToWindow(APP_ERROR, error);
+export const showAppError = (error) => Main.sendToWindow(APP_ERROR, error)
 
 /**
  * Show release notification
@@ -18,7 +18,7 @@ export const showAppError = (error) => Main.sendToWindow(APP_ERROR, error);
  * @param release
  * @return {MainWindow}
  */
-export const sendReleaseNotification = (release) => Main.sendToWindow(APP_NOTIFICATION_RELEASE, release);
+export const sendReleaseNotification = (release) => Main.sendToWindow(APP_NOTIFICATION_RELEASE, release)
 
 /**
  * Catch release notification
@@ -27,4 +27,4 @@ export const sendReleaseNotification = (release) => Main.sendToWindow(APP_NOTIFI
  * @return {Electron.IpcRenderer}
  */
 export const catchReleaseNotification = (callback) =>
-  ipcRenderer.on(APP_NOTIFICATION_RELEASE, (e, release) => callback(release));
+  ipcRenderer.on(APP_NOTIFICATION_RELEASE, (e, release) => callback(release))

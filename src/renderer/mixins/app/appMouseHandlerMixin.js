@@ -7,7 +7,7 @@ export default {
      *
      * @param e
      */
-    handleMouseEvents(e) {
+    handleMouseEvents (e) {
       //
     },
 
@@ -16,19 +16,19 @@ export default {
      *
      * @param e
      */
-    handleMouseScroll(e) {
+    handleMouseScroll (e) {
       //
     }
 
   },
 
-  mounted() {
-    window.addEventListener('mousemove', this.handleMouseEvents);
-    window.addEventListener('mousewheel', this.handleMouseScroll);
+  mounted () {
+    window.addEventListener('mousemove', this.handleMouseEvents)
+    window.addEventListener('mousewheel', this.handleMouseScroll)
   },
 
-  destroyed() {
-    window.removeEventListener('mousemove', this.handleMouseEvents);
-    window.removeEventListener('mousewheel', this.handleMouseScroll);
+  destroyed () {
+    window.removeEventListener('mousemove', this.handleMouseEvents)
+    window.removeEventListener('mousewheel', this.handleMouseScroll)
   }
 }

@@ -1,64 +1,61 @@
-import { Main, Torrent } from '@main/utils/windows';
-import { app, ipcMain, ipcRenderer } from 'electron';
-import {
-  start as startSystemSleepBlocker,
-  stop as stopSystemSleepBlocker
-} from '../../utils/powerSaveBlocker'
+import { Main, Torrent } from '@main/utils/windows'
+import { app, ipcMain, ipcRenderer } from 'electron'
+import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from '../../utils/powerSaveBlocker'
 
 import { setEncrypted } from '@main/utils/safeStorage'
 
-export const APP_DISCORD_RICH_PRESENSE = 'app:richpresense';
+export const APP_DISCORD_RICH_PRESENSE = 'app:richpresense'
 
-export const APP_ABOUT = 'app:about';
-export const APP_SYSTEM_SLEEP_DISABLE = 'app:system:disable_sleep';
-export const APP_SYSTEM_SLEEP_ENABLE = 'app:system:enable_sleep';
-export const APP_DOCK_NUMBER = 'app:dock:number';
-export const APP_DEVTOOLS_MAIN = 'app:devtools:main';
-export const APP_DEVTOOLS_TORRENT = 'app:devtools:torrent';
-export const APP_SAFE_STORAGE_ENCRYPT_REQUEST = 'app:system:safe_storage:encrypt';
-export const APP_SAFE_STORAGE_DECRYPT_REQUEST = 'app:system:safe_storage:decrypt';
+export const APP_ABOUT = 'app:about'
+export const APP_SYSTEM_SLEEP_DISABLE = 'app:system:disable_sleep'
+export const APP_SYSTEM_SLEEP_ENABLE = 'app:system:enable_sleep'
+export const APP_DOCK_NUMBER = 'app:dock:number'
+export const APP_DEVTOOLS_MAIN = 'app:devtools:main'
+export const APP_DEVTOOLS_TORRENT = 'app:devtools:torrent'
+export const APP_SAFE_STORAGE_ENCRYPT_REQUEST = 'app:system:safe_storage:encrypt'
+export const APP_SAFE_STORAGE_DECRYPT_REQUEST = 'app:system:safe_storage:decrypt'
 
 /**
  * Send app about event
  *
  * @return {void}
  */
-export const sendAppAboutEvent = () => ipcRenderer.send(APP_ABOUT);
+export const sendAppAboutEvent = () => ipcRenderer.send(APP_ABOUT)
 
 /**
  * Listen app about event
  *
  * @return {Electron.IpcMain}
  */
-export const catchAppAboutEvent = () => ipcMain.on(APP_ABOUT, () => app.showAboutPanel());
+export const catchAppAboutEvent = () => ipcMain.on(APP_ABOUT, () => app.showAboutPanel())
 
 /**
  * Send app devtools main event
  *
  * @return {void}
  */
-export const sendAppDevtoolsMainEvent = () => ipcRenderer.send(APP_DEVTOOLS_MAIN);
+export const sendAppDevtoolsMainEvent = () => ipcRenderer.send(APP_DEVTOOLS_MAIN)
 
 /**
  * Listen app devtools main event
  *
  * @return {Electron.IpcMain}
  */
-export const catchAppDevtoolsMainEvent = () => ipcMain.on(APP_DEVTOOLS_MAIN, () => Main.showDevTools());
+export const catchAppDevtoolsMainEvent = () => ipcMain.on(APP_DEVTOOLS_MAIN, () => Main.showDevTools())
 
 /**
  * Send app devtools torrent event
  *
  * @return {void}
  */
-export const sendAppDevtoolsTorrentEvent = () => ipcRenderer.send(APP_DEVTOOLS_TORRENT);
+export const sendAppDevtoolsTorrentEvent = () => ipcRenderer.send(APP_DEVTOOLS_TORRENT)
 
 /**
  * Listen app devtools torrent event
  *
  * @return {Electron.IpcMain}
  */
-export const catchAppDevtoolsTorrentEvent = () => ipcMain.on(APP_DEVTOOLS_TORRENT, () => Torrent.showDevTools());
+export const catchAppDevtoolsTorrentEvent = () => ipcMain.on(APP_DEVTOOLS_TORRENT, () => Torrent.showDevTools())
 
 /**
  * Send app docker number event
@@ -66,7 +63,7 @@ export const catchAppDevtoolsTorrentEvent = () => ipcMain.on(APP_DEVTOOLS_TORREN
  * @param number
  * @return {void}
  */
-export const sendAppDockNumberEvent = (number) => ipcRenderer.send(APP_DOCK_NUMBER, number);
+export const sendAppDockNumberEvent = (number) => ipcRenderer.send(APP_DOCK_NUMBER, number)
 
 /**
  * Listen app dock number event
@@ -76,9 +73,9 @@ export const sendAppDockNumberEvent = (number) => ipcRenderer.send(APP_DOCK_NUMB
 
 export const catchAppDockNumberEvent = () => {
   ipcMain.on(APP_DOCK_NUMBER, (e, number) => {
-    if (app.dock) app.dock.setBadge(number && number > 0 ? number.toString() : '');
-  });
-};
+    if (app.dock) app.dock.setBadge(number && number > 0 ? number.toString() : '')
+  })
+}
 
 /**
  * Send app system sleep blocker enable event
@@ -86,7 +83,7 @@ export const catchAppDockNumberEvent = () => {
  * @param number
  * @return {void}
  */
-export const sendEnableSystemSleepBlockerEvent = (number) => ipcRenderer.send(APP_SYSTEM_SLEEP_DISABLE);
+export const sendEnableSystemSleepBlockerEvent = (number) => ipcRenderer.send(APP_SYSTEM_SLEEP_DISABLE)
 
 /**
  * Listen app system sleep blocker enable event
@@ -96,8 +93,8 @@ export const sendEnableSystemSleepBlockerEvent = (number) => ipcRenderer.send(AP
 export const catchEnableSystemSleepBlockerEvent = () => {
   ipcMain.on(APP_SYSTEM_SLEEP_DISABLE, (e) => {
     startSystemSleepBlocker()
-  });
-};
+  })
+}
 
 /**
  * Send app system sleep blocker disable event
@@ -105,7 +102,7 @@ export const catchEnableSystemSleepBlockerEvent = () => {
  * @param number
  * @return {void}
  */
-export const sendDisableSystemSleepBlockerEvent = (number) => ipcRenderer.send(APP_SYSTEM_SLEEP_ENABLE);
+export const sendDisableSystemSleepBlockerEvent = (number) => ipcRenderer.send(APP_SYSTEM_SLEEP_ENABLE)
 
 /**
  * Listen app system sleep blocker disable event
@@ -115,8 +112,8 @@ export const sendDisableSystemSleepBlockerEvent = (number) => ipcRenderer.send(A
 export const catchDisableSystemSleepBlockerEvent = () => {
   ipcMain.on(APP_SYSTEM_SLEEP_ENABLE, (e) => {
     stopSystemSleepBlocker()
-  });
-};
+  })
+}
 
 /**
  * Send encrypt request to safe storage
@@ -125,7 +122,7 @@ export const catchDisableSystemSleepBlockerEvent = () => {
  * @param {string} data Data to encrypt
  * @return {Promise<string>}
  */
-export const invokeSafeStorageEncrypt = (prop, data) => ipcRenderer.invoke(APP_SAFE_STORAGE_ENCRYPT_REQUEST, prop, data);
+export const invokeSafeStorageEncrypt = (prop, data) => ipcRenderer.invoke(APP_SAFE_STORAGE_ENCRYPT_REQUEST, prop, data)
 
 /**
  * Listen encrypt request to safe storage
@@ -144,7 +141,7 @@ export const handleSafeStorageEncrypt = () => {
  * @param {object} data
  * @return {Promise}
  */
-export const invokeRichPresense = (data) => ipcRenderer.invoke(APP_DISCORD_RICH_PRESENSE, data);
+export const invokeRichPresense = (data) => ipcRenderer.invoke(APP_DISCORD_RICH_PRESENSE, data)
 
 /**
  * Listens for activity for discord rich presence

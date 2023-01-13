@@ -3,11 +3,8 @@ import path from 'path'
 import { app } from 'electron'
 import { meta, version } from '@package'
 import sentry from './utils/sentry'
-const { discordActivity } = require('./utils/discord')
-const { setActivity, destroy: destroyRichPresence } = discordActivity()
-
 // Store
-import { setUserId, getStore } from '@store'
+import { getStore, setUserId } from '@store'
 
 // Windows
 import { Main, Torrent } from './utils/windows'
@@ -17,49 +14,47 @@ import { Main, Torrent } from './utils/windows'
 import { autoUpdater } from 'electron-updater'
 
 // App Handlers
-import {
-  catchAppAboutEvent,
-  catchAppDevtoolsMainEvent,
-  catchAppDevtoolsTorrentEvent,
-  catchAppDockNumberEvent,
-  catchDisableSystemSleepBlockerEvent,
-  catchEnableSystemSleepBlockerEvent, handleRichPresense,
-  handleSafeStorageEncrypt
-} from '@main/handlers/app/appHandlers'
+import { catchAppAboutEvent, catchAppDevtoolsMainEvent, catchAppDevtoolsTorrentEvent, catchAppDockNumberEvent, catchDisableSystemSleepBlockerEvent, catchEnableSystemSleepBlockerEvent, handleRichPresense, handleSafeStorageEncrypt } from '@main/handlers/app/appHandlers'
 
 // Torrent Handlers
-import { broadcastTorrentEvents } from '@main/handlers/torrents/torrentsHandler';
+import { broadcastTorrentEvents } from '@main/handlers/torrents/torrentsHandler'
 
 // Import tray and menu
 import Tray from './utils/tray'
 import Menu from './utils/menu'
 import { openWindowInterceptor } from '@main/utils/windows/openWindowInterceptor'
 
+const { discordActivity } = require('./utils/discord')
+const {
+  setActivity,
+  destroy: destroyRichPresence
+} = discordActivity()
+
 // Remote
 require('@electron/remote/main').initialize()
 
 // Create tray and menu controller
-const trayController = new Tray();
-const menuController = new Menu();
+const trayController = new Tray()
+const menuController = new Menu()
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\'); // eslint-disable-line
+  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
 // Add command lines arguments
-app.commandLine.appendSwitch('disable-site-isolation-trials');
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
-app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+app.commandLine.appendSwitch('disable-site-isolation-trials')
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 // Close app on all windows closed (relevant for mac users)
 app.on('window-all-closed', () => {
   destroyRichPresence()
   app.quit()
-});
+})
 
 app.on('web-contents-created', (event, webContents) => {
   webContents.setWindowOpenHandler(openWindowInterceptor)
@@ -79,22 +74,25 @@ app.on('web-contents-created', (event, webContents) => {
 // App ready handler
 app.on('ready', async () => {
   // Set user id
-  await setUserId();
+  await setUserId()
 
   // Initialize sentry.io
-  sentry({ store: getStore(), source: 'main' });
+  sentry({
+    store: getStore(),
+    source: 'main'
+  })
 
   // Create windows
-  Main.createWindow({ title: meta.name }).loadUrl();
-  Torrent.createWindow({ title: `${meta.name} Torrent` }).loadUrl();
+  Main.createWindow({ title: meta.name }).loadUrl()
+  Torrent.createWindow({ title: `${meta.name} Torrent` }).loadUrl()
 
   const mainWindow = Main.getWindow()
   const torrentWindow = Torrent.getWindow()
 
   mainWindow.webContents.openDevTools()
 
-  require('@electron/remote/main').enable(mainWindow.webContents);
-  require('@electron/remote/main').enable(torrentWindow.webContents);
+  require('@electron/remote/main').enable(mainWindow.webContents)
+  require('@electron/remote/main').enable(torrentWindow.webContents)
 
   mainWindow
     .once('ready-to-show', () => {
@@ -104,17 +102,17 @@ app.on('ready', async () => {
     .on('close', () => {
       destroyRichPresence()
       app.quit()
-    }); // Main window close event
+    }) // Main window close event
 
   // Create menu
   // Create tray icon
-  menuController.setWindows(mainWindow, torrentWindow).init();
+  menuController.setWindows(mainWindow, torrentWindow).init()
   trayController.createTrayIcon({
     iconPath: path.join(__dirname, '../../build/icons/tray/icon.png')
-  }).setTooltip(meta.name);
+  }).setTooltip(meta.name)
 
-  appHandlers(); // App handlers
-  torrentHandlers(); // Torrent handler
+  appHandlers() // App handlers
+  torrentHandlers() // Torrent handler
   // downloadHandlers(); // Download handlers
 })
 
@@ -125,15 +123,15 @@ app.on('ready', async () => {
  * @return {void}
  */
 const appHandlers = () => {
-  catchAppAboutEvent(); // About dialog
-  catchAppDockNumberEvent(); // App dock number event
-  catchAppDevtoolsMainEvent(); // Devtools main
-  catchAppDevtoolsTorrentEvent(); // Devtools torrent
-  catchEnableSystemSleepBlockerEvent(); // Disable system sleep
-  catchDisableSystemSleepBlockerEvent(); // Enable system sleep
-  handleSafeStorageEncrypt();
+  catchAppAboutEvent() // About dialog
+  catchAppDockNumberEvent() // App dock number event
+  catchAppDevtoolsMainEvent() // Devtools main
+  catchAppDevtoolsTorrentEvent() // Devtools torrent
+  catchEnableSystemSleepBlockerEvent() // Disable system sleep
+  catchDisableSystemSleepBlockerEvent() // Enable system sleep
+  handleSafeStorageEncrypt()
   handleRichPresense(setActivity)
-};
+}
 
 /**
  * Torrents handlers
@@ -141,8 +139,8 @@ const appHandlers = () => {
  * @return {void}
  */
 const torrentHandlers = () => {
-  broadcastTorrentEvents(); // broadcast all torrent events
-};
+  broadcastTorrentEvents() // broadcast all torrent events
+}
 
 /**
  * Download handlers
@@ -157,4 +155,4 @@ const downloadHandlers = () => {
   // startingDownload(storage, Main); // Start download
   // cancelingDownload(storage); // Cancel download
   // openingDownload(storage); // Open downloaded file
-};
+}

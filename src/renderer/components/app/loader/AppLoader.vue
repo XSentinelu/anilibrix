@@ -5,22 +5,22 @@
 </template>
 
 <script>
-  import LoaderLogo from './components/logo'
+import LoaderLogo from './components/logo'
 
-  export default {
-    components: {
-      LoaderLogo
-    },
-  }
+export default {
+  components: {
+    LoaderLogo
+  },
+}
 </script>
 
 <style lang="scss" scoped>
 
-  .app {
-    &__loader {
-      height: 120px;
-      width: 120px;
-    }
+.app {
+  &__loader {
+    height: 120px;
+    width: 120px;
   }
+}
 
 </style>

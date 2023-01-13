@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow } from 'electron'
 
 export default class Window {
   /**
@@ -6,8 +6,8 @@ export default class Window {
    *
    * @return Window
    */
-  constructor() {
-    this._window = null;
+  constructor () {
+    this._window = null
   }
 
   /**
@@ -15,8 +15,8 @@ export default class Window {
    *
    * @return Object
    */
-  getWindowConfiguration() {
-    return {};
+  getWindowConfiguration () {
+    return {}
   }
 
   /**
@@ -24,8 +24,8 @@ export default class Window {
    *
    * @return String|null
    */
-  getWindowUrl() {
-    return null;
+  getWindowUrl () {
+    return null
   }
 
   /**
@@ -33,8 +33,8 @@ export default class Window {
    *
    * @return BrowserWindow|null
    */
-  getWindow() {
-    return this._window;
+  getWindow () {
+    return this._window
   }
 
   /**
@@ -42,9 +42,9 @@ export default class Window {
    *
    * @return this
    */
-  createWindow(configuration) {
-    this._window = new BrowserWindow({ ...this.getWindowConfiguration(), ...configuration });
-    return this;
+  createWindow (configuration) {
+    this._window = new BrowserWindow({ ...this.getWindowConfiguration(), ...configuration })
+    return this
   }
 
   /**
@@ -52,15 +52,15 @@ export default class Window {
    *
    * @return this
    */
-  loadUrl() {
+  loadUrl () {
     const window = this.getWindow()
     const windowUrl = this.getWindowUrl()
 
     if (window && windowUrl) {
-      window.loadURL(windowUrl);
+      window.loadURL(windowUrl)
     }
 
-    return this;
+    return this
   }
 
   /**
@@ -69,17 +69,20 @@ export default class Window {
    * @param channel
    * @param payload
    */
-  sendToWindow(channel, payload) {
+  sendToWindow (channel, payload) {
     const window = this.getWindow()
     if (window) {
-      window.webContents.send(channel, payload);
+      window.webContents.send(channel, payload)
 
       if (process.env.NODE_ENV === 'development') {
-        console.log({ channel, payload })
+        console.log({
+          channel,
+          payload
+        })
       }
     }
 
-    return this;
+    return this
   }
 
   /**
@@ -87,7 +90,7 @@ export default class Window {
    *
    * @return void
    */
-  showDevTools() {
-    this.getWindow().openDevTools({ mode: 'detach' });
+  showDevTools () {
+    this.getWindow().openDevTools({ mode: 'detach' })
   }
 }

@@ -10,15 +10,15 @@
 
 <script>
 
-  import {mapActions, mapState} from "vuex";
+import { mapActions, mapState } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapState('app', {_drawer: 'drawer'}),
-    },
+export default {
+  computed: {
+    ...mapState('app', { _drawer: 'drawer' }),
+  },
 
-    methods: {
-      ...mapActions('app', {_setDrawer: 'setDrawer'}),
-    }
+  methods: {
+    ...mapActions('app', { _setDrawer: 'setDrawer' }),
   }
+}
 </script>

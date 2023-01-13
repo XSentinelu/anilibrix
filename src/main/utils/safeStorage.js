@@ -1,7 +1,10 @@
 const { safeStorage } = require('electron')
 const Storage = require('electron-store')
 
-const storage = new Storage({ name: 'anilibrix_safe', clearInvalidConfig: true });
+const storage = new Storage({
+  name: 'anilibrix_safe',
+  clearInvalidConfig: true
+})
 
 function remove (prop) {
   storage.delete(prop)
@@ -26,4 +29,8 @@ function getDecrypted (prop) {
   return safeStorage.decryptString(encryptedString)
 }
 
-module.exports = { setEncrypted, getDecrypted, remove }
+module.exports = {
+  setEncrypted,
+  getDecrypted,
+  remove
+}

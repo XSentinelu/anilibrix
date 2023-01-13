@@ -16,43 +16,42 @@
 
 <script>
 
-  const props = {
-    attach: {
-      type: HTMLDivElement,
-      default: null
-    }
-  };
+const props = {
+  attach: {
+    type: HTMLDivElement,
+    default: null
+  }
+}
 
-  export default {
-    props,
-    data() {
-      return {
-        visible: false,
-        loading: false,
-      }
+export default {
+  props,
+  data () {
+    return {
+      visible: false,
+      loading: false,
+    }
+  },
+
+  methods: {
+
+    /**
+     * Show dialog
+     *
+     * @return void
+     */
+    showDialog () {
+      this.visible = true
     },
 
-    methods: {
-
-      /**
-       * Show dialog
-       *
-       * @return void
-       */
-      showDialog() {
-        this.visible = true;
-      },
-
-
-      /**
-       * Exit application
-       *
-       * @return void
-       */
-      exitApp() {
-        require('@electron/remote').app.exit(0);
-      }
+    /**
+     * Exit application
+     *
+     * @return void
+     */
+    exitApp () {
+      require('@electron/remote').app.exit(0)
     }
-
   }
+
+}
 </script>

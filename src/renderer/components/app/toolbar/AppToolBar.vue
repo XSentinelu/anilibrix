@@ -34,46 +34,46 @@
 
 <script>
 
-  import Update from './components/update'
-  import Search from './components/search'
-  import Account from './components/account'
-  import Settings from './components/settings'
-  import Notifications from './components/notifications'
+import Update from './components/update'
+import Search from './components/search'
+import Account from './components/account'
+import Settings from './components/settings'
+import Notifications from './components/notifications'
 
-  export default {
-    components: {
-      Update,
-      Search,
-      Account,
-      Settings,
-      Notifications
-    },
+export default {
+  components: {
+    Update,
+    Search,
+    Account,
+    Settings,
+    Notifications
+  },
 
-    computed: {
+  computed: {
 
-      /**
-       * Check if should hide toolbar
-       *
-       * @return {*|boolean}
-       */
-      hideToolbar() {
-        return this.$__get(this.$route, 'meta.layout.hide_toolbar') || false;
-      }
-
+    /**
+     * Check if should hide toolbar
+     *
+     * @return {*|boolean}
+     */
+    hideToolbar () {
+      return this.$__get(this.$route, 'meta.layout.hide_toolbar') || false
     }
+
   }
+}
 
 </script>
 
 <style lang="scss" scoped>
 
-  .toolbar {
-    ::v-deep {
-      .v-toolbar__content {
-        padding-left: 0;
-        padding-right: 0;
-      }
+.toolbar {
+  ::v-deep {
+    .v-toolbar__content {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
+}
 
 </style>

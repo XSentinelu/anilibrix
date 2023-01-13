@@ -25,20 +25,20 @@
 
 <script>
 
-  // Utils
-  import {mapActions} from 'vuex'
+// Utils
+import { mapActions } from 'vuex'
 
-  // Images
-  import LibriaTyan01 from '@assets/images/libria-tyan/LibriaTyan01.svg'
+// Images
+import LibriaTyan01 from '@assets/images/libria-tyan/LibriaTyan01.svg'
 
-  export default {
-    data() {
-      return {
-        image: LibriaTyan01,
-      }
-    },
-    methods: {
-      ...mapActions('releases', {_getReleases: 'getReleases'}),
+export default {
+  data () {
+    return {
+      image: LibriaTyan01,
     }
+  },
+  methods: {
+    ...mapActions('releases', { _getReleases: 'getReleases' }),
   }
+}
 </script>

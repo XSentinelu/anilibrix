@@ -12,22 +12,22 @@
 
 <script>
 
-  import Loader from './components/loader'
+import Loader from './components/loader'
 
-  const props = {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    release: {
-      type: Object,
-      default: null
-    }
-  };
-  export default {
-    props,
-    components: {
-      Loader,
-    },
+const props = {
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  release: {
+    type: Object,
+    default: null
   }
+}
+export default {
+  props,
+  components: {
+    Loader,
+  },
+}
 </script>

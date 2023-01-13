@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import __get from 'lodash/get'
 
-const SET_WATCH_DATA = 'SET_WATCH_DATA';
-const REMOVE_WATCH_DATA = 'REMOVE_WATCH_DATA';
+const SET_WATCH_DATA = 'SET_WATCH_DATA'
+const REMOVE_WATCH_DATA = 'REMOVE_WATCH_DATA'
 
 export default {
   namespaced: true,
@@ -21,7 +21,10 @@ export default {
      * @param v
      * @return {*}
      */
-    [SET_WATCH_DATA]: (s, { k, v }) => Vue.set(s.items, k, v),
+    [SET_WATCH_DATA]: (s, {
+      k,
+      v
+    }) => Vue.set(s.items, k, v),
 
     /**
      * Remove data
@@ -41,9 +44,12 @@ export default {
      * @return {function({release_id: *, episode_id: *}): *|null}
      */
     // eslint-disable-next-line camelcase
-    getWatchedEpisode: state => ({ release_id, episode_id }) => {
+    getWatchedEpisode: state => ({
+      release_id,
+      episode_id
+    }) => {
       // eslint-disable-next-line camelcase
-      return __get(state, ['items', `${release_id}:${episode_id}`]) || null;
+      return __get(state, ['items', `${release_id}:${episode_id}`]) || null
     },
 
     /**
@@ -54,8 +60,11 @@ export default {
      * @return {function({release_id?: *, total_episodes_number?: *}=): []}
      */
     // eslint-disable-next-line camelcase
-    getWatchedEpisodes: (state, getters) => ({ release_id = 0, total_episodes_number = 0 } = {}) => {
-      const watchedEpisodes = [];
+    getWatchedEpisodes: (state, getters) => ({
+      release_id = 0,
+      total_episodes_number = 0
+    } = {}) => {
+      const watchedEpisodes = []
 
       // Iterate through total episodes number
       // eslint-disable-next-line camelcase
@@ -63,10 +72,13 @@ export default {
         // Try to get episode watch data
         // If episode exists and episode is seen
         // Add it to watched episode
-        const episode = getters.getWatchedEpisode({ release_id, episode_id: i });
-        if (episode && episode.isSeen === true) watchedEpisodes.push(episode);
+        const episode = getters.getWatchedEpisode({
+          release_id,
+          episode_id: i
+        })
+        if (episode && episode.isSeen === true) watchedEpisodes.push(episode)
       }
-      return watchedEpisodes;
+      return watchedEpisodes
     },
 
     /**
@@ -78,15 +90,21 @@ export default {
      * @return {function({release_id?: *, total_episodes_number?: *}=): number}
      */
     // eslint-disable-next-line camelcase
-    getReleaseProgress: (state, getters) => ({ release_id = 0, total_episodes_number = 0 } = {}) => {
+    getReleaseProgress: (state, getters) => ({
+      release_id = 0,
+      total_episodes_number = 0
+    } = {}) => {
       // Get release watched episodes
       // Calculate watched progress percentage
-      const watchedEpisodes = getters.getWatchedEpisodes({ release_id, total_episodes_number });
+      const watchedEpisodes = getters.getWatchedEpisodes({
+        release_id,
+        total_episodes_number
+      })
       // eslint-disable-next-line camelcase
       return total_episodes_number > 0
         // eslint-disable-next-line camelcase
         ? (watchedEpisodes.length / total_episodes_number) * 100
-        : 0;
+        : 0
     }
 
   },
@@ -105,29 +123,48 @@ export default {
      * @return {Promise<void>}
      */
     // eslint-disable-next-line camelcase
-    setWatchedEpisode: ({ commit, getters, dispatch }, { time, release_id, episode_id, percentage }) => {
+    setWatchedEpisode: ({
+      commit,
+      getters,
+      dispatch
+    }, {
+      time,
+      release_id,
+      episode_id,
+      percentage
+    }) => {
       // eslint-disable-next-line camelcase
       if (release_id > -1 && episode_id > -1) {
         // Try to get previously watched data for provided episode
         // Create episode watch data object
-        const previouslyWatched = getters.getWatchedEpisode({ release_id, episode_id });
-        const data = { time, percentage, isSeen: false };
+        const previouslyWatched = getters.getWatchedEpisode({
+          release_id,
+          episode_id
+        })
+        const data = {
+          time,
+          percentage,
+          isSeen: false
+        }
 
         // If isSeen flag is true -> append it to data object
-        const previouslySeenState = __get(previouslyWatched, 'isSeen') || null;
+        const previouslySeenState = __get(previouslyWatched, 'isSeen') || null
         if (previouslySeenState !== true) {
           // If previous seen state is false
           // Calculate current percentage and set seen flag
-          if (percentage >= 85) data.isSeen = true;
+          if (percentage >= 85) data.isSeen = true
         } else {
           // If previous seen state is true
           // Set it to current watched data
-          data.isSeen = previouslySeenState;
+          data.isSeen = previouslySeenState
         }
 
         // Set local storage data
         // eslint-disable-next-line camelcase
-        commit(SET_WATCH_DATA, { k: `${release_id}:${episode_id}`, v: data });
+        commit(SET_WATCH_DATA, {
+          k: `${release_id}:${episode_id}`,
+          v: data
+        })
       }
     },
 
@@ -142,7 +179,14 @@ export default {
      * @return {Promise<void>}
      */
     // eslint-disable-next-line camelcase
-    removeWatchedEpisode: ({ commit, getters, dispatch }, { release_id, episode_id }) => {
+    removeWatchedEpisode: ({
+      commit,
+      getters,
+      dispatch
+    }, {
+      release_id,
+      episode_id
+    }) => {
       // eslint-disable-next-line camelcase
       commit(REMOVE_WATCH_DATA, `${release_id}:${episode_id}`)
     },
@@ -157,21 +201,34 @@ export default {
      * @return {Promise<void>}
      */
     // eslint-disable-next-line camelcase
-    setWatchedEpisodes: async ({ dispatch, getters }, { release_id, episodes }) => {
+    setWatchedEpisodes: async ({
+      dispatch,
+      getters
+    }, {
+      release_id,
+      episodes
+    }) => {
       // eslint-disable-next-line camelcase
       if (release_id && episodes && episodes.length > 0) {
         await Promise.allSettled(
           episodes.map(episode => {
-            const episodeId = episode.id;
-            const watchedEpisode = getters.getWatchedEpisode({ release_id, episode_id: episodeId });
-            const watchedEpisodeIsSeen = __get(watchedEpisode, 'isSeen') || false;
-            const payload = { release_id, episode_id: episodeId, percentage: 100 };
+            const episodeId = episode.id
+            const watchedEpisode = getters.getWatchedEpisode({
+              release_id,
+              episode_id: episodeId
+            })
+            const watchedEpisodeIsSeen = __get(watchedEpisode, 'isSeen') || false
+            const payload = {
+              release_id,
+              episode_id: episodeId,
+              percentage: 100
+            }
 
             // Check if episode is not marked as seen
             // Set episode as watched
-            if (watchedEpisodeIsSeen !== true) dispatch('setWatchedEpisode', payload);
+            if (watchedEpisodeIsSeen !== true) dispatch('setWatchedEpisode', payload)
           })
-        );
+        )
       }
     },
 
@@ -185,17 +242,26 @@ export default {
      * @return {Promise<void>}
      */
     // eslint-disable-next-line camelcase
-    removeWatchedEpisodes: async ({ dispatch, getters }, { release_id, episodes }) => {
+    removeWatchedEpisodes: async ({
+      dispatch,
+      getters
+    }, {
+      release_id,
+      episodes
+    }) => {
       // eslint-disable-next-line camelcase
       if (release_id && episodes && episodes.length > 0) {
         await Promise.allSettled(
           episodes.map(episode => {
-            const episodeId = episode.id;
-            const payload = { release_id, episode_id: episodeId };
+            const episodeId = episode.id
+            const payload = {
+              release_id,
+              episode_id: episodeId
+            }
 
-            dispatch('removeWatchedEpisode', payload);
+            dispatch('removeWatchedEpisode', payload)
           })
-        );
+        )
       }
     }
   }

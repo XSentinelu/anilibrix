@@ -1,4 +1,4 @@
-import BaseProxy from '@proxies/BaseProxy';
+import BaseProxy from '@proxies/BaseProxy'
 
 export default class ReleaseProxy extends BaseProxy {
   /**
@@ -6,12 +6,18 @@ export default class ReleaseProxy extends BaseProxy {
    *
    * @return {Promise}
    */
-  async getReleases(parameters = {}) {
-    const data = this.getFormDataObject({ query: 'list', perPage: 14 });
-    const params = { data, headers: data.getHeaders(), ...parameters };
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params);
+  async getReleases (parameters = {}) {
+    const data = this.getFormDataObject({
+      query: 'list',
+      perPage: 14
+    })
+    const params = {
+      data,
+      headers: data.getHeaders(), ...parameters
+    }
+    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
 
-    return this.handleResponse(response.data);
+    return this.handleResponse(response.data)
   }
 
   /**
@@ -21,12 +27,18 @@ export default class ReleaseProxy extends BaseProxy {
    * @param parameters
    * @return {Promise<unknown>}
    */
-  async getRelease(releaseId, parameters = {}) {
-    const data = this.getFormDataObject({ query: 'release', id: releaseId });
-    const params = { data, headers: data.getHeaders(), ...parameters };
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params);
+  async getRelease (releaseId, parameters = {}) {
+    const data = this.getFormDataObject({
+      query: 'release',
+      id: releaseId
+    })
+    const params = {
+      data,
+      headers: data.getHeaders(), ...parameters
+    }
+    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
 
-    return this.handleResponse(response.data);
+    return this.handleResponse(response.data)
   }
 
   /**
@@ -36,12 +48,18 @@ export default class ReleaseProxy extends BaseProxy {
    * @param parameters
    * @return {Promise<unknown>}
    */
-  async searchReleases(searchQuery, parameters = {}) {
-    const data = this.getFormDataObject({ query: 'search', search: searchQuery });
-    const params = { data, headers: data.getHeaders(), ...parameters };
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params);
+  async searchReleases (searchQuery, parameters = {}) {
+    const data = this.getFormDataObject({
+      query: 'search',
+      search: searchQuery
+    })
+    const params = {
+      data,
+      headers: data.getHeaders(), ...parameters
+    }
+    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
 
-    return this.handleResponse(response.data);
+    return this.handleResponse(response.data)
   }
 
   /**
@@ -51,13 +69,16 @@ export default class ReleaseProxy extends BaseProxy {
    * @param parameters
    * @return {Promise<unknown>}
    */
-  async getReleaseTorrent(url, parameters = {}) {
+  async getReleaseTorrent (url, parameters = {}) {
     if (url) {
       // eslint-disable-next-line no-return-await
       return await this.submit('GET', this.getApiEndpoint() + url, {
-        ...parameters, responseType: 'arraybuffer'
-      });
-    } else return null;
+        ...parameters,
+        responseType: 'arraybuffer'
+      })
+    } else {
+      return null
+    }
   }
 
   /**
@@ -66,7 +87,7 @@ export default class ReleaseProxy extends BaseProxy {
    * @param src
    * @return {string|null}
    */
-  getReleasePosterPath(src) {
+  getReleasePosterPath (src) {
     return src ? this.getStaticEndpoint() + src : null;
   }
 }
