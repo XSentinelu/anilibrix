@@ -19,7 +19,7 @@
     "release": "yarn build && electron-builder -wml -c.compression=store",
     "release:mac": "yarn build && electron-builder -m -c.compression=store",
     "release:linux": "yarn build && electron-builder -l -c.compression=store",
-    "release:windows": "yarn build && electron-builder -w -c.compression=store",
+    "release:windows": "yarn build && electron-builder -w -c.compression=maximum",
     "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src"
   },
   "meta": {
