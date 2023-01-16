@@ -148,7 +148,7 @@ export default {
       a.end(d)
       a.secondButton(
         this.title.slice(0, 29) + (this.title.length > 29 ? '...' : ''),
-        'https://anilibria.tv/release/' + this.release.code
+        'https://anilibria.tv/release/' + this.release.code + '.html'
       )
       invokeRichPresense(a)
     }, 100)
