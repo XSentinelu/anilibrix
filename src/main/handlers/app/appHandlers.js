@@ -1,8 +1,10 @@
 import { Main, Torrent } from '@main/utils/windows'
 import { app, ipcMain, ipcRenderer } from 'electron'
 import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from '../../utils/powerSaveBlocker'
-
 import { setEncrypted } from '@main/utils/safeStorage'
+import CatalogProxy from '@proxies/catalog'
+const { shell } = require('electron')
+const path = require('path')
 
 export const APP_DISCORD_RICH_PRESENSE = 'app:richpresense'
 
@@ -14,6 +16,9 @@ export const APP_DEVTOOLS_MAIN = 'app:devtools:main'
 export const APP_DEVTOOLS_TORRENT = 'app:devtools:torrent'
 export const APP_SAFE_STORAGE_ENCRYPT_REQUEST = 'app:system:safe_storage:encrypt'
 export const APP_SAFE_STORAGE_DECRYPT_REQUEST = 'app:system:safe_storage:decrypt'
+
+export const APP_SHOW_CONFIG = 'app:show_config'
+export const APP_CHECK_API_ENDPOINT = 'app:check_api_endpoint'
 
 /**
  * Send app about event
@@ -151,5 +156,24 @@ export const invokeRichPresense = (data) => ipcRenderer.invoke(APP_DISCORD_RICH_
 export const handleRichPresense = (setActivity) => {
   ipcMain.handle(APP_DISCORD_RICH_PRESENSE, async (event, data) => {
     return setActivity(data)
+  })
+}
+
+/**
+ * Send activity for discord rich presence
+ *
+ * @param {object} data
+ * @return {Promise}
+ */
+export const invokeShowConfig = () => ipcRenderer.invoke(APP_SHOW_CONFIG)
+
+/**
+ * Listens for activity for discord rich presence
+ *
+ * @return {void}
+ */
+export const handleShowConfig = () => {
+  ipcMain.handle(APP_SHOW_CONFIG, async (event, data) => {
+    return shell.showItemInFolder(path.join(app.getPath('userData'), 'anilibrix.json'))
   })
 }

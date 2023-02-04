@@ -41,6 +41,7 @@
 
 import ExitDialog from './dialogs/exit'
 import CacheDialog from './dialogs/cache'
+import { invokeShowConfig } from '@main/handlers/app/appHandlers'
 
 export default {
   data () {
@@ -62,6 +63,11 @@ export default {
           title: 'Перезагрузить приложение',
           value: this.shortcuts['reload'],
           action: () => require('@electron/remote').getCurrentWindow().reload(),
+        },
+        {
+          title: 'Показать расположение конфиг файла',
+          value: this.shortcuts['reload'],
+          action: () => invokeShowConfig(),
         },
         {
           title: 'Свернуть приложение',
