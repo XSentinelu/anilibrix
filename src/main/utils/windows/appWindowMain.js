@@ -46,6 +46,10 @@ class MainWindow extends Window {
     }
   }
 
+  get isMain () {
+    return true
+  }
+
   /**
    * Get window url
    *

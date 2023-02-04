@@ -1,5 +1,6 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, app  } from 'electron'
 import windowStateKeeper from 'electron-window-state'
+import path from 'path'
 
 export default class Window {
   /**
@@ -44,14 +45,18 @@ export default class Window {
    * @return this
    */
   createWindow (configuration) {
-    let opts = { ...this.getWindowConfiguration(), ...configuration }
+    const windowsConfig = this.getWindowConfiguration()
+    let opts = { ...windowsConfig, ...configuration }
 
     const mainWindowState = windowStateKeeper({
+      file: 'window-state.json',
       defaultWidth: opts.width,
       defaultHeight: opts.height
     })
 
-    if (this.constructor.name === 'MainWindow') {
+    console.log('Window-state: is Main?', this.isMain ?? false)
+
+    if (this.isMain === true) {
       // Create the window using the state information
       opts = Object.assign(opts, {
         x: mainWindowState.x,
