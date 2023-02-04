@@ -10,7 +10,6 @@ class TorrentWindow extends Window {
     return {
       show: false,
       skipTaskbar: true,
-      useContentSize: true,
       webPreferences: {
         devTools: true,
         nodeIntegration: true,

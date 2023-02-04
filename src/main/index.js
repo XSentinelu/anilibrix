@@ -89,7 +89,7 @@ app.on('ready', async () => {
   const mainWindow = Main.getWindow()
   const torrentWindow = Torrent.getWindow()
 
-  //mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   require('@electron/remote/main').enable(mainWindow.webContents)
   require('@electron/remote/main').enable(torrentWindow.webContents)

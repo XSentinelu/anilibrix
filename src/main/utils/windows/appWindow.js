@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron'
+import windowStateKeeper from 'electron-window-state'
 
 export default class Window {
   /**
@@ -43,7 +44,32 @@ export default class Window {
    * @return this
    */
   createWindow (configuration) {
-    this._window = new BrowserWindow({ ...this.getWindowConfiguration(), ...configuration })
+    let opts = { ...this.getWindowConfiguration(), ...configuration }
+
+    const mainWindowState = windowStateKeeper({
+      defaultWidth: opts.width,
+      defaultHeight: opts.height
+    })
+
+    if (this.constructor.name === 'MainWindow') {
+      // Create the window using the state information
+      opts = Object.assign(opts, {
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height
+      })
+
+      this._window = new BrowserWindow(opts)
+
+      // Let us register listeners on the window, so we can update the state
+      // automatically (the listeners will be removed when the window is closed)
+      // and restore the maximized or full screen state
+      mainWindowState.manage(this._window)
+    } else {
+      this._window = new BrowserWindow(opts)
+    }
+
     return this
   }
 
