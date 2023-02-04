@@ -54,7 +54,9 @@ export default class BaseProxy {
    * @return {string}
    */
   getApiEndpoint () {
-    return process.env.API_ENDPOINT_URL
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    console.log('Endpoint', endpoint)
+    return endpoint + '/public/api/index.php'
   }
 
   /**
@@ -63,7 +65,10 @@ export default class BaseProxy {
    * @return {string}
    */
   getStaticEndpoint () {
-    return process.env.STATIC_ENDPOINT_URL
+    // eslint-disable-next-line camelcase
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.static_endpoint
+    console.log('Endpoint for static', endpoint)
+    return endpoint
   }
 
   /**

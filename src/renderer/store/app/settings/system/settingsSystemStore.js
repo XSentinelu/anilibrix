@@ -5,6 +5,8 @@ const SET_ADS_MAXIMUM = 'SET_ADS_MAXIMUM'
 const SET_UPDATES_TIMEOUT = 'SET_UPDATES_TIMEOUT'
 const SET_SYSTEM_NOTIFICATIONS = 'SET_SYSTEM_NOTIFICATIONS'
 
+const SET_API_ENDPOINT = 'SET_API_ENDPOINT'
+const SET_API_STATIC_ENDPOINT = 'SET_API_STATIC_ENDPOINT'
 export default {
   namespaced: true,
   state: {
@@ -18,13 +20,18 @@ export default {
       enabled: true,
       timeout: 10
     },
+    api: {
+      endpoint: process.env.API_ENDPOINT_URL,
+      static_endpoint: process.env.STATIC_ENDPOINT_URL
+    },
     notifications: {
       system: true
     }
   },
 
   mutations: {
-
+    [SET_API_ENDPOINT]: (s, state) => (s.api.endpoint = state),
+    [SET_API_STATIC_ENDPOINT]: (s, state) => (s.api.static_endpoint = state),
     /**
      * Set updates state
      *
@@ -89,6 +96,16 @@ export default {
      * @return {*}
      */
     setUpdates: ({ commit }, state) => commit(SET_UPDATES, state),
+
+    /**
+     * Set updates state
+     *
+     * @param commit
+     * @param state
+     * @return {*}
+     */
+    setAPIEndpoint: ({ commit }, state) => commit(SET_API_ENDPOINT, state),
+    setAPIStaticEndpoint: ({ commit }, state) => commit(SET_API_STATIC_ENDPOINT, state),
 
     /**
      * Set updates timeout

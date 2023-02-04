@@ -9,6 +9,35 @@
       </div>
     </div>
 
+    <!-- API Endpoint -->
+    <v-card>
+      <v-card-text class="mt-2">
+        <v-combobox
+          outlined
+          :value="_api_endpoint"
+          @input="_setAPIEndpoint($event ? $event : process.env.API_ENDPOINT_URL)"
+          :items="['https://anilibria.tv/', 'https://wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/']"
+          label="Точка подключения к API"
+          persistent-hint
+        />
+
+        <v-combobox
+          outlined
+          class="mb-2"
+          :value="_static_endpoint"
+          @input="_setAPIStaticEndpoint($event ? $event : process.env.STATIC_ENDPOINT_URL)"
+          :items="['https://static.anilibria.tv/', 'https://static.wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/']"
+          label="Точка подключения к серверу статики"
+          persistent-hint
+        />
+
+        <div class="caption">
+          Вы можете использовать основной домен, если он не заблокирован вашим провайдером, или использовать дополнительные домены
+
+          <b>После изменения точки доступа рекомендуется перезагрузить приложение</b>
+        </div>
+      </v-card-text>
+    </v-card>
 
     <!-- System Notifications -->
     <v-card>
@@ -103,13 +132,17 @@
 import { mapActions, mapState } from 'vuex'
 
 export default {
-
+  data () {
+    return {}
+  },
   computed: {
     ...mapState('app/settings/system', {
       _ads: s => s.ads.enabled,
       _ads_maximum: s => s.ads.maximum,
       _updates_enabled: s => s.updates.enabled,
       _updates_timeout: s => s.updates.timeout,
+      _api_endpoint: s => s.api.endpoint,
+      _static_endpoint: s => s.api.static_endpoint,
       _notifications_system: s => s.notifications.system,
     })
   },
@@ -121,6 +154,8 @@ export default {
       _setAdsMaximum: 'setAdsMaximum',
       _setUpdatesTimeout: 'setUpdatesTimeout',
       _setSystemNotifications: 'setSystemNotifications',
+      _setAPIEndpoint: 'setAPIEndpoint',
+      _setAPIStaticEndpoint: 'setAPIStaticEndpoint',
     }),
 
   },

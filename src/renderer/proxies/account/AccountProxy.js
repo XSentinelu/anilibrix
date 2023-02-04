@@ -70,7 +70,7 @@ export default class AccountProxy extends BaseProxy {
       data,
       headers: data.getHeaders()
     }
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
+    const response = await this.submit('POST', this.getApiEndpoint(), params)
 
     return this.handleResponse(response.data)
   }

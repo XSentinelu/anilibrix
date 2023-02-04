@@ -17,7 +17,7 @@ export default class FavoritesProxy extends BaseProxy {
       data,
       headers: data.getHeaders(), ...parameters
     }
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
+    const response = await this.submit('POST', this.getApiEndpoint(), params)
 
     return this.handleResponse(response.data)
   }
@@ -39,7 +39,7 @@ export default class FavoritesProxy extends BaseProxy {
       data,
       headers: data.getHeaders(), ...parameters
     }
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
+    const response = await this.submit('POST', this.getApiEndpoint(), params)
 
     return this.handleResponse(response.data)
   }
@@ -61,7 +61,7 @@ export default class FavoritesProxy extends BaseProxy {
       data,
       headers: data.getHeaders(), ...parameters
     }
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/api/index.php', params)
+    const response = await this.submit('POST', this.getApiEndpoint(), params)
 
     return this.handleResponse(response.data)
   }
