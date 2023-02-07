@@ -26,7 +26,7 @@ export default class AccountProxy extends BaseProxy {
       data,
       headers: data.getHeaders()
     }
-    const response = await this.submit('POST', this.getApiEndpoint() + '/public/login.php', params)
+    const response = await this.submit('POST', this.getApiLoginEndpoint(), params)
     const status = __get(response, 'data.err')
 
     // Get status
@@ -56,7 +56,7 @@ export default class AccountProxy extends BaseProxy {
    */
   async logout () {
     // eslint-disable-next-line no-return-await
-    return await this.submit('POST', this.getApiEndpoint() + '/public/logout.php')
+    return await this.submit('POST', this.getApiLogoutEndpoint())
   }
 
   /**

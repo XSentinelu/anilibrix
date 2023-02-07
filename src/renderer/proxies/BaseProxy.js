@@ -59,6 +59,18 @@ export default class BaseProxy {
     return endpoint + '/public/api/index.php'
   }
 
+  getApiLoginEndpoint () {
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    console.log('Endpoint for login', endpoint)
+    return endpoint + '/public/login.php'
+  }
+
+  getApiLogoutEndpoint () {
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    console.log('Endpoint for logout', endpoint)
+    return endpoint + '/public/logout.php'
+  }
+
   /**
    * Get static endpoint url
    *
