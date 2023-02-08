@@ -59,6 +59,12 @@ export default class BaseProxy {
     return endpoint + '/public/api/index.php'
   }
 
+  getTorrentEndpoint () {
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    console.log('Endpoint for torrent', endpoint)
+    return endpoint
+  }
+
   getApiLoginEndpoint () {
     const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
     console.log('Endpoint for login', endpoint)

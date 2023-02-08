@@ -70,9 +70,10 @@ export default class ReleaseProxy extends BaseProxy {
    * @return {Promise<unknown>}
    */
   async getReleaseTorrent (url, parameters = {}) {
+    console.log('Get release torrent', this.getTorrentEndpoint() + url)
     if (url) {
       // eslint-disable-next-line no-return-await
-      return await this.submit('GET', this.getApiEndpoint() + url, {
+      return await this.submit('GET', this.getTorrentEndpoint() + url, {
         ...parameters,
         responseType: 'arraybuffer'
       })
