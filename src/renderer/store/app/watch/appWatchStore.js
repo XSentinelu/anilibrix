@@ -3,6 +3,7 @@ import __get from 'lodash/get'
 
 const SET_WATCH_DATA = 'SET_WATCH_DATA'
 const REMOVE_WATCH_DATA = 'REMOVE_WATCH_DATA'
+const REPLACE_WATCH_DATA = 'REPLACE_WATCH_DATA'
 
 export default {
   namespaced: true,
@@ -12,6 +13,9 @@ export default {
 
   mutations: {
 
+    [REPLACE_WATCH_DATA]: (s, data) => {
+      return Vue.set(s, 'items', data)
+    },
     /**
      * Set data
      * Use Vue to keep reactivity
@@ -230,6 +234,12 @@ export default {
           })
         )
       }
+    },
+
+    replaceWatchedEpisodes: async ({
+      commit
+    }, { data }) => {
+      commit(REPLACE_WATCH_DATA, data)
     },
 
     /**

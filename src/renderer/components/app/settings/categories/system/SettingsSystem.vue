@@ -32,7 +32,8 @@
         />
 
         <div class="caption">
-          Вы можете использовать основной домен, если он не заблокирован вашим провайдером, или использовать дополнительные домены
+          Вы можете использовать основной домен, если он не заблокирован вашим провайдером, или использовать
+          дополнительные домены
 
           <b>После изменения точки доступа рекомендуется перезагрузить приложение</b>
         </div>
@@ -124,18 +125,53 @@
       </v-card-text>
     </v-card>
 
+    <div v-show="_isAuthorized" class="pa-4 caption grey--text">
+      <div class="body-1">Снапшоты</div>
+      <div>Вы можете создавать резервные копии данных приложения привязанные к вашему аккаунту анилибрии</div>
+    </div>
+
+    <v-card v-show="_isAuthorized">
+      <v-list dense>
+        <template>
+          <v-list-item @click="snapshots">
+            <v-list-item-content>
+              <v-list-item-title v-text="'Список снапшотов'"/>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+    </v-card>
+
+    <template v-if="isMounted">
+      <component
+        :is="Confirm"
+        ref="confirm"
+        v-on:openSnapshots="showSnapshotsList"/>
+
+      <component
+        :is="snapshotsList"
+        ref="snapshotsList"></component>
+    </template>
   </div>
 </template>
 
 <script>
 
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
+import Confirm from '@components/app/settings/categories/system/dialogs/confirm.vue'
+import snapshotsList from '@components/app/settings/categories/system/dialogs/snapshotsList.vue'
 
 export default {
   data () {
-    return {}
+    return {
+      isMounted: false,
+      Confirm,
+      snapshotsList
+    }
   },
+
   computed: {
+    ...mapGetters('app/account', { _isAuthorized: 'isAuthorized' }),
     ...mapState('app/settings/system', {
       _ads: s => s.ads.enabled,
       _ads_maximum: s => s.ads.maximum,
@@ -144,10 +180,18 @@ export default {
       _api_endpoint: s => s.api.endpoint,
       _static_endpoint: s => s.api.static_endpoint,
       _notifications_system: s => s.notifications.system,
-    })
+    }),
   },
 
   methods: {
+    showSnapshotsList: function () {
+      this.$refs.confirm.hideDialog()
+      this.$refs.snapshotsList.showDialog()
+      this.$refs.snapshotsList.fetchSnapshots()
+    },
+    snapshots: function () {
+      this.$refs.confirm.showDialog()
+    },
     ...mapActions('app/settings/system', {
       _setAds: 'setAds',
       _setUpdates: 'setUpdates',
@@ -156,9 +200,11 @@ export default {
       _setSystemNotifications: 'setSystemNotifications',
       _setAPIEndpoint: 'setAPIEndpoint',
       _setAPIStaticEndpoint: 'setAPIStaticEndpoint',
-    }),
-
+    })
   },
 
+  mounted () {
+    this.isMounted = true
+  }
 }
 </script>
