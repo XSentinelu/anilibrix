@@ -76,8 +76,8 @@ export default {
         watchedReleases[releaseId].episodes.push({
           percentage: episode.percentage,
           episode: episodeId,
-          isSeen: episode.isSeen,
-          timestamp: episode.time
+          isSeen: !!episode.isSeen,
+          timestamp: episode.time < 0 ? 0 : episode.time
         })
       })
 
