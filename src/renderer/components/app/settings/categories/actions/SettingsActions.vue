@@ -66,7 +66,7 @@ export default {
         },
         {
           title: 'Показать расположение конфиг файла',
-          value: this.shortcuts['reload'],
+          value: '',
           action: () => invokeShowConfig(),
         },
         {
