@@ -21,7 +21,7 @@ export default {
      * @param e
      * @return {void}
      */
-    handleKeyboardEvents (e) {
+    handleKeyboardEvents: function (e) {
 
       // State
       if (e.which === 32) this.$emit('toggle:play') // Space -> play
@@ -30,6 +30,24 @@ export default {
       // Seek
       if (e.which === 39) this.forward() // right arrow -> forward
       if (e.which === 37) this.rewind() // left arrow -> rewind
+
+      // Volume
+      if (e.which === 38) {
+        if (this.player.volume >= 0.9) {
+          this.$emit('set:volume', 1)
+        } else {
+          const newVolume = this.player.volume + 0.1
+          this.$emit('set:volume', newVolume)
+        }
+      } // up arrow -> inc vol
+      if (e.which === 40) {
+        if (this.player.volume <= 0.1) {
+          this.$emit('set:volume', 0)
+        } else {
+          const newVolume = this.player.volume - 0.1
+          this.$emit('set:volume', newVolume)
+        }
+      } // down arrow -> dec vol
 
       // Speed
       if (e.which === 190 && e.shiftKey) this.setSpeed(0.25) // shift + > -> add speed

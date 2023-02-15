@@ -44,6 +44,7 @@
     <!-- Keyboard -->
     <player-keyboard
       v-bind="{player}"
+      @set:volume="setVolume"
       @set:time="setTime"
       @set:speed="setSpeed"
       @toggle:play="togglePlay"
