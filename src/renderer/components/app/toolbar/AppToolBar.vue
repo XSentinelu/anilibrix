@@ -22,6 +22,14 @@
       <!-- Search-->
       <search class="mr-4"/>
 
+      <div>
+        <v-btn :disabled="diceIntervalId !== null" icon id="toolbar__rand" v-on:click="randomRelease">
+          <v-icon>mdi-dice-{{ dice }}</v-icon>
+        </v-btn>
+
+        <v-tooltip left activator="#toolbar__rand">Случайный релиз</v-tooltip>
+      </div>
+
       <update/>
       <notifications/>
       <settings/>
@@ -39,6 +47,7 @@ import Search from './components/search'
 import Account from './components/account'
 import Settings from './components/settings'
 import Notifications from './components/notifications'
+import { invokeRand } from '@main/handlers/app/appHandlers'
 
 export default {
   components: {
@@ -48,9 +57,39 @@ export default {
     Settings,
     Notifications
   },
+  methods: {
+    async randomRelease() {
+      this.diceIntervalId = setInterval(() => {
+        if (this.direction) {
+          this.dice--
+        } else {
+          this.dice++
+        }
 
+        if (this.dice === 6) {
+          this.direction = 1
+        } else if (this.dice === 0) {
+          this.direction = 0
+        }
+      }, 200)
+      const { id, name } = await invokeRand()
+      if (id === -1) {
+        this.$toasted.show('Функция не поддерживается выбранным API сервером', { type: 'error' })
+        return
+      }
+      await this.$router.push('/release/' + id + '/' + name )
+      clearInterval(this.diceIntervalId)
+      this.diceIntervalId = null
+    }
+  },
+  data () {
+    return {
+      dice: 5,
+      diceIntervalId: null,
+      direction: 0
+    }
+  },
   computed: {
-
     /**
      * Check if should hide toolbar
      *

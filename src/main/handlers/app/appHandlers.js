@@ -2,7 +2,7 @@ import { Main, Torrent } from '@main/utils/windows'
 import { app, ipcMain, ipcRenderer } from 'electron'
 import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from '../../utils/powerSaveBlocker'
 import { setEncrypted } from '@main/utils/safeStorage'
-import CatalogProxy from '@proxies/catalog'
+import axios from 'axios'
 const { shell } = require('electron')
 const path = require('path')
 
@@ -19,6 +19,8 @@ export const APP_SAFE_STORAGE_DECRYPT_REQUEST = 'app:system:safe_storage:decrypt
 
 export const APP_SHOW_CONFIG = 'app:show_config'
 export const APP_CHECK_API_ENDPOINT = 'app:check_api_endpoint'
+
+export const APP_RAND = 'app:rand'
 
 /**
  * Send app about event
@@ -175,5 +177,46 @@ export const invokeShowConfig = () => ipcRenderer.invoke(APP_SHOW_CONFIG)
 export const handleShowConfig = () => {
   ipcMain.handle(APP_SHOW_CONFIG, async (event, data) => {
     return shell.showItemInFolder(path.join(app.getPath('userData'), 'anilibrix.json'))
+  })
+}
+
+/**
+ * Send activity for discord rich presence
+ *
+ * @param {object} data
+ * @return {Promise}
+ */
+export const invokeRand = () => ipcRenderer.invoke(APP_RAND)
+
+/**
+ * Listens for activity for discord rich presence
+ *
+ * @return {void}
+ */
+export const handleRand = () => {
+  ipcMain.handle(APP_RAND, async (event) => {
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    const { hostname } = new URL(endpoint)
+    const parts = hostname.split('.')
+    if (parts.length > 2) {
+      parts.shift()
+    }
+
+    try {
+      const { data } = await axios.get(`https://api.${parts.join('.')}/v3/title/random`)
+      console.log('Rand:', data.id)
+      return { id: data.id, name: data.names.en }
+    } catch (e) {
+      if (e.response.status === 404) {
+        const { data: { data: { code } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({ query: 'random_release' }))
+        const { data: { data: { id, names } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({
+          query: 'release',
+          code: code
+        }))
+        return { id: id, name: names.pop() }
+      }
+      throw e
+    }
+
   })
 }
