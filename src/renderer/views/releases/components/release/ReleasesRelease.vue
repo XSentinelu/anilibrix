@@ -4,8 +4,8 @@
     <div v-else :style="{maxWidth: '100%'}">
 
       <!-- Release Data -->
-      <div class="display-2 font-weight-black text-truncate">{{ title }}</div>
-      <div class="subtitle-1">{{ subtitle }}</div>
+      <div class="allow-select display-2 font-weight-black text-truncate">{{ title }}</div>
+      <div class="allow-select subtitle-1">{{ subtitle }}</div>
       <div class="body-2">{{ genres }}</div>
 
       <!-- Episode -->
@@ -16,7 +16,7 @@
       </v-layout>
 
       <!-- Description -->
-      <v-clamp class="my-3 grey--text lighten-1" max-height="75px">{{ description }}</v-clamp>
+      <v-clamp class="allow-select my-3 grey--text lighten-1" max-height="75px">{{ description }}</v-clamp>
 
     </div>
   </v-layout>

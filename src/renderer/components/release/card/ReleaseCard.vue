@@ -15,9 +15,9 @@
         <!-- Original Name + Genres -->
         <!-- Meta -->
         <div>
-          <v-card-title v-text="title" class="display-1 mb-2 font-weight-black" :style="{wordBreak: 'break-word'}"/>
-          <v-card-subtitle v-text="original" class="pb-0"/>
-          <v-card-subtitle v-text="genres" class="pt-0"/>
+          <v-card-title v-text="title" class="allow-select display-1 mb-2 font-weight-black" :style="{wordBreak: 'break-word'}"/>
+          <v-card-subtitle v-text="original" class="allow-select pb-0"/>
+          <v-card-subtitle v-text="genres" class="allow-select pt-0"/>
           <v-card-text class="mb-1">
             <favorite v-bind="{release}" color="grey darken-3"/>
             <v-chip v-if="year" v-text="year" label color="grey darken-3" :style="{height: '36px'}"/>

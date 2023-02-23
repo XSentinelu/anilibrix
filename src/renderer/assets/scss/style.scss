@@ -1,7 +1,18 @@
 @import "plugins/vuetify/style";
 
+*, *::after, *::before {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-app-region: no-drag;
+}
+
 html, body {
   overflow-y: hidden !important;
+  user-select: none;
+}
+
+.allow-select {
+  user-select: text !important;
 }
 
 ::-webkit-scrollbar-thumb {
