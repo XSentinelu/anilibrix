@@ -79,6 +79,7 @@ export default {
       }
       await this.$router.push('/release/' + id + '/' + name )
       clearInterval(this.diceIntervalId)
+      this.dice = 5
       this.diceIntervalId = null
     }
   },
