@@ -97,7 +97,7 @@ app.on('ready', async () => {
   mainWindow
     .once('ready-to-show', () => {
       mainWindow.show()
-      autoUpdater.checkForUpdatesAndNotify() // Auto update
+      //autoUpdater.checkForUpdatesAndNotify() // Auto update
     })
     .on('close', () => {
       destroyRichPresence()
