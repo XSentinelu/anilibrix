@@ -33,18 +33,18 @@ export default {
 
       // Volume
       if (e.which === 38) {
-        if (this.player.volume >= 0.9) {
+        if (this.player.volume >= 0.95) {
           this.$emit('set:volume', 1)
         } else {
-          const newVolume = this.player.volume + 0.1
+          const newVolume = this.player.volume + 0.05
           this.$emit('set:volume', newVolume)
         }
       } // up arrow -> inc vol
       if (e.which === 40) {
-        if (this.player.volume <= 0.1) {
+        if (this.player.volume <= 0.05) {
           this.$emit('set:volume', 0)
         } else {
-          const newVolume = this.player.volume - 0.1
+          const newVolume = this.player.volume - 0.05
           this.$emit('set:volume', newVolume)
         }
       } // down arrow -> dec vol

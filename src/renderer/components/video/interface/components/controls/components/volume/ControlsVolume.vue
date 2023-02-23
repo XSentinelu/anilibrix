@@ -11,7 +11,7 @@
       hide-details
       min="0"
       max="1"
-      step=".1"
+      step=".05"
       :value="volume"
       :style="{maxWidth: '70px', width: '70px'}"
       @input="$emit('change', $event)">
