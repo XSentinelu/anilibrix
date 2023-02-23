@@ -11,7 +11,7 @@
   "main": "./dist/electron/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pavloniym/anilibrix"
+    "url": "https://github.com/AnimeHaze/anilibrix"
   },
   "scripts": {
     "build": "node .electron-vue/build.js",
@@ -25,7 +25,7 @@
   "meta": {
     "name": "AniLibrix",
     "links": {
-      "github": "https://github.com/anilibria",
+      "github": "https://github.com/AnimeHaze/anilibrix",
       "donate": "https://www.anilibria.tv/pages/donate.php",
       "telegram": "tg://resolve?domain=anilibrix",
       "anilibria": "https://anilibria.tv"
@@ -151,6 +151,7 @@
     "hls.js": "1.1.5",
     "https-proxy-agent": "^5.0.0",
     "lethargy": "^1.0.9",
+    "debug": "^4.3.4",
     "lodash": "^4.17.19",
     "matroska-subtitles": "^3.3.2",
     "moment": "^2.24.0",
