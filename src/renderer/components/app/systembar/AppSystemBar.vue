@@ -3,7 +3,7 @@
     v-if="is_fullscreen === false"
     align-center
     class="black system-bar white--text px-2"
-    :class="{'is-mac--fullscreen': this.isMacOnFullscreen}"
+    :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.appbarRight}"
     @dblclick="() => maximizeApp()">
 
     <template v-if="!this.isMac">
@@ -21,11 +21,14 @@
 <script>
 
 import { AppPlatformMixin } from '@mixins/app'
+import { mapState } from 'vuex'
 
 export default {
   mixins: [AppPlatformMixin],
   computed: {
-
+    ...mapState('app/settings/system', {
+      appbarRight: s => s.appbar_right
+    }),
     /**
      * Get controls
      *
@@ -35,18 +38,18 @@ export default {
       return [
         {
           icon: 'mdi-minus',
-          sort: this.isWindows ? 0 : 1,
+          sort: this.isMac ? 1 : 2,
           action: () => this.minimizeApp(),
         },
         {
           icon: 'mdi-window-maximize',
           action: () => this.maximizeApp(),
-          sort: this.isWindows ? 1 : 2
+          sort: this.isMac ? 2 : 1
         },
         {
           icon: 'mdi-close',
           action: () => this.closeApp(),
-          sort: this.isWindows ? 2 : 0
+          sort: this.isMac ? 0 : 0
         },
       ].sort((a, b) => a.sort - b.sort)
     }
@@ -98,6 +101,8 @@ export default {
   height: 40px;
   width: 100%;
   z-index: 10;
+  display: flex;
+  flex-direction: row;
   position: fixed;
   -webkit-app-region: drag;
 
@@ -107,6 +112,10 @@ export default {
 
   &.is-mac--fullscreen {
     display: none;
+  }
+
+  &.right {
+    flex-direction: row-reverse;
   }
 }
 

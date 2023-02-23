@@ -9,6 +9,25 @@
       </div>
     </div>
 
+    <!-- Appbar inverse -->
+    <v-card class="mt-2">
+      <v-list-item dense @click="_setAppbarRight(!_appbar_right)">
+        <v-list-item-title>
+          Переместить кнопки контроля вправо
+        </v-list-item-title>
+
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_appbar_right" @change="_setAppbarRight"/>
+        </v-list-item-action>
+      </v-list-item>
+
+      <v-card-text class="pt-2">
+        <div class="caption">
+          Перемещает кнопки упралвления окном (свернуть, закрыть и развернуть) вправо
+        </div>
+      </v-card-text>
+    </v-card>
+
     <!-- API Endpoint -->
     <v-card>
       <v-card-text class="mt-2">
@@ -180,6 +199,7 @@ export default {
       _api_endpoint: s => s.api.endpoint,
       _static_endpoint: s => s.api.static_endpoint,
       _notifications_system: s => s.notifications.system,
+      _appbar_right: s => s.appbar_right
     }),
   },
 
@@ -200,6 +220,7 @@ export default {
       _setSystemNotifications: 'setSystemNotifications',
       _setAPIEndpoint: 'setAPIEndpoint',
       _setAPIStaticEndpoint: 'setAPIStaticEndpoint',
+      _setAppbarRight: 'setAppbarRight'
     })
   },
 

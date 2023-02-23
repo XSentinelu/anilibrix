@@ -4,7 +4,7 @@ const TOGGLE_DEVTOOLS = 'TOGGLE_DEVTOOLS'
 const SET_ADS_MAXIMUM = 'SET_ADS_MAXIMUM'
 const SET_UPDATES_TIMEOUT = 'SET_UPDATES_TIMEOUT'
 const SET_SYSTEM_NOTIFICATIONS = 'SET_SYSTEM_NOTIFICATIONS'
-
+const SET_APPBAR_RIGHT = 'SET_APPBAR_RIGHT';
 const SET_API_ENDPOINT = 'SET_API_ENDPOINT'
 const SET_API_STATIC_ENDPOINT = 'SET_API_STATIC_ENDPOINT'
 export default {
@@ -15,6 +15,7 @@ export default {
       maximum: false
     },
     ads__maximum: false,
+    appbar_right: false,
     devtools: false,
     updates: {
       enabled: true,
@@ -74,6 +75,15 @@ export default {
      * @return {*}
      */
     [SET_ADS]: (s, state) => (s.ads.enabled = state),
+
+    /**
+     * Set appbar inverse
+     *
+     * @param s
+     * @param appbar_right
+     */
+    // eslint-disable-next-line camelcase
+    [SET_APPBAR_RIGHT]: (s, appbar_right) => (s.appbar_right = appbar_right),
 
     /**
      * Set ads maximum
@@ -149,6 +159,15 @@ export default {
      * @param state
      * @return {*}
      */
-    setAdsMaximum: ({ commit }, state) => commit(SET_ADS_MAXIMUM, state)
+    setAdsMaximum: ({ commit }, state) => commit(SET_ADS_MAXIMUM, state),
+
+    /**
+     * Set appbar to right side
+     *
+     * @param commit
+     * @param appbar_right
+     */
+    // eslint-disable-next-line camelcase
+    setAppbarRight: ({ commit }, appbar_right) => commit(SET_APPBAR_RIGHT, appbar_right)
   }
 }
