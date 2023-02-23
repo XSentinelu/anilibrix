@@ -5,16 +5,11 @@
     <app-settings/>
 
     <!-- Content -->
-    <v-fade-transition mode="out-in" appear>
-      <app-loader v-if="loading"/>
-      <template v-else>
-        <v-fade-transition mode="out-in" appear>
-          <component :is="layout">
-            <router-view :key="$route.fullPath"/>
-          </component>
-        </v-fade-transition>
-      </template>
-    </v-fade-transition>
+
+    <app-loader v-if="loading"/>
+    <component :is="layout" v-else>
+      <router-view :key="$route.fullPath"/>
+    </component>
 
     <!-- Errors -->
     <!-- Downloads -->
