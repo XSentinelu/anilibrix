@@ -28,7 +28,8 @@
       "github": "https://github.com/AnimeHaze/anilibrix",
       "donate": "https://www.anilibria.tv/pages/donate.php",
       "telegram": "tg://resolve?domain=anilibrix",
-      "anilibria": "https://anilibria.tv"
+      "anilibria": "https://anilibria.tv",
+      "unofficial": "tg://resolve?domain=anilibrixUnoffical"
     }
   },
   "build": {

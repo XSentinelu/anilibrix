@@ -19,6 +19,7 @@
 <script>
 
 import { meta, repository } from '@package'
+import { shell } from 'electron'
 
 export default {
   computed: {
@@ -39,6 +40,10 @@ export default {
           title: 'Поддержать проект',
           value: 'Яндекс.Деньги, QIWI, PayPal',
           action: () => require('@electron/remote').shell.openExternal(meta.links.donate)
+        },
+        {
+          title: 'Telegram-канал не официальных релизов',
+          action: () => require('@electron/remote').shell.openExternal(meta.links.unofficial)
         },
         {
           title: 'Telegram-канал',
