@@ -77,6 +77,7 @@
 
 import { mapState } from 'vuex'
 import { toFavorites, toRelease, toReleases } from '@utils/router/views'
+import screenfull from 'screenfull'
 
 const props = {
   player: {
@@ -138,10 +139,18 @@ export default {
 
   },
   methods: {
-
-    toRelease,
-    toReleases,
-    toFavorites,
+    toRelease (release) {
+      screenfull.exit()
+      return toRelease(release)
+    },
+    toReleases () {
+      screenfull.exit()
+      return toReleases()
+    },
+    toFavorites () {
+      screenfull.exit()
+      return toFavorites()
+    },
 
     /**
      * Skip opening
