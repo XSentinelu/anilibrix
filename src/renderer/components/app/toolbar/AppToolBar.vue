@@ -1,5 +1,4 @@
 <template>
-  <v-fade-transition appear>
     <v-app-bar v-if="!hideToolbar" flat color="transparent" class="toolbar shrink">
       <!-- Releases -->
       <v-btn small text exact class="mr-1" height="38" :to="{name: 'releases'}">
@@ -37,7 +36,6 @@
 
 
     </v-app-bar>
-  </v-fade-transition>
 </template>
 
 <script>
