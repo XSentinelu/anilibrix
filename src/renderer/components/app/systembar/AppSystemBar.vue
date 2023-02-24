@@ -3,7 +3,7 @@
     v-if="is_fullscreen === false"
     align-center
     class="black system-bar white--text px-2"
-    :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.appbarRight}"
+    :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.controlsRight}"
     @dblclick="() => maximizeApp()">
 
     <template v-if="!this.isMac">
@@ -25,39 +25,49 @@ import { mapState } from 'vuex'
 
 export default {
   mixins: [AppPlatformMixin],
+  data () {
+    return {
+      minimize: {
+        icon: 'mdi-minus',
+        sort: this.isMac ? 1 : 2,
+        action: () => this.minimizeApp(),
+      },
+      maximize: {
+        icon: 'mdi-window-maximize',
+        action: () => this.maximizeApp(),
+      },
+      close: {
+        icon: 'mdi-close',
+        action: () => this.closeApp(),
+      }
+    }
+  },
   computed: {
-    ...mapState('app/settings/system', {
-      appbarRight: s => s.appbar_right
-    }),
+    controlsRight () {
+      if (this.appbarRight || this.isWindows) {
+        return true
+      }
+
+      return false
+    },
     /**
      * Get controls
      *
      * @return Array
      */
     controls () {
-      return [
-        {
-          icon: 'mdi-minus',
-          sort: this.isMac ? 1 : 2,
-          action: () => this.minimizeApp(),
-        },
-        {
-          icon: 'mdi-window-maximize',
-          action: () => this.maximizeApp(),
-          sort: this.isMac ? 2 : 1
-        },
-        {
-          icon: 'mdi-close',
-          action: () => this.closeApp(),
-          sort: this.isMac ? 0 : 0
-        },
-      ].sort((a, b) => a.sort - b.sort)
-    }
-
+      if (this.controlsRight) {
+        return [this.close, this.maximize, this.minimize]
+      } else {
+        return [this.close, this.minimize, this.maximize]
+      }
+    },
+    ...mapState('app/settings/system', {
+      appbarRight: s => s.appbar_right
+    })
   },
 
   methods: {
-
     /**
      * Close app
      *
@@ -101,9 +111,9 @@ export default {
   height: 40px;
   width: 100%;
   z-index: 10;
+  position: fixed;
   display: flex;
   flex-direction: row;
-  position: fixed;
   -webkit-app-region: drag;
 
   &__button {
