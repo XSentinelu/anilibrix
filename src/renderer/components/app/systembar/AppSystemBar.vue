@@ -6,15 +6,11 @@
     :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.controlsRight}"
     @dblclick="() => maximizeApp()">
 
-    <template v-if="!this.isMac">
-      <v-spacer v-if="this.isWindows"/>
-      <template v-for="(control, k) in controls">
-        <v-btn icon small class="system-bar__button" :key="k" @click="control.action">
-          <v-icon small color="grey">{{ control.icon }}</v-icon>
-        </v-btn>
-      </template>
+    <template v-for="(control, k) in controls">
+      <v-btn icon small class="system-bar__button" :key="k" @click="control.action">
+        <v-icon small color="grey">{{ control.icon }}</v-icon>
+      </v-btn>
     </template>
-
   </v-layout>
 </template>
 
@@ -29,7 +25,6 @@ export default {
     return {
       minimize: {
         icon: 'mdi-minus',
-        sort: this.isMac ? 1 : 2,
         action: () => this.minimizeApp(),
       },
       maximize: {
@@ -44,11 +39,7 @@ export default {
   },
   computed: {
     controlsRight () {
-      if (this.appbarRight || this.isWindows) {
-        return true
-      }
-
-      return false
+      return !!(this.appbarRight || this.isWindows);
     },
     /**
      * Get controls
