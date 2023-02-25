@@ -1,9 +1,7 @@
 name: Build
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -65,17 +63,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-
-      - name: Install Snapcraft
-        uses: samuelmeuli/action-snapcraft@v1
-
-        # Only install Snapcraft on Ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
-        with:
-
-          # Log in to Snap Store
-          snapcraft_token: ${{ secrets.SNAPCRAFT_TOKEN }}
-
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -87,5 +74,3 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-
