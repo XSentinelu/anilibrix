@@ -92,7 +92,6 @@ export default {
           // Show app error
           // Throw error
           showAppError('Произошла ошибка при загрузке релиза')
-          throw error
         }
       } finally {
         commit(SET_RELEASE_LOADING, false)

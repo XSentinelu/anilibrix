@@ -184,7 +184,6 @@ export default {
           // Show error
           // Throw error
           showAppError('Произошла ошибка при загрузке релизов')
-          throw error
         }
       } finally {
         commit(SET_RELEASES_LOADING, false)
