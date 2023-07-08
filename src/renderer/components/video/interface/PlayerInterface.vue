@@ -78,6 +78,7 @@ import PlayerBuffering from './components/buffering'
 
 import screenfull from 'screenfull'
 import { AppKeyboardHandlerMixin, AppMouseHandlerMixin } from '@mixins/app'
+import { mapState } from 'vuex'
 
 const props = {
   player: {
@@ -124,7 +125,14 @@ export default {
       video: null,
       visible: true,
       visible_handler: null,
+      openingSkiped: false
     }
+  },
+
+  computed: {
+    ...mapState('app/settings/player', {
+      _auto_opening_skip: s => s.opening.autoSkip
+    })
   },
 
   methods: {
@@ -248,7 +256,36 @@ export default {
 
   },
 
-  mounted () {
+  async mounted () {
+
+    try {
+      if (this._auto_opening_skip) {
+        const epId = this.$__get(this.episode, 'id')
+        const rId = this.$__get(this.release, 'id')
+
+        const { player: playlist } = await fetch(`https://api.wwnd.space/v2/getTitle?id=${rId}&filter=player.playlist&playlist_type=array`)
+          .then(x => x.json())
+
+        const serie = playlist.playlist.find(x => x.serie === epId)
+
+        if (serie) {
+          const [start, end] = serie.skips.opening
+          this.player.on('timeupdate', () => {
+            if (!this.openingSkiped) this.openingSkiped = true
+            const time = Math.floor(this.player.currentTime)
+            if (start && time === start) {
+              this.$toasted.show('Опенинг пропущен', {
+                type: 'info',
+                position: 'top-center'
+              })
+              this.setTime(end)
+            }
+          })
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
 
     // Hide / Show controls
     this.showInterface()

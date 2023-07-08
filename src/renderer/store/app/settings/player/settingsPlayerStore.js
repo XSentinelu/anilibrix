@@ -8,6 +8,8 @@ const SET_UPSCALE_PROCESS = 'SET_UPSCALE_PROCESS'
 const SET_TORRENTS_PROCESS = 'SET_TORRENTS_PROCESS'
 const SET_OPENING_SKIP_TIME = 'SET_OPENING_SKIP_TIME'
 const SET_OPENING_SKIP_BUTTON = 'SET_OPENING_SKIP_BUTTON'
+const SET_OPENING_AUTOSKIP = 'SET_OPENING_AUTOSKIP'
+
 
 export default {
   namespaced: true,
@@ -23,7 +25,8 @@ export default {
     autoplayNext: true,
     opening: {
       skip_time: 30,
-      skip_button: false
+      skip_button: false,
+      autoSkip: false
     },
     video: {
       buffer: 300
@@ -119,7 +122,8 @@ export default {
      * @param state
      * @return {*}
      */
-    [SET_OPENING_SKIP_BUTTON]: (s, state) => (s.opening.skip_button = state)
+    [SET_OPENING_SKIP_BUTTON]: (s, state) => (s.opening.skip_button = state),
+    [SET_OPENING_AUTOSKIP]: (s, state) => (s.opening.autoSkip = state)
   },
 
   actions: {
@@ -208,6 +212,15 @@ export default {
      * @param commit
      * @param buffer
      */
-    setVideoBuffer: ({ commit }, buffer) => commit(SET_VIDEO_BUFFER, buffer)
+    setVideoBuffer: ({ commit }, buffer) => commit(SET_VIDEO_BUFFER, buffer),
+
+    /**
+     * Set opening skip button state
+     *
+     * @param commit
+     * @param state
+     * @return {*}
+     */
+    setAutoSkip: ({ commit }, state) => commit(SET_OPENING_AUTOSKIP, state),
   }
 }

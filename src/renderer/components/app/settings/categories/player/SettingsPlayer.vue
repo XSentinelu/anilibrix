@@ -77,6 +77,22 @@
 
     <!-- Opening Skip Button -->
     <v-card class="mt-2">
+      <v-list-item dense @click="_setAutoSkip(!_auto_opening_skip)">
+        <v-list-item-title>Автоматический пропуск опенинга</v-list-item-title>
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_auto_opening_skip" @change="_setAutoSkip"/>
+        </v-list-item-action>
+      </v-list-item>
+      <v-card-text class="pt-2 caption">
+        <div>
+          При наличии меток пропуска опенинга, он будет автоматически пропускаться
+        </div>
+      </v-card-text>
+    </v-card>
+    <v-divider/>
+
+    <!-- Opening Skip Button -->
+    <v-card class="mt-2">
       <v-list-item dense @click="_setOpeningSkipButton(!_opening_skip_button)">
         <v-list-item-title>Кнопка пропуска опенинга</v-list-item-title>
         <v-list-item-action class="mr-2">
@@ -124,11 +140,13 @@ export default {
       _torrents_process: s => s.torrents.process,
       _opening_skip_time: s => s.opening.skip_time,
       _opening_skip_button: s => s.opening.skip_button,
+      _auto_opening_skip: s => s.opening.autoSkip
     })
   },
 
   methods: {
     ...mapActions('app/settings/player', {
+      _setAutoSkip: 'setAutoSkip',
       _setVideoBuffer: 'setVideoBuffer',
       _setAutoplayNext: 'setAutoplayNext',
       _setTorrentsProcess: 'setTorrentsProcess',
