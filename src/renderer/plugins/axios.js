@@ -17,7 +17,8 @@ Axios.defaults.withCredentials = true
 
 // Create axios
 const axios = Axios.create()
-
+import axiosRetry from 'axios-retry';
+axiosRetry(axios);
 /**
  * Error handler function
  *

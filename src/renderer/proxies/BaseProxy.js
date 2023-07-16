@@ -1,7 +1,6 @@
 import __get from 'lodash/get'
 import store from '@store/index'
 import axios from '@plugins/axios'
-
 import FormData from 'form-data'
 import { meta, version } from '@package'
 

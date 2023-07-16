@@ -22,6 +22,9 @@
 </template>
 
 <script>
+const originalFetch = require('isomorphic-fetch');
+const fetch = require('fetch-retry')(originalFetch);
+window.fetch = fetch
 
 import AppLoader from '@components/app/loader'
 import AppErrors from '@components/app/errors'

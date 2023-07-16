@@ -3,6 +3,8 @@ import { app, ipcMain, ipcRenderer } from 'electron'
 import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from '../../utils/powerSaveBlocker'
 import { setEncrypted } from '@main/utils/safeStorage'
 import axios from 'axios'
+import axiosRetry from 'axios-retry';
+axiosRetry(axios);
 const { shell } = require('electron')
 const path = require('path')
 
