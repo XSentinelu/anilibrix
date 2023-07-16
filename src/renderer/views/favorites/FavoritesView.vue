@@ -136,10 +136,10 @@ export default {
       releases = releases.filter(release => {
 
         const release_id = release.id
-        const total_episodes_number = (this.$__get(release, 'episodes') || []).length
+        const episodes = (this.$__get(release, 'episodes') || []).map(x => x.id)
         const payload = {
           release_id,
-          total_episodes_number
+          episodes
         }
 
         const progress = this.$store.getters['app/watch/getReleaseProgress'](payload)

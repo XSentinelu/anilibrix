@@ -88,10 +88,10 @@ export default {
     progress () {
 
       const release_id = this.release.id
-      const total_episodes_number = (this.episodes || []).length
+      const episodes = (this.episodes || []).map(x => x.id)
       const payload = {
         release_id,
-        total_episodes_number
+        episodes
       }
 
       return this.$store.getters['app/watch/getReleaseProgress'](payload)
@@ -106,10 +106,11 @@ export default {
     watched () {
 
       const release_id = this.release.id
-      const total_episodes_number = (this.episodes || []).length
+
+      const episodes = (this.episodes || []).map(x => x.id)
       const payload = {
         release_id,
-        total_episodes_number
+        episodes
       }
 
       // Get watched episodes

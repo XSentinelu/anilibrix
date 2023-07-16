@@ -66,19 +66,19 @@ export default {
     // eslint-disable-next-line camelcase
     getWatchedEpisodes: (state, getters) => ({
       release_id = 0,
-      total_episodes_number = 0
+      episodes = []
     } = {}) => {
       const watchedEpisodes = []
 
       // Iterate through total episodes number
       // eslint-disable-next-line camelcase
-      for (let i = 1; i <= total_episodes_number; i++) {
+      for (const ep of episodes) {
         // Try to get episode watch data
         // If episode exists and episode is seen
         // Add it to watched episode
         const episode = getters.getWatchedEpisode({
           release_id,
-          episode_id: i
+          episode_id: ep
         })
         if (episode && episode.isSeen === true) watchedEpisodes.push(episode)
       }
@@ -96,18 +96,18 @@ export default {
     // eslint-disable-next-line camelcase
     getReleaseProgress: (state, getters) => ({
       release_id = 0,
-      total_episodes_number = 0
+      episodes = 0
     } = {}) => {
       // Get release watched episodes
       // Calculate watched progress percentage
       const watchedEpisodes = getters.getWatchedEpisodes({
         release_id,
-        total_episodes_number
+        episodes
       })
       // eslint-disable-next-line camelcase
-      return total_episodes_number > 0
+      return episodes.length > 0
         // eslint-disable-next-line camelcase
-        ? (watchedEpisodes.length / total_episodes_number) * 100
+        ? (watchedEpisodes.length / episodes.length) * 100
         : 0
     }
 
