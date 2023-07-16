@@ -184,7 +184,7 @@ export default {
             ))
             .filter(promise => promise.status === 'fulfilled')
             .map(promise => promise.value)
-            .filter(release => release.episodes.length > 0)
+            //.filter(release => release.episodes.length > 0)
             .map(release => ({
               ...release,
               poster: new ReleaseProxy().getReleasePosterPath(release.poster)
