@@ -28,6 +28,25 @@
       </v-card-text>
     </v-card>
 
+    <!-- Appbar inverse -->
+    <v-card class="mt-2">
+      <v-list-item dense @click="_setFilterNotify(!_filter_notify)">
+        <v-list-item-title>
+          Фильтровать уведомления по избранному
+        </v-list-item-title>
+
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_filter_notify" @change="_setFilterNotify"/>
+        </v-list-item-action>
+      </v-list-item>
+
+      <v-card-text class="pt-2">
+        <div class="caption">
+          Включает показ уведомлений только для релизов из избранного
+        </div>
+      </v-card-text>
+    </v-card>
+
     <!-- API Endpoint -->
     <v-card>
       <v-card-text class="mt-2">
@@ -199,7 +218,8 @@ export default {
       _api_endpoint: s => s.api.endpoint,
       _static_endpoint: s => s.api.static_endpoint,
       _notifications_system: s => s.notifications.system,
-      _appbar_right: s => s.appbar_right
+      _appbar_right: s => s.appbar_right,
+      _filter_notify: s => s.filter_notify
     }),
   },
 
@@ -220,7 +240,8 @@ export default {
       _setSystemNotifications: 'setSystemNotifications',
       _setAPIEndpoint: 'setAPIEndpoint',
       _setAPIStaticEndpoint: 'setAPIStaticEndpoint',
-      _setAppbarRight: 'setAppbarRight'
+      _setAppbarRight: 'setAppbarRight',
+      _setFilterNotify: 'setFilterNotify',
     })
   },
 

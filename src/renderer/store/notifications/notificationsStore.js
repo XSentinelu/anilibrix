@@ -1,3 +1,5 @@
+import favorites from '../favorites'
+import app from '../app'
 const PUSH_TO_RELEASES = 'PUSH_TO_RELEASES'
 const SORT_NOTIFICATIONS = 'SORT_NOTIFICATIONS'
 const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS'
@@ -9,7 +11,10 @@ export default {
   state: {
     items: []
   },
-
+  modules: {
+    favorites,
+    app
+  },
   mutations: {
 
     /**
@@ -69,7 +74,12 @@ export default {
      * @param release
      * @return {*}
      */
-    setRelease: ({ commit }, release) => {
+    setRelease: ({ commit, rootState, rootGetters }, release) => {
+      const filterNotify = rootState.app.settings.system.filter_notify
+      const isAuthorized = rootGetters['favorites/isAuthorized']
+      const isFav = rootGetters['favorites/isInFavorite'](release)
+
+      if (isAuthorized && filterNotify && !isFav) return
       if (release && release.episodes[0]) {
         // Add notification
         // Push release to releases items

@@ -5,6 +5,7 @@ const SET_ADS_MAXIMUM = 'SET_ADS_MAXIMUM'
 const SET_UPDATES_TIMEOUT = 'SET_UPDATES_TIMEOUT'
 const SET_SYSTEM_NOTIFICATIONS = 'SET_SYSTEM_NOTIFICATIONS'
 const SET_APPBAR_RIGHT = 'SET_APPBAR_RIGHT';
+const SET_FILTER_NOTIFY = 'SET_FILTER_NOTIFY';
 const SET_API_ENDPOINT = 'SET_API_ENDPOINT'
 const SET_API_STATIC_ENDPOINT = 'SET_API_STATIC_ENDPOINT'
 export default {
@@ -16,6 +17,7 @@ export default {
     },
     ads__maximum: false,
     appbar_right: false,
+    filter_notify: false,
     devtools: false,
     updates: {
       enabled: true,
@@ -84,6 +86,15 @@ export default {
      */
     // eslint-disable-next-line camelcase
     [SET_APPBAR_RIGHT]: (s, appbar_right) => (s.appbar_right = appbar_right),
+
+    /**
+     * Set filter notify
+     *
+     * @param s
+     * @param filter_notify
+     */
+    // eslint-disable-next-line camelcase
+    [SET_FILTER_NOTIFY]: (s, filter_notify) => (s.filter_notify = filter_notify),
 
     /**
      * Set ads maximum
@@ -168,6 +179,15 @@ export default {
      * @param appbar_right
      */
     // eslint-disable-next-line camelcase
-    setAppbarRight: ({ commit }, appbar_right) => commit(SET_APPBAR_RIGHT, appbar_right)
+    setAppbarRight: ({ commit }, appbar_right) => commit(SET_APPBAR_RIGHT, appbar_right),
+
+    /**
+     * Set filter notify
+     *
+     * @param commit
+     * @param filter_notify
+     */
+    // eslint-disable-next-line camelcase
+    setFilterNotify: ({ commit }, filter_notify) => commit(SET_FILTER_NOTIFY, filter_notify)
   }
 }
