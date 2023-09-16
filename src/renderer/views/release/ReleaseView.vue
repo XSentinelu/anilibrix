@@ -21,6 +21,7 @@
 
                 <v-chip
                   class="ma-2"
+                  v-if="release.status"
                   color="secondary"
                   text-color="white"
                 >
