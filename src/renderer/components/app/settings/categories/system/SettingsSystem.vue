@@ -10,23 +10,25 @@
     </div>
 
     <!-- Appbar inverse -->
-    <v-card class="mt-2">
-      <v-list-item dense @click="_setAppbarRight(!_appbar_right)">
-        <v-list-item-title>
-          Переместить кнопки контроля вправо
-        </v-list-item-title>
+    <template v-if="!this.isMac">
+      <v-card class="mt-2">
+        <v-list-item dense @click="_setAppbarRight(!_appbar_right)">
+          <v-list-item-title>
+            Переместить кнопки контроля вправо
+          </v-list-item-title>
 
-        <v-list-item-action class="mr-2">
-          <v-switch :input-value="_appbar_right" @change="_setAppbarRight"/>
-        </v-list-item-action>
-      </v-list-item>
+          <v-list-item-action class="mr-2">
+            <v-switch :input-value="_appbar_right" @change="_setAppbarRight"/>
+          </v-list-item-action>
+        </v-list-item>
 
-      <v-card-text class="pt-2">
-        <div class="caption">
-          Перемещает кнопки упралвления окном (свернуть, закрыть и развернуть) вправо
-        </div>
-      </v-card-text>
-    </v-card>
+        <v-card-text class="pt-2">
+          <div class="caption">
+            Перемещает кнопки упралвления окном (свернуть, закрыть и развернуть) вправо
+          </div>
+        </v-card-text>
+      </v-card>
+    </template>
 
     <!-- Appbar inverse -->
     <v-card class="mt-2">
@@ -198,8 +200,10 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import Confirm from '@components/app/settings/categories/system/dialogs/confirm.vue'
 import snapshotsList from '@components/app/settings/categories/system/dialogs/snapshotsList.vue'
+import { AppPlatformMixin } from '@mixins/app'
 
 export default {
+  mixins: [AppPlatformMixin],
   data () {
     return {
       isMounted: false,
