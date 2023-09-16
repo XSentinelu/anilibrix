@@ -1,9 +1,10 @@
 <template>
   <v-progress-linear
-    v-bind="{height, color}"
+    v-bind="{height}"
+    :color="isComplete && dense ? 'green darken-4' : color"
     class="release__progress"
     :class="{square}"
-    background-color="red darken-2"
+    :background-color="dense ? (isComplete ? 'green darken-4' : (isUnseen ? 'grey darken-3' : 'red darken-1')): ''"
     :value="progress"
     :indeterminate="loading">
 
