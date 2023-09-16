@@ -3,6 +3,7 @@
     v-bind="{height, color}"
     class="release__progress"
     :class="{square}"
+    background-color="red darken-2"
     :value="progress"
     :indeterminate="loading">
 
