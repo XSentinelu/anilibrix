@@ -4,6 +4,10 @@ class ActivityBuilder {
     this.largeImageKey = 'libriatyan03'
   }
 
+  setImage (img) {
+    this.largeImageKey = img
+  }
+
   firstLine (text) {
     this.details = text
   }

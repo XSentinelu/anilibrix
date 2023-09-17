@@ -139,6 +139,7 @@ export default {
   created () {
     this.activityInterval = setInterval(() => {
       const a = new ActivityBuilder()
+      a.setImage(this.release.poster)
       a.firstLine('Смотрит аниме')
       a.secondLine(`[${this.episode.id}/${this.episodes.length}] ` + this.title)
       a.firstButton('Anilibria.TV', 'https://anilibria.tv')
