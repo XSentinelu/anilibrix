@@ -78,7 +78,7 @@ import PlayerBuffering from './components/buffering'
 
 import screenfull from 'screenfull'
 import { AppKeyboardHandlerMixin, AppMouseHandlerMixin } from '@mixins/app'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 const props = {
   player: {
@@ -125,13 +125,17 @@ export default {
       video: null,
       visible: true,
       visible_handler: null,
-      openingSkiped: false
+      openingSkiped: false,
+      keysDown: []
     }
   },
 
   computed: {
     ...mapState('app/settings/player', {
-      _auto_opening_skip: s => s.opening.autoSkip
+      _auto_opening_skip: s => s.opening.autoSkip,
+      _opening_skip_button_key: s => s.opening.skip_button_key,
+      _auto_opening_skip_key: s => s.opening.autoSkipKey,
+      _opening_skip_time: s => s.opening.skip_time
     })
   },
 
@@ -256,14 +260,58 @@ export default {
      */
     setVolume (volume) {
       this.player.volume = volume
-    }
+    },
 
+    handleKeys (type, e) {
+      if (type === 'keydown') {
+        if (this.keysDown.indexOf(e.code) === -1) {
+          this.keysDown.push(e.code);
+        }
+
+        if (this.keysDown.length && !['ControlLeft'].includes(this.keysDown.toString())) {
+          if (this._opening_skip_button_key === this.keysDown.join('+')) {
+            this.setTime(this.player.currentTime + (this._opening_skip_time || 0))
+          }
+
+          if (this._auto_opening_skip_key === this.keysDown.join('+')) {
+            if (this._auto_opening_skip) {
+              this.$toasted.show('Авто пропуск опенинга выключен', {
+                type: 'default',
+                position: 'top-center'
+              })
+            } else {
+              this.$toasted.show('Авто пропуск опенинга включен', {
+                type: 'success',
+                position: 'top-center'
+              })
+            }
+            this._setAutoSkip(!this._auto_opening_skip)
+          }
+        }
+      } else if (type === 'keyup') {
+        const index = this.keysDown.indexOf(e.code);
+
+        if (index !== -1) {
+          this.keysDown.splice(index, 1);
+        }
+      }
+    },
+    ...mapActions('app/settings/player', {
+      _setAutoSkip: 'setAutoSkip'
+    }),
+    handleKeyUp (e) {
+      this.handleKeys('keyup', e)
+    },
+    handleKeyDown (e) {
+      this.handleKeys('keydown', e)
+    },
   },
 
   async mounted () {
+    document.addEventListener('keyup', this.handleKeyUp)
+    document.addEventListener('keydown', this.handleKeyDown)
 
     try {
-      if (this._auto_opening_skip) {
         const epId = this.$__get(this.episode, 'id')
         const rId = this.$__get(this.release, 'id')
 
@@ -275,18 +323,19 @@ export default {
         if (serie) {
           const [start, end] = serie.skips.opening
           this.player.on('timeupdate', () => {
-            if (!this.openingSkiped) this.openingSkiped = true
-            const time = Math.floor(this.player.currentTime)
-            if (start && time === start) {
-              this.$toasted.show('Опенинг пропущен', {
-                type: 'info',
-                position: 'top-center'
-              })
-              this.setTime(end)
+            if (this._auto_opening_skip) {
+              if (!this.openingSkiped) this.openingSkiped = true
+              const time = Math.floor(this.player.currentTime)
+              if (start && time === start) {
+                this.$toasted.show('Опенинг пропущен', {
+                  type: 'info',
+                  position: 'top-center'
+                })
+                this.setTime(end)
+              }
             }
           })
         }
-      }
     } catch (e) {
       console.log(e)
     }
@@ -306,7 +355,8 @@ export default {
   },
 
   beforeDestroy () {
-
+    document.removeEventListener('keyup', this.handleKeyUp)
+    document.removeEventListener('keydown', this.handleKeyDown)
     // Remove player listeners
     this.video.removeEventListener('click', this.togglePlay)
     this.video.removeEventListener('dblclick', this.toggleFullscreen)
