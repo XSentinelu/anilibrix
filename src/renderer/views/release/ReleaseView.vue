@@ -3,7 +3,7 @@
 
     <!-- Release Card -->
     <card v-bind="{loading}" class="mb-2" :release="__release"/>
-    <v-card  v-if="franchises.length" flat color="transparent" class="mb-2">
+    <v-card  v-if="franchises.length" flat color="transparent" class="mb-6">
       <v-card-title>Связанное</v-card-title>
       <v-list three-line>
         <template v-for="(item, index) in franchises">
