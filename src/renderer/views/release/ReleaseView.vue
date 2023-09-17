@@ -2,7 +2,7 @@
   <v-layout v-if="loading || _release" column>
 
     <!-- Release Card -->
-    <card v-bind="{loading}" class="mb-2" :release="_release"/>
+    <card v-bind="{loading}" class="mb-2" :release="__release"/>
     <v-card  v-if="franchises.length" flat color="transparent" class="mb-2">
       <v-card-title>Связанное</v-card-title>
       <v-list three-line>
@@ -52,7 +52,8 @@
 import Card from '@components/release/card'
 import Episodes from '@components/release/episodes'
 import Comments from '@components/release/comments'
-
+const originalFetch = require('isomorphic-fetch');
+const fetch = require('fetch-retry')(originalFetch);
 import { toVideo } from '@utils/router/views'
 import { mapState } from 'vuex'
 import router from '@router'
@@ -92,20 +93,32 @@ export default {
     return {
       tab: 0,
       loading: false,
-      franchises: []
+      franchises: [],
+      dates: {},
+      team: null
     }
   },
 
   computed: {
     ...mapState('release', { _release: s => s.data }),
-
+    __release () {
+      return { ...this._release, team: this.team}
+    },
     /**
      * Get release episodes
      *
      * @return {array}
      */
     episodes () {
-      return this.$__get(this._release, 'episodes') || []
+      return this.$__get(this._release, 'episodes')?.map(x => {
+        const date = this.dates[x.id] ?
+          ` (${new Intl.DateTimeFormat('ru-RU').format(
+            new Date(this.dates[x.id] * 1000)
+          )})` :
+          ''
+        x.date = date
+        return x
+      }) || []
     },
 
     /**
@@ -143,17 +156,71 @@ export default {
   },
 
   watch: {
-
     releaseId: {
       immediate: true,
       async handler (releaseId) {
 
+        try {
+          let { franchises, team } = await fetch(`https://api.wwnd.space/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
+            .then(x => x.json())
+
+          this.team = team
+          const ids = new Set([])
+          for (const franchise of franchises) {
+            for (const release of franchise.releases) {
+              ids.add(release.id)
+            }
+          }
+
+          let additionalData = await fetch(
+            `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${Array.from(ids)}`)
+            .then(x => x.json())
+
+          franchises = franchises.map(x => {
+            x.releases = x.releases.sort(function(a, b) {
+              return a.ordinal - b.ordinal;
+            })
+
+            x.releases = x.releases.map(x => {
+              const { posters, type, status: { string: status } } = additionalData.find(release => release.id === x.id)
+              console.log(additionalData.find(release => release.id === x.id))
+              x.poster = process.env.STATIC_ENDPOINT_URL + posters?.medium.url
+              x.type = type?.full_string
+              x.status = status
+              return x
+            })
+
+            return x
+          })
+          this.franchises.push(...franchises)
+        } catch (e) {
+          console.log(e)
+          this.$toasted.error('Ошибка загрузки связанного', { position: 'top' })
+        }
+
         // Update if release data changed
         if (this._release === null || this._release.id !== parseInt(releaseId)) {
-
           // Get release data
           this.loading = true
+
+          try {
+            const { player: { playlist } } = await fetch('https://api.wwnd.space/v2/getTitle?id='+releaseId)
+              .then(async(x) => {
+                const d = await x.text()
+                  //console.log(d)
+                return JSON.parse(d)
+              })
+
+            for (const [key, { serie, created_timestamp }] of Object.entries(playlist)) {
+              this.dates[key] = created_timestamp
+            }
+          } catch (e) {
+            console.log(e)
+          }
+
+          // this.dates.map(x => x)
           await this.$store.dispatchPromise('release/getRelease', releaseId)
+
           this.loading = false
 
         }
