@@ -22,17 +22,18 @@ export default {
      * @return {void}
      */
     handleKeyboardEvents: function (e) {
+      if (e.code === 'VolumeMute') this.player.volume = 0
 
       // State
-      if (e.which === 32) this.$emit('toggle:play') // Space -> play
+      if (e.which === 32 || e.code === 'MediaPlayPause') this.$emit('toggle:play') // Space -> play
       if (e.code === 'KeyF') this.$emit('toggle:fullscreen') // F -> fullscreen
 
       // Seek
-      if (e.which === 39) this.forward() // right arrow -> forward
-      if (e.which === 37) this.rewind() // left arrow -> rewind
+      if (e.which === 39 || e.code === 'MediaTrackNext') this.forward() // right arrow -> forward
+      if (e.which === 37 || e.code === 'MediaTrackPrevious') this.rewind() // left arrow -> rewind
 
       // Volume
-      if (e.which === 38) {
+      if (e.which === 38 || e.code === 'VolumeUp') {
         if (this.player.volume >= 0.95) {
           this.$emit('set:volume', 1)
         } else {
@@ -40,7 +41,7 @@ export default {
           this.$emit('set:volume', newVolume)
         }
       } // up arrow -> inc vol
-      if (e.which === 40) {
+      if (e.which === 40 || e.code === 'VolumeDown') {
         if (this.player.volume <= 0.05) {
           this.$emit('set:volume', 0)
         } else {
