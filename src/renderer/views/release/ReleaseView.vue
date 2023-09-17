@@ -86,45 +86,6 @@ export default {
   },
 
   async mounted () {
-    try {
-      let { franchises } = await fetch(`https://api.wwnd.space/v3/title?filter=franchises&playlist_type=array&id=${this.releaseId}`)
-        .then(x => x.json())
-
-      console.log(franchises)
-
-      const ids = new Set([])
-      for (const franchise of franchises) {
-        for (const release of franchise.releases) {
-          ids.add(release.id)
-        }
-      }
-
-      console.log(ids)
-
-      let additionalData = await fetch(
-        `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${Array.from(ids)}`)
-        .then(x => x.json())
-
-      franchises = franchises.map(x => {
-        x.releases = x.releases.sort(function(a, b) {
-          return a.ordinal - b.ordinal;
-        })
-
-        x.releases = x.releases.map(x => {
-          const { posters, type, status: { string: status } } = additionalData.find(release => release.id === x.id)
-          x.poster = process.env.STATIC_ENDPOINT_URL + posters?.medium.url
-          x.type = type?.full_string
-          x.status = status
-          return x
-        })
-
-        return x
-      })
-      this.franchises.push(...franchises)
-    } catch (e) {
-      console.log(e)
-      this.$toasted.error('Ошибка загрузки связанного', { position: 'top' })
-    }
   },
 
   data () {
