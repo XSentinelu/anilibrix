@@ -233,6 +233,10 @@ export default {
      * @return void
      */
     setTime (time) {
+      if (this.player.paused) {
+        this.player.once('playing', () => this.player.pause())
+      }
+
       this.player.currentTime = time
     },
 
