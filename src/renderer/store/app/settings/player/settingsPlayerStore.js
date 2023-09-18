@@ -8,8 +8,9 @@ const SET_UPSCALE_PROCESS = 'SET_UPSCALE_PROCESS'
 const SET_TORRENTS_PROCESS = 'SET_TORRENTS_PROCESS'
 const SET_OPENING_SKIP_TIME = 'SET_OPENING_SKIP_TIME'
 const SET_OPENING_SKIP_BUTTON = 'SET_OPENING_SKIP_BUTTON'
+const SET_OPENING_SKIP_BUTTON_KEY = 'SET_OPENING_SKIP_BUTTON_KEY'
 const SET_OPENING_AUTOSKIP = 'SET_OPENING_AUTOSKIP'
-
+const SET_OPENING_AUTOSKIP_BUTTON_KEY = 'SET_OPENING_AUTOSKIP_BUTTON_KEY'
 
 export default {
   namespaced: true,
@@ -26,7 +27,9 @@ export default {
     opening: {
       skip_time: 30,
       skip_button: false,
-      autoSkip: false
+      skip_button_key: '',
+      autoSkip: false,
+      autoSkipKey: ''
     },
     video: {
       buffer: 300
@@ -123,7 +126,10 @@ export default {
      * @return {*}
      */
     [SET_OPENING_SKIP_BUTTON]: (s, state) => (s.opening.skip_button = state),
-    [SET_OPENING_AUTOSKIP]: (s, state) => (s.opening.autoSkip = state)
+    [SET_OPENING_SKIP_BUTTON_KEY]: (s, state) => (s.opening.skip_button_key = state),
+    [SET_OPENING_AUTOSKIP]: (s, state) => (s.opening.autoSkip = state),
+    [SET_OPENING_AUTOSKIP_BUTTON_KEY]: (s, state) => (s.opening.autoSkipKey = state)
+
   },
 
   actions: {
@@ -205,7 +211,7 @@ export default {
      * @return {*}
      */
     setOpeningSkipButton: ({ commit }, state) => commit(SET_OPENING_SKIP_BUTTON, state),
-
+    setOpeningSkipButtonKey: ({ commit }, state) => commit(SET_OPENING_SKIP_BUTTON_KEY, state),
     /**
      * Set video buffer
      *
@@ -222,5 +228,6 @@ export default {
      * @return {*}
      */
     setAutoSkip: ({ commit }, state) => commit(SET_OPENING_AUTOSKIP, state),
+    setAutoSkipKey: ({ commit }, state) => commit(SET_OPENING_AUTOSKIP_BUTTON_KEY, state)
   }
 }

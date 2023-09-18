@@ -2,7 +2,7 @@
   <v-list-item two-line ref="container" @click="$emit('click')">
 
     <v-list-item-content>
-      <v-list-item-title v-text="episode.title"/>
+      <v-list-item-title v-text="episode.title + (episode.date || '')"/>
       <v-list-item-subtitle>
         <quality v-bind="{episode}"/>
       </v-list-item-subtitle>

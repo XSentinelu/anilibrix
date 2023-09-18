@@ -16,8 +16,20 @@
         <!-- Meta -->
         <div>
           <v-card-title v-text="title" class="allow-select display-1 mb-2 font-weight-black" :style="{wordBreak: 'break-word'}"/>
-          <v-card-subtitle v-text="original" class="allow-select pb-0"/>
-          <v-card-subtitle v-text="genres" class="allow-select pt-0"/>
+          <v-card-subtitle v-text="original" class="allow-select pb-1"/>
+
+          <div style="margin-bottom: -10px;" v-for="(type, prop) in release.team" :key="prop" class="pl-4" v-if="type.length">
+            <span class="subtitle-2" style="color: rgb(184 184 184);">{{ teamProps[prop] }}:</span>
+            <v-chip
+              v-for="name in type"
+              :key="name"
+              class="ma-2"
+              small
+            >
+              {{ name }}
+            </v-chip>
+          </div>
+
           <v-card-text class="mb-1">
             <favorite v-bind="{release}" color="grey darken-3"/>
             <v-chip v-if="year" v-text="year" label color="grey darken-3" :style="{height: '36px'}"/>
@@ -55,6 +67,17 @@ export default {
   components: {
     Loader,
     Favorite
+  },
+  data () {
+    return {
+      teamProps: {
+        voice: 'Озвучили',
+        translator: 'Перевели',
+        decor: 'Оформили',
+        editing: 'Субтитры',
+        timing: 'Таймили'
+      }
+    }
   },
   computed: {
 

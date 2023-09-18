@@ -23,6 +23,7 @@
                 square
                 class="release-card--progress mx-n4"
                 height="25">
+                :color="red darken-5"
               </release-progress>
 
             </div>
@@ -32,10 +33,11 @@
           <release-progress
             v-if="!hover"
             v-bind="{release, episodes}"
+            dense
+            center
             square
             class="release-card--progress"
-            height="5"
-            :show-numbers="false">
+            height="25">
           </release-progress>
 
         </v-img>
@@ -116,7 +118,6 @@ export default {
 
   &--reveal {
     bottom: 0;
-    opacity: .9;
     position: absolute;
     width: 100%;
     height: 100%;

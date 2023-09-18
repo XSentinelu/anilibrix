@@ -89,6 +89,26 @@
         </div>
       </v-card-text>
     </v-card>
+
+    <v-card>
+      <v-card-text class="caption">Горячая клавиша включения и выключения авто пропуска</v-card-text>
+      <v-card-text>
+        <v-text-field
+          outlined
+          hide-details
+          class="mb-2"
+          type="text"
+          label="Нажми тут сочетание клавиш"
+          clearable
+          :value="_auto_opening_skip_key"
+          @click:clear="_setAutoSkipKey('')"
+          @keyup.prevent="bindAutoSkip('keyup', $event)"
+          @keydown.prevent="bindAutoSkip('keydown', $event)">
+        </v-text-field>
+      </v-card-text>
+    </v-card>
+    <v-divider/>
+
     <v-divider/>
 
     <!-- Opening Skip Button -->
@@ -104,6 +124,25 @@
           В интерфейсе плеера появится дополнительная кнопка, которая перемотает плеер на указанное количество секунд
         </div>
         <div>Данная кнопка не гарантирует корректный пропуск опенинга</div>
+      </v-card-text>
+    </v-card>
+    <v-divider/>
+
+    <v-card>
+      <v-card-text class="caption">Горячая клавиша кнопки пропуска опенинга</v-card-text>
+      <v-card-text>
+        <v-text-field
+          outlined
+          hide-details
+          class="mb-2"
+          type="text"
+          label="Нажми тут сочетание клавиш"
+          clearable
+          :value="_opening_skip_button_key"
+          @click:clear="_setOpeningSkipButtonKey('')"
+          @keyup.prevent="bindSkip('keyup', $event)"
+          @keydown.prevent="bindSkip('keydown', $event)">
+        </v-text-field>
       </v-card-text>
     </v-card>
     <v-divider/>
@@ -132,6 +171,7 @@
 
 import { mapActions, mapState } from 'vuex'
 
+
 export default {
   computed: {
     ...mapState('app/settings/player', {
@@ -140,11 +180,51 @@ export default {
       _torrents_process: s => s.torrents.process,
       _opening_skip_time: s => s.opening.skip_time,
       _opening_skip_button: s => s.opening.skip_button,
-      _auto_opening_skip: s => s.opening.autoSkip
+      _opening_skip_button_key: s => s.opening.skip_button_key,
+      _auto_opening_skip: s => s.opening.autoSkip,
+      _auto_opening_skip_key: s => s.opening.autoSkipKey
     })
   },
-
+  data () {
+    return {
+      keysDown: []
+    }
+  },
   methods: {
+    bindAutoSkip (type, e) {
+      if (type === 'keydown') {
+        if (this.keysDown.indexOf(e.code) === -1) {
+          this.keysDown.push(e.code);
+        }
+
+        if (this.keysDown.length && !['ControlLeft'].includes(this.keysDown.toString())) {
+          this._setAutoSkipKey(this.keysDown.join('+'))
+        }
+      } else if (type === 'keyup') {
+        const index = this.keysDown.indexOf(e.code);
+
+        if (index !== -1) {
+          this.keysDown.splice(index, 1);
+        }
+      }
+    },
+    bindSkip (type, e) {
+      if (type === 'keydown') {
+        if (this.keysDown.indexOf(e.code) === -1) {
+          this.keysDown.push(e.code);
+        }
+
+        if (this.keysDown.length && !['ControlLeft'].includes(this.keysDown.toString())) {
+          this._setOpeningSkipButtonKey(this.keysDown.join('+'))
+        }
+      } else if (type === 'keyup') {
+        const index = this.keysDown.indexOf(e.code);
+
+        if (index !== -1) {
+          this.keysDown.splice(index, 1);
+        }
+      }
+    },
     ...mapActions('app/settings/player', {
       _setAutoSkip: 'setAutoSkip',
       _setVideoBuffer: 'setVideoBuffer',
@@ -152,6 +232,8 @@ export default {
       _setTorrentsProcess: 'setTorrentsProcess',
       _setOpeningSkipTime: 'setOpeningSkipTime',
       _setOpeningSkipButton: 'setOpeningSkipButton',
+      _setOpeningSkipButtonKey: 'setOpeningSkipButtonKey',
+      _setAutoSkipKey: 'setAutoSkipKey'
     }),
   }
 
