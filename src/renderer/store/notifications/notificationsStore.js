@@ -71,15 +71,16 @@ export default {
      * Add release to notification items
      *
      * @param commit
+     * @param rootState
+     * @param rootGetters
      * @param release
      * @return {*}
      */
     setRelease: ({ commit, rootState, rootGetters }, release) => {
       const filterNotify = rootState.app.settings.system.filter_notify
-      const isAuthorized = rootGetters['favorites/isAuthorized']
-      const isFav = rootGetters['favorites/isInFavorite'](release)
+      const isFavorite = rootGetters['favorites/isInFavorite'](release)
 
-      if (isAuthorized && filterNotify && !isFav) return
+      if (filterNotify && !isFavorite) return
       if (release && release.episodes[0]) {
         // Add notification
         // Push release to releases items

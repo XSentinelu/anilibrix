@@ -56,9 +56,10 @@ export default {
      * Check if provided release is in favorite
      *
      * @param s
+     * @param getters
      * @return {function(*): boolean}
      */
-    isInFavorite: s => release => ((s.items || []).findIndex(item => item.id === release.id) > -1)
+    isInFavorite: (s, getters) => release => getters.isAuthorized && ((s.items || []).findIndex(item => item.id === release.id) > -1)
 
   },
 
