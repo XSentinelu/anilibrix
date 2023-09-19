@@ -20,6 +20,7 @@ const REMOVE_ITEM = 'REMOVE_ITEM'
 const SET_SETTINGS_SORT = 'SET_SETTINGS_SORT'
 const SET_SETTINGS_GROUP = 'SET_SETTINGS_GROUP'
 const SET_SETTINGS_SHOW_SEEN = 'SET_SETTINGS_SHOW_SEEN'
+const SET_SETTINGS_SHOW_COMPLETED = 'SET_SETTINGS_SHOW_COMPLETED'
 const SET_SETTINGS_YEARS_COLLAPSED = 'SET_SETTINGS_YEARS_COLLAPSED'
 
 // Requests
@@ -35,6 +36,7 @@ export default {
       sort: 'original',
       group: 'years',
       show_seen: true,
+      show_completed: false,
       years_collapsed: []
     }
   },
@@ -127,6 +129,15 @@ export default {
      * @return {*}
      */
     [SET_SETTINGS_SHOW_SEEN]: (s, state) => (s.settings.show_seen = state),
+
+    /**
+     * Set settings show completed
+     *
+     * @param s
+     * @param state
+     * @return {*}
+     */
+    [SET_SETTINGS_SHOW_COMPLETED]: (s, state) => (s.settings.show_completed = state),
 
     /**
      * Set years collapsed
@@ -335,7 +346,16 @@ export default {
      * @param state
      * @return {*}
      */
-    setSettingsShowSeen: ({ commit }, state) => commit(SET_SETTINGS_SHOW_SEEN, state)
+    setSettingsShowSeen: ({ commit }, state) => commit(SET_SETTINGS_SHOW_SEEN, state),
+
+    /**
+     * Set settings show completed
+     *
+     * @param commit
+     * @param state
+     * @return {*}
+     */
+    setSettingsShowCompleted: ({ commit }, state) => commit(SET_SETTINGS_SHOW_COMPLETED, state)
 
   }
 }

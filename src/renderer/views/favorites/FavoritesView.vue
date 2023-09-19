@@ -117,6 +117,7 @@ export default {
       const sort = this.$__get(this._settings, 'sort')
       const search = this.search
       const show_seen = this.$__get(this._settings, 'show_seen') || false
+      const show_completed = this.$__get(this._settings, 'show_completed')
 
       // Create releases copy from store
       let releases = [...this._items || []]
@@ -124,8 +125,10 @@ export default {
       // Check sort type
       // Sort by title if sort type is 'title'
       // Sort by release update datetime if sort type is 'updates'
+      // Sort by rating if sort type is 'rating'
       if (sort === 'title') releases = releases.sort((a, b) => a.names.ru.localeCompare(b.names.ru))
       if (sort === 'updates') releases = releases.sort((a, b) => b.datetime.system - a.datetime.system)
+      if (sort === 'rating') releases = releases.sort((a, b) => b.favoriteRating.count - a.favoriteRating.count)
 
       // Check search string
       // Apply search if search is provided
@@ -137,13 +140,14 @@ export default {
 
         const release_id = release.id
         const episodes = (this.$__get(release, 'episodes') || []).map(x => x.id)
+        const statusCode = this.$__get(release, 'statusCode')
         const payload = {
           release_id,
           episodes
         }
 
         const progress = this.$store.getters['app/watch/getReleaseProgress'](payload)
-        return progress < 100 || (progress === 100 && show_seen === true)
+        return (progress < 100 || (progress === 100 && show_seen === true)) && (Number(statusCode) !== 1 || (Number(statusCode) === 1 && show_completed === false))
       })
 
       return releases
