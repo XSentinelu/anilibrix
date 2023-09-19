@@ -34,6 +34,7 @@
             <favorite v-bind="{release}" color="grey darken-3"/>
             <v-chip v-if="year" v-text="year" label color="grey darken-3" :style="{height: '36px'}"/>
             <v-chip v-if="type" v-text="type" label color="grey darken-3" :style="{height: '36px'}"/>
+            <v-chip v-if="status" v-text="status" label color="grey darken-3" :style="{height: '36px'}"/>
           </v-card-text>
         </div>
 
@@ -142,6 +143,15 @@ export default {
      */
     poster () {
       return this.$__get(this.release, 'poster')
+    },
+
+    /**
+    * Get release status
+    *
+    * @return {*}
+    */
+    status () {
+      return this.$__get(this.release, 'status')
     }
 
   }

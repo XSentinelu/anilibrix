@@ -3,6 +3,7 @@ import BaseTransformer from '@transformers/BaseTransformer'
 
 // Utils
 import stripHtml from 'string-strip-html'
+import humanFormat from 'human-format';
 
 export default class ReleaseTransformer extends BaseTransformer {
   /**
@@ -26,6 +27,7 @@ export default class ReleaseTransformer extends BaseTransformer {
       poster: this.get(release, 'poster'),
       status: this.get(release, 'status'),
       statusCode: this.get(release, 'statusCode'),
+      favoriteRating: this._getFavoriteRating(release),
       datetime: this._getReleaseDatetime(release),
       episodes: {
         playlist: this.get(release, 'playlist'),
@@ -51,6 +53,18 @@ export default class ReleaseTransformer extends BaseTransformer {
       system,
       human
     }
+  }
+
+  /**
+   * Get release favorite rating
+   *
+   * @param release
+   * @return {{count: (*|number), text: string}}
+   */
+  _getFavoriteRating (release) {
+    const rating = this.get(release, 'favorite.rating')
+
+    return { count: rating, text: humanFormat(rating) }
   }
 
   /**
