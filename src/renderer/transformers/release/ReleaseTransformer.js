@@ -24,6 +24,8 @@ export default class ReleaseTransformer extends BaseTransformer {
       voices: this.get(release, 'voices') || [],
       genres: this.get(release, 'genres') || [],
       poster: this.get(release, 'poster'),
+      status: this.get(release, 'status'),
+      statusCode: this.get(release, 'statusCode'),
       datetime: this._getReleaseDatetime(release),
       episodes: {
         playlist: this.get(release, 'playlist'),

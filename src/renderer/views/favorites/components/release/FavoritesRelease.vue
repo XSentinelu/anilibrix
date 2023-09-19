@@ -5,41 +5,38 @@
         <v-img aspect-ratio=".7" :src="poster">
 
           <v-fade-transition mode="out-in">
-            <div v-if="hover" class="release-card--reveal grey darken-4 pa-4">
-
+            <div v-if="hover" class="d-flex flex-column release-card--reveal grey darken-4 pa-4" style="padding-bottom: 25px !important">
               <!-- Title -->
               <div class="body-2 font-weight-bold mb-2">{{ title }}</div>
 
               <!-- Description -->
-              <v-clamp autoresize class="caption" max-height="70%" :style="{hyphens: 'auto'}">
-                {{ description }}
-              </v-clamp>
+              <div class="flex-grow-1 overflow-hidden">
+                <v-clamp autoresize class="caption" max-height="100%" :style="{hyphens: 'auto'}">
+                  {{ description }}
+                </v-clamp>
+              </div>
 
-              <!-- Release Progress -->
-              <release-progress
-                v-bind="{release, episodes}"
-                dense
-                center
-                square
-                class="release-card--progress mx-n4"
-                height="25">
-                :color="red darken-5"
-              </release-progress>
-
+              <!-- Status -->
+              <div v-if="status" class="d-flex justify-end mt-auto py-2">
+                <v-chip
+                  color="secondary"
+                  text-color="white"
+                  x-small
+                 >
+                  {{ status }}
+                </v-chip>
+              </div>
             </div>
           </v-fade-transition>
 
           <!-- Release Progress -->
           <release-progress
-            v-if="!hover"
-            v-bind="{release, episodes}"
+            v-bind="{ release, episodes }"
             dense
             center
             square
             class="release-card--progress"
-            height="25">
-          </release-progress>
-
+            height="25"/>
         </v-img>
       </v-card>
     </v-lazy>
@@ -104,7 +101,16 @@ export default {
      */
     description () {
       return this.$__get(this.release, 'description')
-    }
+    },
+
+    /**
+     * Get release status
+     *
+     * @return {string}
+     */
+    status () {
+      return this.$__get(this.release, 'status')
+    },
   }
 
 }
