@@ -17,11 +17,19 @@
               </div>
 
               <!-- Status -->
-              <div v-if="status" class="d-flex justify-end mt-auto py-2">
+              <div v-if="status || rating" class="d-flex justify-space-between mt-auto py-2">
                 <v-chip
                   color="secondary"
                   text-color="white"
-                  x-small
+                  small
+                 >
+                  {{ rating }}
+                </v-chip>
+
+                <v-chip
+                  color="gray"
+                  text-color="white"
+                  small
                  >
                   {{ status }}
                 </v-chip>
@@ -110,6 +118,15 @@ export default {
      */
     status () {
       return this.$__get(this.release, 'status')
+    },
+
+    /**
+     * Get release rating
+     *
+     * @return {string}
+     */
+    rating () {
+      return this.$__get(this.release, 'favoriteRating.text')
     },
   }
 
