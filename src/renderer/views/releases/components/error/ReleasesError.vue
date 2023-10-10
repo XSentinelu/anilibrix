@@ -14,7 +14,7 @@
             <div>Попробуйте изменить настройки соединения или попробуйте позже</div>
           </v-card-text>
           <v-layout>
-            <v-btn @click="_getReleases">Повторить</v-btn>
+            <v-btn @click="reload">Повторить</v-btn>
           </v-layout>
         </v-card>
       </v-col>
@@ -38,6 +38,9 @@ export default {
     }
   },
   methods: {
+    reload () {
+      window.location.reload()
+    },
     ...mapActions('releases', { _getReleases: 'getReleases' }),
   }
 }
