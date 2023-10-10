@@ -12,13 +12,6 @@
           <v-card-text>
             <div>Укажите данные, с которыми вы зарегистрировались на сайте Анилибрии</div>
           </v-card-text>
-          <v-alert
-            icon="mdi-shield-lock"
-            dense
-            type="info"
-          >
-            Ваши учетные данные хранятся в зашифрованном виде
-          </v-alert>
           <!-- Login / Email -->
           <!-- Password -->
           <v-layout class="py-6 pt-2">
