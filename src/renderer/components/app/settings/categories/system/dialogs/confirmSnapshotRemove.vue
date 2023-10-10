@@ -36,6 +36,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { catGirlFetch } from '@utils/fetch'
 export default {
   data () {
     return {
@@ -52,7 +53,7 @@ export default {
   methods: {
     deleteSnapshot: async function () {
       this.loading = true
-      await fetch(process.env.EXT_API_SERVER + '/snapshot/' + this.id, {
+      await catGirlFetch(process.env.EXT_API_SERVER + '/snapshot/' + this.id, {
         method: 'DELETE',
         headers: {
           'x-session': this._session

@@ -97,6 +97,8 @@ import { mapState } from 'vuex'
 import confirmCreate from '@components/app/settings/categories/system/dialogs/confirmCreate.vue'
 import confirmSnapshotRemove from '@components/app/settings/categories/system/dialogs/confirmSnapshotRemove.vue'
 import confirmSnapshotRestore from '@components/app/settings/categories/system/dialogs/confirmSnapshotRestore.vue'
+import { catGirlFetch } from '@utils/fetch'
+
 export default {
   data () {
     return {
@@ -140,15 +142,15 @@ export default {
     createSnapshot () {
       this.$refs.createSnapshot.showDialog()
     },
-    restoreSnapshot(id) {
+    restoreSnapshot (id) {
       this.$refs.restoreConfirm.showDialog(id)
     },
-    deleteSnapshot(id) {
+    deleteSnapshot (id) {
       this.$refs.deleteConfirm.showDialog(id)
     },
     fetchSnapshots: async function () {
       this.loading = true
-      await fetch(process.env.EXT_API_SERVER + '/snapshot', {
+      await catGirlFetch(process.env.EXT_API_SERVER + '/snapshot', {
         headers: {
           'x-session': this._session
         }

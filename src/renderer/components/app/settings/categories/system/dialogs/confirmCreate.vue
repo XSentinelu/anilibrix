@@ -36,6 +36,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { catGirlFetch } from '@utils/fetch'
 
 export default {
   data () {
@@ -88,7 +89,7 @@ export default {
         }
       })
 
-      await fetch(process.env.EXT_API_SERVER + '/snapshot', {
+      await catGirlFetch(process.env.EXT_API_SERVER + '/snapshot', {
         method: 'PUT',
         headers: {
           'x-session': this._session,
