@@ -3,11 +3,12 @@
 
     <!-- Release Card -->
     <card v-bind="{loading}" class="mb-2" :release="__release"/>
-    <v-card  v-if="franchises.length" flat color="transparent" class="mb-6">
+    <v-card v-if="franchises.length && !loading" flat color="transparent" class="mb-6">
       <v-card-title>Связанное</v-card-title>
       <v-list three-line>
         <template v-for="(item, index) in franchises">
-          <v-list-item :link="true" @click="router().push('/release/' + release.id + '/' + release.names.en)" :disabled="release.id == releaseId"
+          <v-list-item :link="true" @click="router().push('/release/' + release.id + '/' + release.names.en)"
+                       :disabled="release.id == releaseId"
                        v-for="(release, index) in item.releases"
                        :key="release.id"
           >
@@ -52,11 +53,11 @@
 import Card from '@components/release/card'
 import Episodes from '@components/release/episodes'
 import Comments from '@components/release/comments'
-const originalFetch = require('isomorphic-fetch');
-const fetch = require('fetch-retry')(originalFetch);
+
 import { toVideo } from '@utils/router/views'
 import { mapState } from 'vuex'
 import router from '@router'
+import { catGirlFetch } from '@utils/fetch'
 
 const props = {
   releaseId: {
@@ -70,11 +71,6 @@ const props = {
 }
 
 export default {
-  methods: {
-    router () {
-      return router
-    }
-  },
   props,
   name: 'Release.View',
   meta () {
@@ -102,7 +98,10 @@ export default {
   computed: {
     ...mapState('release', { _release: s => s.data }),
     __release () {
-      return { ...this._release, team: this.team}
+      return {
+        ...this._release,
+        team: this.team
+      }
     },
     /**
      * Get release episodes
@@ -110,15 +109,25 @@ export default {
      * @return {array}
      */
     episodes () {
-      return this.$__get(this._release, 'episodes')?.map(x => {
-        const date = this.dates[x.id] ?
-          ` (${new Intl.DateTimeFormat('ru-RU').format(
-            new Date(this.dates[x.id] * 1000)
-          )})` :
-          ''
-        x.date = date
-        return x
-      }) || []
+      if (!this._release) return []
+
+      if (!Object.keys(this.dates).length) return this.$__get(this._release, 'episodes', [])
+
+      return this.$__get(this._release, 'episodes', [])
+        .map(episode => {
+          let date = ''
+
+          if (this.dates[episode.id]) {
+            const dt = new Date(this.dates[episode.id] * 1000)
+            const formattedDate = new Intl.DateTimeFormat('ru-RU').format(dt)
+            date = this.dates[episode.id] ? ` (${formattedDate})` : ''
+          }
+
+          return {
+            ...episode,
+            date: date,
+          }
+        })
     },
 
     /**
@@ -155,72 +164,110 @@ export default {
 
   },
 
+  methods: {
+    router () {
+      return router
+    },
+    async fetchAdditional() {
+      try {
+        const { franchises, team } = await this.loadFranchisesAndTeam()
+
+        this.team = team
+        const releaseIds = this.extractReleaseIds(franchises)
+        const additionalData = await this.loadAdditionalData(releaseIds)
+
+        this.franchises = this.formatFranchises(franchises, additionalData)
+      } catch (error) {
+        console.error(error)
+        this.$toasted.error('Ошибка загрузки связанных данных')
+      }
+    },
+
+    async loadFranchisesAndTeam() {
+      return await catGirlFetch(`https://api.wwnd.space/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
+        .then(response => response.json())
+    },
+
+    extractReleaseIds(franchises) {
+      const releaseIds = new Set()
+      franchises.forEach(franchise => {
+        franchise.releases.forEach(release => {
+          releaseIds.add(release.id)
+        })
+      })
+      return Array.from(releaseIds)
+    },
+
+    async loadAdditionalData(releaseIds) {
+      return await catGirlFetch(
+        `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${releaseIds}`
+      ).then(response => response.json())
+    },
+
+    formatFranchises(franchises, additionalData) {
+      return franchises.map(franchise => {
+        return {
+          ...franchise,
+          releases: franchise.releases.map(release => {
+            const releaseData = additionalData.find(data => data.id === release.id)
+            const {
+              posters,
+              type,
+              status: { string: status },
+            } = releaseData
+
+            return {
+              ...release,
+              poster: process.env.STATIC_ENDPOINT_URL + posters?.medium.url,
+              type: type?.full_string,
+              status: status,
+            }
+          }),
+        }
+      })
+    },
+
+    async fetchDates() {
+      try {
+        const { player: { playlist } } = await this.loadTitleData()
+
+        this.dates = this.extractDatesFromPlaylist(playlist)
+      } catch (error) {
+        this.$toasted.error('Ошибка загрузки связанных данных')
+        console.error(error)
+      }
+    },
+
+    async loadTitleData() {
+      return await catGirlFetch('https://api.wwnd.space/v2/getTitle?id=' + this.releaseId)
+        .then(async response => {
+          const textData = await response.text()
+          return JSON.parse(textData)
+        })
+    },
+
+    extractDatesFromPlaylist(playlist) {
+      const dates = {}
+      for (const [key, { created_timestamp }] of Object.entries(playlist)) {
+        dates[key] = created_timestamp
+      }
+      return dates
+    },
+  },
+
   watch: {
     releaseId: {
       immediate: true,
       async handler (releaseId) {
 
-        try {
-          let { franchises, team } = await fetch(`https://api.wwnd.space/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
-            .then(x => x.json())
-
-          this.team = team
-          const ids = new Set([])
-          for (const franchise of franchises) {
-            for (const release of franchise.releases) {
-              ids.add(release.id)
-            }
-          }
-
-          let additionalData = await fetch(
-            `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${Array.from(ids)}`)
-            .then(x => x.json())
-
-          franchises = franchises.map(x => {
-            x.releases = x.releases.sort(function(a, b) {
-              return a.ordinal - b.ordinal;
-            })
-
-            x.releases = x.releases.map(x => {
-              const { posters, type, status: { string: status } } = additionalData.find(release => release.id === x.id)
-              console.log(additionalData.find(release => release.id === x.id))
-              x.poster = process.env.STATIC_ENDPOINT_URL + posters?.medium.url
-              x.type = type?.full_string
-              x.status = status
-              return x
-            })
-
-            return x
-          })
-          this.franchises.push(...franchises)
-        } catch (e) {
-          console.log(e)
-          this.$toasted.error('Ошибка загрузки связанного', { position: 'top' })
-        }
-
         // Update if release data changed
         if (this._release === null || this._release.id !== parseInt(releaseId)) {
+
           // Get release data
           this.loading = true
-
-          try {
-            const { player: { playlist } } = await fetch('https://api.wwnd.space/v2/getTitle?id='+releaseId)
-              .then(async(x) => {
-                const d = await x.text()
-                  //console.log(d)
-                return JSON.parse(d)
-              })
-
-            for (const [key, { serie, created_timestamp }] of Object.entries(playlist)) {
-              this.dates[key] = created_timestamp
-            }
-          } catch (e) {
-            console.log(e)
-          }
-
-          // this.dates.map(x => x)
+          await this.fetchDates(releaseId)
+          await this.fetchAdditional(releaseId)
           await this.$store.dispatchPromise('release/getRelease', releaseId)
-
           this.loading = false
 
         }
