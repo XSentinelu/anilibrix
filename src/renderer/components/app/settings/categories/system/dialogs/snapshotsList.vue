@@ -165,9 +165,10 @@ export default {
             createdAt
           }) => ({
             id,
-            date: this.$moment(createdAt).format('DD.MM.YYYY hh:mm:ss')
+            date: this.$moment(createdAt).format('DD.MM.YYYY hh:mm:ss'),
+            dateRaw: createdAt
           })).sort(function (a, b) {
-            return new Date(b.date) - new Date(a.date)
+            return new Date(b.dateRaw) - new Date(a.dateRaw)
           })
         }).catch((error) => this.$toasted.show(error, { type: 'error' }))
       this.loading = false
