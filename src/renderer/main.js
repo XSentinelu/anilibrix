@@ -23,7 +23,13 @@ import '@assets/scss/style.scss'
 
 // Import entry component
 import App from './App'
-
+import axios from 'axios'
+import axiosRetry from 'axios-retry';
+axiosRetry(axios, {
+  retryDelay: 1500,
+  retries: 10,
+  retryCondition: () => true
+})
 Vue.config.productionTip = false
 
 // Initialize sentry

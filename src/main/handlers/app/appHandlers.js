@@ -4,7 +4,13 @@ import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from
 import { setEncrypted } from '@main/utils/safeStorage'
 import axios from 'axios'
 import axiosRetry from 'axios-retry';
-axiosRetry(axios);
+
+axiosRetry(axios, {
+  retryDelay: 1500,
+  retries: 10,
+  retryCondition: () => true
+})
+
 const { shell } = require('electron')
 const path = require('path')
 
