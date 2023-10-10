@@ -30,6 +30,7 @@
                   color="gray"
                   text-color="white"
                   small
+                  v-if="status"
                  >
                   {{ status }}
                 </v-chip>
