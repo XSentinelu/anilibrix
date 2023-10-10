@@ -5,11 +5,13 @@
     class="black system-bar white--text px-2"
     :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.controlsRight}"
     @dblclick="() => maximizeApp()">
-
-    <template v-for="(control, k) in controls">
-      <v-btn icon small class="system-bar__button" :key="k" @click="control.action">
-        <v-icon small color="grey">{{ control.icon }}</v-icon>
-      </v-btn>
+    <template v-if="!this.isMac">
+      <v-spacer v-if="this.isWindows"/>
+      <template v-for="(control, k) in controls">
+        <v-btn icon small class="system-bar__button" :key="k" @click="control.action">
+          <v-icon small color="grey">{{ control.icon }}</v-icon>
+        </v-btn>
+      </template>
     </template>
   </v-layout>
 </template>

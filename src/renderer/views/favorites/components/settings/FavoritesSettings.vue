@@ -14,6 +14,19 @@
       </v-list-item>
     </v-card>
 
+    <!-- Completed -->
+    <v-card class="mb-2">
+      <v-list-item class="py-2" @click="_setSettingsShowCompleted(!_show_completed)">
+        <v-list-item-content>
+          <v-list-item-title>Только завершенные</v-list-item-title>
+          <v-list-item-subtitle>Вы можете показать или скрыть незаконченные релизы</v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-switch :input-value="_show_completed" @click="_setSettingsShowCompleted"/>
+        </v-list-item-action>
+      </v-list-item>
+    </v-card>
+
 
     <!-- Sort -->
     <v-card class="mb-2">
@@ -74,6 +87,10 @@ export default {
           value: 'title'
         },
         {
+          title: 'По популярности',
+          value: 'rating'
+        },
+        {
           title: 'По дате добавления в избранное',
           value: 'original'
         },
@@ -100,6 +117,7 @@ export default {
       _sort: s => s.settings.sort,
       _group: s => s.settings.group,
       _show_seen: s => s.settings.show_seen,
+      _show_completed: s => s.settings.show_completed,
     })
   },
 
@@ -109,6 +127,7 @@ export default {
       _setSettingsSort: 'setSettingsSort',
       _setSettingsGroup: 'setSettingsGroup',
       _setSettingsShowSeen: 'setSettingsShowSeen',
+      _setSettingsShowCompleted: 'setSettingsShowCompleted',
     })
 
   }
