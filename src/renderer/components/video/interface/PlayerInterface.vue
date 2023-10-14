@@ -270,11 +270,11 @@ export default {
         }
 
         if (this.keysDown.length && !['ControlLeft'].includes(this.keysDown.toString())) {
-          if (this._opening_skip_button_key === this.keysDown.join('+')) {
+          if (this._auto_opening_skip_key !== '' && this._opening_skip_button_key === this.keysDown.join('+')) {
             this.setTime(this.player.currentTime + (this._opening_skip_time || 0))
           }
 
-          if (this._auto_opening_skip_key === this.keysDown.join('+')) {
+          if (this._auto_opening_skip_key !== '' && this._auto_opening_skip_key === this.keysDown.join('+')) {
             if (this._auto_opening_skip) {
               this.$toasted.show('Авто пропуск опенинга выключен', {
                 type: 'default',
