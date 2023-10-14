@@ -43,7 +43,7 @@
 
     <!-- Keyboard -->
     <player-keyboard
-      v-bind="{player}"
+      v-bind="{player, release, episode}"
       @set:volume="setVolume"
       @set:time="setTime"
       @set:speed="setSpeed"

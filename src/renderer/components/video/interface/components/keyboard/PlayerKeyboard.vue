@@ -1,18 +1,57 @@
 <script>
 
 import { AppKeyboardHandlerMixin } from '@mixins/app'
+import { toVideo } from '@utils/router/views'
 
 const props = {
   player: {
     type: Object,
     default: null
-  }
+  },
+  release: {
+    type: Object,
+    default: null
+  },
+  episode: {
+    type: Object,
+    default: null
+  },
 }
 
 export default {
   props,
   mixins: [AppKeyboardHandlerMixin],
   render: () => null,
+  computed: {
+    /**
+     * Get episodes
+     *
+     * @return Array
+     */
+    episodes () {
+      return this.$__get(this.release, 'episodes') || []
+    },
+
+    /**
+     * Get next episode
+     *
+     * @return Object|null
+     */
+    next () {
+      return this.episodes
+        .find(episode => episode.id === (this.$__get(this.episode, 'id') || -1) + 1) || null
+    },
+
+    /**
+     * Get previous episode
+     *
+     * @return {*}
+     */
+    previous () {
+      return this.episodes
+        .find(episode => episode.id === (this.$__get(this.episode, 'id') || -1) - 1) || null
+    },
+  },
   methods: {
 
     /**
@@ -29,8 +68,8 @@ export default {
       if (e.code === 'KeyF') this.$emit('toggle:fullscreen') // F -> fullscreen
 
       // Seek
-      if (e.which === 39 || e.code === 'MediaTrackNext') this.forward() // right arrow -> forward
-      if (e.which === 37 || e.code === 'MediaTrackPrevious') this.rewind() // left arrow -> rewind
+      if (e.which === 39 || e.code === 'MediaTrackNext') toVideo(this.release, this.next, {fromStart: true})
+      if (e.which === 37 || e.code === 'MediaTrackPrevious') toVideo(this.release, this.previous, {fromStart: true})
 
       // Volume
       if (e.which === 38 || e.code === 'VolumeUp') {
