@@ -66,7 +66,7 @@ jobs:
         run: yarn
 
       - name: Run build
-        run: npm run release:windows
+        run: npm run release:linux
 
       - name: Archive results
         uses: actions/upload-artifact@v3
