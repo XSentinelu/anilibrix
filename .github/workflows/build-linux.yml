@@ -75,4 +75,6 @@ jobs:
           path: |
             release/*.snap
             release/*.AppImage
-            
+            release/linux-arm64-unpacked
+            release/linux-unpacked
+            release/linux-ia32-unpacked

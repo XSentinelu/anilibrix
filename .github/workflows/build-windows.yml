@@ -72,4 +72,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Save artifacts
-          path: release/*.exe
+          path: |
+            release/*.exe
+            release/win-arm64-unpacked
+            release/win-unpacked
+            release/win-ia32-unpacked
