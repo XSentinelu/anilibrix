@@ -83,6 +83,10 @@ export default {
   },
 
   async mounted () {
+    if (this._release?.id) {
+      await this.fetchDates(this._release.id)
+      await this.fetchAdditional(this._release.id)
+    }
   },
 
   data () {
