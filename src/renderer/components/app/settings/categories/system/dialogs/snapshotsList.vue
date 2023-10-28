@@ -155,7 +155,6 @@ export default {
           'x-session': this._session
         }
       })
-        .then(e => e.json())
         .then(({
           data,
           success,

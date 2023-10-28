@@ -189,7 +189,6 @@ export default {
 
     async loadFranchisesAndTeam() {
       return await catGirlFetch(`https://api.wwnd.space/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
-        .then(response => response.json())
     },
 
     extractReleaseIds(franchises) {
@@ -205,7 +204,7 @@ export default {
     async loadAdditionalData(releaseIds) {
       return await catGirlFetch(
         `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${releaseIds}`
-      ).then(response => response.json())
+      )
     },
 
     formatFranchises(franchises, additionalData) {
@@ -244,10 +243,6 @@ export default {
 
     async loadTitleData() {
       return await catGirlFetch('https://api.wwnd.space/v2/getTitle?id=' + this.releaseId)
-        .then(async response => {
-          const textData = await response.text()
-          return JSON.parse(textData)
-        })
     },
 
     extractDatesFromPlaylist(playlist) {

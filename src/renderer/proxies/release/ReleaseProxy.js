@@ -42,7 +42,6 @@ export default class ReleaseProxy extends BaseProxy {
     for (const ep in playlist) {
       if (playlist[ep].sources.is_rutube) {
         playlist[ep].fullhd = await catGirlFetch(`https://rutube.ru/api/play/options/${playlist[ep].rutube_id}/?no_404=true&referer&pver=v2`)
-          .then(x => x.json())
           .then(x => x.video_balancer.m3u8)
           .catch(x => console.log(x))
       }
