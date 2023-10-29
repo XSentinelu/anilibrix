@@ -167,7 +167,7 @@ export default {
             createdAt
           }) => ({
             id,
-            date: this.$moment(createdAt).format('DD.MM.YYYY hh:mm:ss'),
+            date: this.$moment(createdAt).format('DD.MM.YYYY HH:mm:ss'),
             dateRaw: createdAt
           })).sort(function (a, b) {
             return new Date(b.dateRaw) - new Date(a.dateRaw)
