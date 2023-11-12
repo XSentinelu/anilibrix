@@ -62,6 +62,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-electron-builder-cache-
 
+      - name: Remove other python
+        run: sudo rm -rf /System/Library/Frameworks/Python.framework/
+
       - name: Install python@3.10
         run: brew install python@3.10
 
