@@ -24,6 +24,6 @@ export function catGirlFetch (url, init = {}) {
       init[attempt]++
       console.log('Parse err', init[attempt])
       if (init[attempt] > 5) return Promise.reject(err)
-      return fetchRetry(url, init)
+      return catGirlFetch(url, init)
     })
 }
