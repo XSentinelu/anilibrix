@@ -58,6 +58,9 @@ import { toVideo } from '@utils/router/views'
 import { mapState } from 'vuex'
 import router from '@router'
 import { catGirlFetch } from '@utils/fetch'
+import ReleaseProxy from '@proxies/release'
+
+const domain = 'https://api.wwnd.space'
 
 const props = {
   releaseId: {
@@ -188,7 +191,7 @@ export default {
     },
 
     async loadFranchisesAndTeam() {
-      return await catGirlFetch(`https://api.wwnd.space/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
+      return await catGirlFetch(`${domain}/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
     },
 
     extractReleaseIds(franchises) {
@@ -202,9 +205,15 @@ export default {
     },
 
     async loadAdditionalData(releaseIds) {
-      return await catGirlFetch(
-        `https://api.wwnd.space/v3/title/list?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id_list=${releaseIds}`
+      const result = await Promise.allSettled(
+          releaseIds.map((id) => catGirlFetch(
+            `${domain}/v3/title?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id=${id}`
+          ))
       )
+
+      return result
+        .filter(({ value }) => value.status !== 404)
+        .map(({ value }) => value)
     },
 
     formatFranchises(franchises, additionalData) {
@@ -213,6 +222,9 @@ export default {
           ...franchise,
           releases: franchise.releases.map(release => {
             const releaseData = additionalData.find(data => data.id === release.id)
+
+            if (!releaseData) return null
+
             const {
               posters,
               type,
@@ -221,11 +233,11 @@ export default {
 
             return {
               ...release,
-              poster: process.env.STATIC_ENDPOINT_URL + posters?.medium.url,
+              poster: new ReleaseProxy().getStaticEndpoint() + posters?.medium.url,
               type: type?.full_string,
               status: status,
             }
-          }),
+          }).filter(x => x !== null),
         }
       })
     },
@@ -242,7 +254,7 @@ export default {
     },
 
     async loadTitleData() {
-      return await catGirlFetch('https://api.wwnd.space/v2/getTitle?id=' + this.releaseId)
+      return await catGirlFetch(`${domain}/v2/getTitle?id=${this.releaseId}`)
     },
 
     extractDatesFromPlaylist(playlist) {
