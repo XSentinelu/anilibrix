@@ -86,9 +86,10 @@ export default {
   },
 
   async mounted () {
+    const id = this._release?.id
     if (this._release?.id) {
-      await this.fetchDates(this._release.id)
-      await this.fetchAdditional(this._release.id)
+      await this.fetchDates(id)
+      await this.fetchAdditional(id)
     }
   },
 
@@ -276,9 +277,9 @@ export default {
 
           // Get release data
           this.loading = true
+          await this.$store.dispatchPromise('release/getRelease', releaseId)
           await this.fetchDates(releaseId)
           await this.fetchAdditional(releaseId)
-          await this.$store.dispatchPromise('release/getRelease', releaseId)
           this.loading = false
 
         }
