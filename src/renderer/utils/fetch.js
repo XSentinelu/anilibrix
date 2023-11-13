@@ -19,8 +19,19 @@ export function catGirlFetch (url, init = {}) {
   }
 
   return fetchRetry(url, init)
+    .then(x => {
+      if (!x.ok && x.status === 404) {
+        const err = new Error('Not found')
+        err.status = 404
+        throw err
+      }
+
+      return x
+    })
     .then(x => x.json())
     .catch(err => {
+      if (err.status === 404) throw err
+
       init[attempt]++
       console.log('Parse err', init[attempt])
       if (init[attempt] > 5) return Promise.reject(err)

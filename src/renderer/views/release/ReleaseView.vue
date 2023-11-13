@@ -213,7 +213,9 @@ export default {
       )
 
       return result
-        .filter(({ value }) => value.status !== 404)
+        .filter(({ value, reason }) => {
+          return reason?.status !== 404
+        })
         .map(({ value }) => value)
     },
 
