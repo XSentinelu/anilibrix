@@ -5,47 +5,39 @@
         <v-img aspect-ratio=".7" :src="poster">
 
           <v-fade-transition mode="out-in">
-            <div v-if="hover" class="d-flex flex-column release-card--reveal grey darken-4 pa-4" style="padding-bottom: 25px !important">
+            <div v-if="hover" class="release-card--reveal grey darken-4 pa-4">
+
               <!-- Title -->
               <div class="body-2 font-weight-bold mb-2">{{ title }}</div>
 
               <!-- Description -->
-              <div class="flex-grow-1 overflow-hidden">
-                <v-clamp autoresize class="caption" max-height="100%" :style="{hyphens: 'auto'}">
-                  {{ description }}
-                </v-clamp>
-              </div>
+              <v-clamp autoresize class="caption" max-height="70%" :style="{hyphens: 'auto'}">
+                {{ description }}
+              </v-clamp>
 
-              <!-- Status -->
-              <div v-if="status || rating" class="d-flex justify-space-between mt-auto py-2">
-                <v-chip
-                  color="secondary"
-                  text-color="white"
-                  small
-                 >
-                  {{ rating }}
-                </v-chip>
+              <!-- Release Progress -->
+              <release-progress
+                v-bind="{release, episodes}"
+                dense
+                center
+                square
+                class="release-card--progress mx-n4"
+                height="25">
+              </release-progress>
 
-                <v-chip
-                  color="gray"
-                  text-color="white"
-                  small
-                  v-if="status"
-                 >
-                  {{ status }}
-                </v-chip>
-              </div>
             </div>
           </v-fade-transition>
 
           <!-- Release Progress -->
           <release-progress
-            v-bind="{ release, episodes }"
-            dense
-            center
+            v-if="!hover"
+            v-bind="{release, episodes}"
             square
             class="release-card--progress"
-            height="25"/>
+            height="5"
+            :show-numbers="false">
+          </release-progress>
+
         </v-img>
       </v-card>
     </v-lazy>
@@ -110,25 +102,7 @@ export default {
      */
     description () {
       return this.$__get(this.release, 'description')
-    },
-
-    /**
-     * Get release status
-     *
-     * @return {string}
-     */
-    status () {
-      return this.$__get(this.release, 'status')
-    },
-
-    /**
-     * Get release rating
-     *
-     * @return {string}
-     */
-    rating () {
-      return this.$__get(this.release, 'favoriteRating.text')
-    },
+    }
   }
 
 }
@@ -142,6 +116,7 @@ export default {
 
   &--reveal {
     bottom: 0;
+    opacity: .9;
     position: absolute;
     width: 100%;
     height: 100%;
