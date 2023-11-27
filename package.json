@@ -1,6 +1,6 @@
 {
   "name": "anilibrix",
-  "version": "v1.4.3-ext.9",
+  "version": "v1.4.3-ext.9s",
   "author": {
     "name": "Anilibria",
     "email": "anilibria@protonmail.com",
@@ -11,7 +11,7 @@
   "main": "./dist/electron/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnimeHaze/anilibrix"
+    "url": "https://github.com/XSentinelu/anilibrix"
   },
   "scripts": {
     "build": "node .electron-vue/build.js",
@@ -25,11 +25,10 @@
   "meta": {
     "name": "AniLibrix",
     "links": {
-      "github": "https://github.com/AnimeHaze/anilibrix",
+      "github": "https://github.com/XSentinelu/anilibrix",
       "donate": "https://www.anilibria.tv/pages/donate.php",
       "telegram": "tg://resolve?domain=anilibrix",
-      "anilibria": "https://anilibria.tv",
-      "unofficial": "tg://resolve?domain=anilibrixUnoffical"
+      "anilibria": "https://anilibria.tv"
     }
   },
   "build": {
@@ -140,8 +139,10 @@
     "@sentry/integrations": "^6.13.2",
     "axios": "^0.19.2",
     "axios-retry": "^3.5.1",
+    "bindings": "^1.5.0",
     "chromecast-api": "^0.3.3",
     "debug": "^4.3.4",
+    "detect-libc": "^2.0.2",
     "discord-rpc": "^4.0.1",
     "electron-dl": "^3.0.1",
     "electron-promise-ipc": "^2.0.1",
