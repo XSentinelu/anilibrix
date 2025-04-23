@@ -1,14 +1,18 @@
 <template>
   <v-progress-linear
-    v-bind="{height, color}"
+    v-bind="{ height, color, opacity }"
+    :color="isComplete ? 'red darken-1' : color"
+    :style="isUnseen ? 'opacity : 0.3' : ''"
     class="release__progress"
-    :class="{square}"
+    :class="{ square }"
+    :background-color="isUnseen ? 'grey darken-3' : 'red darken-1'"
     :value="progress"
-    :indeterminate="loading">
-
+    :indeterminate="loading"
+  >
     <template v-if="!loading && showNumbers" v-slot>
-      <div class="release__progress__description caption white--text font-weight-bold px-4">
-
+      <div
+        class="release__progress__description caption white--text font-weight-bold px-4"
+      >
         <!-- Complete All Episodes -->
         <span v-if="isComplete">
           <span v-if="!dense">Просмотрены все эпизоды</span>
@@ -23,44 +27,43 @@
 
         <!-- Episodes Progress -->
         <span v-else>
-          <span v-if="!dense">Просмотрено {{ watched }} из {{ episodes.length }}</span>
+          <span v-if="!dense"
+            >Просмотрено {{ watched }} из {{ episodes.length }}</span
+          >
           <span v-else>{{ watched }} из {{ episodes.length }}</span>
         </span>
-
       </div>
     </template>
-
   </v-progress-linear>
 </template>
 
 <script>
-
-import pluralize from '@utils/strings/pluralize'
+import pluralize from "@utils/strings/pluralize";
 
 const props = {
   release: {
     type: Object,
-    default: null
+    default: null,
   },
   episodes: {
     type: Array,
-    default: null
+    default: null,
   },
   showNumbers: {
     type: Boolean,
-    default: true
+    default: true,
   },
   color: {
     type: String,
-    default: 'secondary'
+    default: "secondary",
   },
   height: {
     type: [Number, String],
-    default: '25'
+    default: "25",
   },
   dense: {
     type: Boolean,
-    default: false
+    default: false,
   },
   center: {
     type: Boolean,
@@ -72,30 +75,27 @@ const props = {
   },
   square: {
     type: Boolean,
-    default: false
-  }
-}
+    default: false,
+  },
+};
 
 export default {
   props,
   computed: {
-
     /**
      * Calculate total seen progress
      *
      * @return {*}
      */
-    progress () {
-
-      const release_id = this.release.id
-      const episodes = (this.episodes || []).map(x => x.id)
+    progress() {
+      const release_id = this.release.id;
+      const episodes = (this.episodes || []).map((x) => x.id);
       const payload = {
         release_id,
-        episodes
-      }
+        episodes,
+      };
 
-      return this.$store.getters['app/watch/getReleaseProgress'](payload)
-
+      return this.$store.getters["app/watch/getReleaseProgress"](payload);
     },
 
     /**
@@ -103,21 +103,24 @@ export default {
      *
      * @return {*}
      */
-    watched () {
+    watched() {
+      const release_id = this.release.id;
 
-      const release_id = this.release.id
-
-      const episodes = (this.episodes || []).map(x => x.id)
+      const episodes = (this.episodes || []).map((x) => x.id);
       const payload = {
         release_id,
-        episodes
-      }
+        episodes,
+      };
 
       // Get watched episodes
       // Convert to string with suffix
-      const watched_episodes = this.$store.getters['app/watch/getWatchedEpisodes'](payload)
-      return pluralize(watched_episodes.length, ['эпизод', 'эпизода', 'эпизодов'])
-
+      const watched_episodes =
+        this.$store.getters["app/watch/getWatchedEpisodes"](payload);
+      return pluralize(watched_episodes.length, [
+        "эпизод",
+        "эпизода",
+        "эпизодов",
+      ]);
     },
 
     /**
@@ -125,8 +128,8 @@ export default {
      *
      * @return {boolean}
      */
-    isComplete () {
-      return this.progress === 100
+    isComplete() {
+      return this.progress === 100;
     },
 
     /**
@@ -134,16 +137,14 @@ export default {
      *
      * @return {boolean}
      */
-    isUnseen () {
-      return this.progress === 0
-    }
-
-  }
-}
+    isUnseen() {
+      return this.progress === 0;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 .release__progress {
   cursor: default;
   border-radius: 4px !important;
@@ -158,5 +159,4 @@ export default {
     position: absolute;
   }
 }
-
 </style>
