@@ -51,7 +51,8 @@ export default class Window {
     const mainWindowState = windowStateKeeper({
       file: 'window-state.json',
       defaultWidth: opts.width,
-      defaultHeight: opts.height
+      defaultHeight: opts.height,
+      fullScreen: false
     })
 
     console.log('Window-state: is Main?', this.isMain ?? false)

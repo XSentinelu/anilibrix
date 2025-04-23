@@ -208,8 +208,8 @@ export default {
           if (!axios.isCancel(error)) {
             // Show error
             // Throw error
+            console.error(error)
             showAppError('Произошла ошибка при загрузке избранных релизов')
-            console.log(error)
           }
         } finally {
           commit(SET_LOADING, false)
@@ -253,7 +253,6 @@ export default {
             // Show app error
             // Throw error
             showAppError(error)
-            console.log(error)
           }
         }
       }
@@ -295,7 +294,6 @@ export default {
             // Show app error
             // Throw error
             showAppError(error)
-            console.log(error)
           }
         }
       }

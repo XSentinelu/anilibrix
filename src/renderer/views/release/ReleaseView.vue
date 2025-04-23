@@ -3,7 +3,7 @@
 
     <!-- Release Card -->
     <card v-bind="{loading}" class="mb-2" :release="__release"/>
-    <v-card v-if="franchises.length && !loading" flat color="transparent" class="mb-6">
+    <v-card v-if="franchises.length && !loadingAdditional" flat color="transparent" class="mb-6">
       <v-card-title>Связанное</v-card-title>
       <v-list three-line>
         <template v-for="(item, index) in franchises">
@@ -40,6 +40,7 @@
     <v-tabs v-if="!loading" v-model="tab" class="shrink mb-4" background-color="transparent">
       <v-tab>Эпизоды</v-tab>
       <v-tab>Комментарии</v-tab>
+      <v-tab v-if="torrents.length > 0">Торренты</v-tab>
     </v-tabs>
 
     <!-- Release Components -->
@@ -53,14 +54,14 @@
 import Card from '@components/release/card'
 import Episodes from '@components/release/episodes'
 import Comments from '@components/release/comments'
+import Torrents from '@components/release/torrents'
 
 import { toVideo } from '@utils/router/views'
 import { mapState } from 'vuex'
 import router from '@router'
 import { catGirlFetch } from '@utils/fetch'
 import ReleaseProxy from '@proxies/release'
-
-const domain = 'https://api.wwnd.space'
+import {invokeGetTitleV3} from "@main/handlers/app/appHandlers";
 
 const props = {
   releaseId: {
@@ -88,7 +89,6 @@ export default {
   async mounted () {
     const id = this._release?.id
     if (this._release?.id) {
-      await this.fetchDates(id)
       await this.fetchAdditional(id)
     }
   },
@@ -97,6 +97,7 @@ export default {
     return {
       tab: 0,
       loading: false,
+      loadingAdditional: true,
       franchises: [],
       dates: {},
       team: null
@@ -119,23 +120,18 @@ export default {
     episodes () {
       if (!this._release) return []
 
-      if (!Object.keys(this.dates).length) return this.$__get(this._release, 'episodes', [])
-
       return this.$__get(this._release, 'episodes', [])
-        .map(episode => {
-          let date = ''
+    },
 
-          if (this.dates[episode.id]) {
-            const dt = new Date(this.dates[episode.id] * 1000)
-            const formattedDate = new Intl.DateTimeFormat('ru-RU').format(dt)
-            date = this.dates[episode.id] ? ` (${formattedDate})` : ''
-          }
+    /**
+     * Get release torrents
+     *
+     * @return {array}
+     */
+    torrents () {
+      if (!this._release) return []
 
-          return {
-            ...episode,
-            date: date,
-          }
-        })
+      return this.$__get(this._release, 'torrents', [])
     },
 
     /**
@@ -157,6 +153,10 @@ export default {
         {
           is: Comments,
           props: { release: this._release }
+        },
+        {
+          is: Torrents,
+          props: { torrents: this.torrents }
         }
       ]
     },
@@ -177,6 +177,7 @@ export default {
       return router
     },
     async fetchAdditional() {
+      this.loadingAdditional = true
       try {
         const { franchises, team } = await this.loadFranchisesAndTeam()
 
@@ -185,14 +186,16 @@ export default {
         const additionalData = await this.loadAdditionalData(releaseIds)
 
         this.franchises = this.formatFranchises(franchises, additionalData)
+        this.loadingAdditional = false
       } catch (error) {
         console.error(error)
         this.$toasted.error('Ошибка загрузки связанных данных')
+        this.loadingAdditional = false
       }
     },
 
     async loadFranchisesAndTeam() {
-      return await catGirlFetch(`${domain}/v3/title?filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
+      return await invokeGetTitleV3(`filter=franchises,team&playlist_type=array&id=${this.releaseId}`)
     },
 
     extractReleaseIds(franchises) {
@@ -207,8 +210,8 @@ export default {
 
     async loadAdditionalData(releaseIds) {
       const result = await Promise.allSettled(
-          releaseIds.map((id) => catGirlFetch(
-            `${domain}/v3/title?filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id=${id}`
+          releaseIds.map((id) => invokeGetTitleV3(
+            `filter=status.string,id,type.full_string,string,names.ru,posters.medium&include=raw_poster&description_type=plain&playlist_type=object&id=${id}`
           ))
       )
 
@@ -243,30 +246,7 @@ export default {
           }).filter(x => x !== null),
         }
       })
-    },
-
-    async fetchDates() {
-      try {
-        const { player: { playlist } } = await this.loadTitleData()
-
-        this.dates = this.extractDatesFromPlaylist(playlist)
-      } catch (error) {
-        this.$toasted.error('Ошибка загрузки связанных данных')
-        console.error(error)
-      }
-    },
-
-    async loadTitleData() {
-      return await catGirlFetch(`${domain}/v2/getTitle?id=${this.releaseId}`)
-    },
-
-    extractDatesFromPlaylist(playlist) {
-      const dates = {}
-      for (const [key, { created_timestamp }] of Object.entries(playlist)) {
-        dates[key] = created_timestamp
-      }
-      return dates
-    },
+    }
   },
 
   watch: {
@@ -280,10 +260,8 @@ export default {
           // Get release data
           this.loading = true
           await this.$store.dispatchPromise('release/getRelease', releaseId)
-          await this.fetchDates(releaseId)
-          await this.fetchAdditional(releaseId)
+          this.fetchAdditional(releaseId)
           this.loading = false
-
         }
       }
     }

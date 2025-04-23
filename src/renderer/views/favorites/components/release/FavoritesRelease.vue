@@ -1,43 +1,46 @@
 <template>
   <v-hover v-slot:default="{ hover }">
-    <v-lazy :options="{threshold: .5}">
+    <v-lazy :options="{ threshold: 0.5 }">
       <v-card class="grey darken-3 release-card" @click="$emit('click')">
         <v-img aspect-ratio=".7" :src="poster">
-
           <v-fade-transition mode="out-in">
             <div v-if="hover" class="release-card--reveal grey darken-4 pa-4">
-
               <!-- Title -->
               <div class="body-2 font-weight-bold mb-2">{{ title }}</div>
 
               <!-- Description -->
-              <v-clamp autoresize class="caption" max-height="70%" :style="{hyphens: 'auto'}">
+              <v-clamp
+                autoresize
+                class="caption"
+                max-height="70%"
+                :style="{ hyphens: 'auto' }"
+              >
                 {{ description }}
               </v-clamp>
 
               <!-- Release Progress -->
               <release-progress
-                v-bind="{release, episodes}"
+                v-bind="{ release, episodes }"
                 dense
                 center
                 square
                 class="release-card--progress mx-n4"
-                height="25">
+                height="25"
+              >
               </release-progress>
-
             </div>
           </v-fade-transition>
 
           <!-- Release Progress -->
           <release-progress
             v-if="!hover"
-            v-bind="{release, episodes}"
+            v-bind="{ release, episodes }"
             square
             class="release-card--progress"
             height="5"
-            :show-numbers="false">
+            :show-numbers="false"
+          >
           </release-progress>
-
         </v-img>
       </v-card>
     </v-lazy>
@@ -45,36 +48,34 @@
 </template>
 
 <script>
-
-import VClamp from 'vue-clamp'
-import ReleaseProgress from '@components/release/progress'
+import VClamp from "vue-clamp";
+import ReleaseProgress from "@components/release/progress";
 
 const props = {
   release: {
     type: Object,
-    default: null
+    default: null,
   },
   showSeen: {
     type: Boolean,
-    default: false
-  }
-}
+    default: false,
+  },
+};
 
 export default {
   props,
   components: {
     VClamp,
-    ReleaseProgress
+    ReleaseProgress,
   },
   computed: {
-
     /**
      * Get release poster image
      *
      * @return {string}
      */
-    poster () {
-      return this.$__get(this.release, 'poster') || ''
+    poster() {
+      return this.$__get(this.release, "poster") || "";
     },
 
     /**
@@ -82,8 +83,8 @@ export default {
      *
      * @return {string}
      */
-    title () {
-      return this.$__get(this.release, 'names.ru')
+    title() {
+      return this.$__get(this.release, "names.ru");
     },
 
     /**
@@ -91,8 +92,8 @@ export default {
      *
      * @return {array}
      */
-    episodes () {
-      return this.$__get(this.release, 'episodes') || []
+    episodes() {
+      return this.$__get(this.release, "episodes") || [];
     },
 
     /**
@@ -100,23 +101,39 @@ export default {
      *
      * @return {string}
      */
-    description () {
-      return this.$__get(this.release, 'description')
-    }
-  }
+    description() {
+      return this.$__get(this.release, "description");
+    },
 
-}
+    /**
+     * Get release status
+     *
+     * @return {string}
+     */
+    status() {
+      return this.$__get(this.release, "status");
+    },
+
+    /**
+     * Get release rating
+     *
+     * @return {string}
+     */
+    rating() {
+      return this.$__get(this.release, "favoriteRating.text");
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
-
 .release-card {
   position: relative;
   display: flex;
 
   &--reveal {
     bottom: 0;
-    opacity: .9;
+    opacity: 0.9;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -129,5 +146,4 @@ export default {
     border-radius: 0;
   }
 }
-
 </style>

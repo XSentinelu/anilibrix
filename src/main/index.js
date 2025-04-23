@@ -1,11 +1,14 @@
+import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
+import proxy from 'node-global-proxy';
+import { execFile } from 'child_process'
 // Main process
 import path from 'path'
-import { app } from 'electron'
+
 import { meta, version } from '@package'
 import sentry from './utils/sentry'
 // Store
-import { getStore, setUserId } from '@store'
-
+import store, { getStore, setUserId } from '@store'
+import express from 'express'
 // Windows
 import { Main, Torrent } from './utils/windows'
 
@@ -14,7 +17,19 @@ import { Main, Torrent } from './utils/windows'
 import { autoUpdater } from 'electron-updater'
 
 // App Handlers
-import { catchAppAboutEvent, catchAppDevtoolsMainEvent, catchAppDevtoolsTorrentEvent, catchAppDockNumberEvent, catchDisableSystemSleepBlockerEvent, catchEnableSystemSleepBlockerEvent, handleRand, handleRichPresense, handleSafeStorageEncrypt, handleShowConfig } from '@main/handlers/app/appHandlers'
+import {
+  catchAppAboutEvent,
+  catchAppDevtoolsMainEvent,
+  catchAppDevtoolsTorrentEvent,
+  catchAppDockNumberEvent,
+  catchDisableSystemSleepBlockerEvent,
+  catchEnableSystemSleepBlockerEvent, handleGetTitleV1New, handleGetTitleV2, handleGetTitleV3,
+  handleRand,
+  handleRichPresense,
+  handleSafeStorageEncrypt,
+  handleShowConfig,
+  handleTorrentParse, handleUpdateProxy
+} from '@main/handlers/app/appHandlers'
 
 // Torrent Handlers
 import { broadcastTorrentEvents } from '@main/handlers/torrents/torrentsHandler'
@@ -23,6 +38,38 @@ import { broadcastTorrentEvents } from '@main/handlers/torrents/torrentsHandler'
 import Tray from './utils/tray'
 import Menu from './utils/menu'
 import { openWindowInterceptor } from '@main/utils/windows/openWindowInterceptor'
+import { consoleLogToFile } from '@main/utils/log-to-file';
+import { debounce } from 'lodash';
+import { catGirlFetch } from '../renderer/utils/fetch';
+import {getActiveOperaProxyURL, startOperaProxy, stopOperaProxy} from '@main/utils/opera-proxy';
+let proxyServer
+app.commandLine.appendSwitch('--no-sandbox')
+const proxyServerValue = store.state.app.settings.system.proxy
+console.log('Load proxy ', proxyServerValue)
+
+if (app.commandLine.hasSwitch('proxy-server') || proxyServerValue) {
+  proxyServer = app.commandLine.getSwitchValue('proxy-server') || proxyServerValue;
+
+  (async () => {
+    if (proxyServer === 'http://opera') {
+      await startOperaProxy()
+      proxyServer = getActiveOperaProxyURL()
+    } else {
+      await stopOperaProxy()
+    }
+
+    if (proxyServer) {
+      proxy.setConfig({
+        http: proxyServer === 'http://opera' ? getActiveOperaProxyURL() : proxyServer,
+        https: proxyServer === 'http://opera' ? getActiveOperaProxyURL() : proxyServer
+      })
+
+      proxy.start();
+    }
+  })();
+} else {
+  proxy.system()
+}
 
 const { discordActivity } = require('./utils/discord')
 const {
@@ -65,6 +112,33 @@ app.on('window-all-closed', () => {
 })
 
 app.on('web-contents-created', (event, webContents) => {
+  webContents.on('did-finish-load', async () => {
+    if (webContents.getURL().startsWith('https://id.vk.com/')) {
+      webContents.on('will-redirect', async (event, url) => {
+        if (!url.startsWith('https://www.anilibria.tv/')) {
+          return true
+        }
+
+        const cookies = await webContents.session.cookies.get({ url: 'https://www.anilibria.tv' })
+
+        const { value: sessionId } = cookies.find(cookie => cookie.name === 'PHPSESSID') || {}
+
+        if (sessionId) {
+          Main.getWindow().webContents.send('VK_CODE', sessionId)
+        }
+
+        BrowserWindow.fromWebContents(webContents).hide()
+
+        webContents.on('did-finish-load', async () => {
+          await webContents.session.clearStorageData()
+          webContents.destroy()
+        })
+
+        return true
+      });
+    }
+  })
+
   webContents.setWindowOpenHandler(openWindowInterceptor)
   webContents.setUserAgent(`${meta.name}/${version}`)
   webContents.on('will-attach-webview', (event, webPreferences, params) => {
@@ -81,6 +155,40 @@ app.on('web-contents-created', (event, webContents) => {
 
 // App ready handler
 app.on('ready', async () => {
+  app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    if (store.state.app.settings.system.ignore_certs) {
+      // Verification logic.
+      event.preventDefault()
+      console.log('Certificate error ignored', url, error)
+      callback(true)
+    } else {
+      callback(false)
+    }
+  })
+
+  globalShortcut.register('CmdOrCtrl+shift+R', () => {
+    console.log('Restart')
+
+    const options = {
+      args: process.argv.slice(1).concat(['--relaunch']),
+      execPath: process.execPath
+    };
+    // Fix for .AppImage
+    if (app.isPackaged && process.env.APPIMAGE) {
+      execFile(process.env.APPIMAGE, options.args);
+      app.quit()
+
+      return
+    }
+
+    app.relaunch()
+    app.exit()
+  })
+
+  consoleLogToFile({
+    logFilePath: path.join(app.getPath('userData') + '/anilibrix.log')
+  })
+
   // Set user id
   await setUserId()
 
@@ -97,6 +205,14 @@ app.on('ready', async () => {
   const mainWindow = Main.getWindow()
   const torrentWindow = Torrent.getWindow()
 
+  if (proxyServer) {
+    mainWindow.webContents.session
+      .setProxy({ proxyRules: proxyServer === 'http://opera' ? getActiveOperaProxyURL() : proxyServer })
+
+    torrentWindow.webContents.session
+      .setProxy({ proxyRules: proxyServer === 'http://opera' ? getActiveOperaProxyURL() : proxyServer })
+  }
+
   if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools()
 
   require('@electron/remote/main').enable(mainWindow.webContents)
@@ -105,7 +221,7 @@ app.on('ready', async () => {
   mainWindow
     .once('ready-to-show', () => {
       mainWindow.show()
-      //autoUpdater.checkForUpdatesAndNotify() // Auto update
+      // autoUpdater.checkForUpdatesAndNotify() // Auto update
     })
     .on('close', () => {
       destroyRichPresence()
@@ -122,6 +238,17 @@ app.on('ready', async () => {
   appHandlers() // App handlers
   torrentHandlers() // Torrent handler
   // downloadHandlers(); // Download handlers
+
+  const serv = express()
+  serv.get('/rutube/:id/*', (req, res) => {
+    catGirlFetch(`https://rutube.ru/api/play/options/${req.params.id}/?no_404=true&referer&pver=v2`, {}, 3000)
+      .then(x => {
+        res.redirect(x.video_balancer.m3u8)
+      })
+      .catch(x => res.status(500).send())
+  })
+
+  serv.listen(9384)
 })
 
 /**
@@ -141,6 +268,71 @@ const appHandlers = () => {
   handleRichPresense(setActivity)
   handleRand()
   handleShowConfig()
+  handleTorrentParse()
+  handleGetTitleV2()
+  handleGetTitleV3()
+  handleGetTitleV1New()
+  handleUpdateProxy(async (url) => {
+    if (url === '') {
+      proxy.system()
+      const mainWindow = Main.getWindow()
+      const torrentWindow = Torrent.getWindow()
+
+      await stopOperaProxy()
+
+      mainWindow.webContents.session
+        .setProxy({ proxyRules: '' })
+
+      torrentWindow.webContents.session
+        .setProxy({ proxyRules: '' })
+
+      console.log('system proxy set')
+      return
+    }
+
+    if (url) {
+      try {
+        new URL(url)
+      } catch (e) {
+        return
+      }
+
+      console.log('Proxy url', url)
+      setProxy(url)
+    } else {
+      proxy.system()
+    }
+  })
+}
+
+const setProxy = debounce(setProxyOrig, 2000)
+
+function setProxyOrig (url) {
+  (async () => {
+    if (url === 'http://opera') {
+      await startOperaProxy()
+      url = getActiveOperaProxyURL()
+    } else {
+      await stopOperaProxy()
+    }
+
+    proxy.setConfig({
+      http: url,
+      https: url
+    })
+    console.log('set proxy', url)
+
+    const mainWindow = Main.getWindow()
+    const torrentWindow = Torrent.getWindow()
+
+    mainWindow.webContents.session
+      .setProxy({ proxyRules: url })
+
+    torrentWindow.webContents.session
+      .setProxy({ proxyRules: url })
+
+    proxy.start()
+  })();
 }
 
 /**

@@ -1,49 +1,49 @@
-import store from '@store'
-import { meta, repository } from '@package'
-import { Menu, shell } from 'electron'
+import store from "@store";
+import { meta, repository } from "@package";
+import { Menu, shell } from "electron";
 
 export const aboutTemplate = [
   {
-    role: 'about',
-    label: 'О приложении'
+    role: "about",
+    label: "О приложении",
   },
   {
-    label: 'Telegram-канал',
-    click: () => shell.openExternal(meta.links.telegram)
+    label: "Telegram-канал",
+    click: () => shell.openExternal(meta.links.telegram),
   },
   {
-    label: 'Исходный код на GitHub',
-    click: () => shell.openExternal(repository.url)
+    label: "Исходный код на GitHub",
+    click: () => shell.openExternal(repository.url),
   },
   {
-    type: 'separator'
+    type: "separator",
   },
   {
-    label: 'Анилибрия',
-    click: () => shell.openExternal(meta.links.anilibria)
+    label: "Анилибрия",
+    click: () => shell.openExternal(meta.links.anilibria),
   },
   {
-    label: 'Поддержать проект',
-    click: () => shell.openExternal(meta.links.donate)
+    label: "Поддержать проект",
+    click: () => shell.openExternal(meta.links.donate),
   },
   {
-    type: 'separator'
+    type: "separator",
   },
   {
-    role: 'minimize',
-    label: 'Свернуть приложение'
+    role: "minimize",
+    label: "Свернуть приложение",
   },
   {
-    role: 'quit',
-    label: 'Закрыть приложение'
-  }
-]
+    role: "quit",
+    label: "Закрыть приложение",
+  },
+];
 
 export default class AppMenu {
-  constructor () {
-    this._menu = null
-    this._mainWindow = null
-    this._torrentWindow = null
+  constructor() {
+    this._menu = null;
+    this._mainWindow = null;
+    this._torrentWindow = null;
   }
 
   /**
@@ -51,15 +51,15 @@ export default class AppMenu {
    *
    * @return AppMenu
    */
-  init () {
+  init() {
     // Build from template
-    this._menu = Menu.buildFromTemplate(this._getMenuTemplate())
+    this._menu = Menu.buildFromTemplate(this._getMenuTemplate());
 
     // Set menu
-    this._mainWindow.setMenu(this._menu)
-    this._torrentWindow.setMenu(this._menu)
+    this._mainWindow.setMenu(this._menu);
+    this._torrentWindow.setMenu(this._menu);
 
-    return this
+    return this;
   }
 
   /**
@@ -69,11 +69,11 @@ export default class AppMenu {
    * @param torrent
    * @return {AppMenu}
    */
-  setWindows (main = null, torrent = null) {
-    this._mainWindow = main
-    this._torrentWindow = torrent
+  setWindows(main = null, torrent = null) {
+    this._mainWindow = main;
+    this._torrentWindow = torrent;
 
-    return this
+    return this;
   }
 
   /**
@@ -82,53 +82,57 @@ export default class AppMenu {
    * @return Array
    * @private
    */
-  _getMenuTemplate () {
+  _getMenuTemplate() {
     return [
       {
         label: meta.name,
-        submenu: aboutTemplate
+        submenu: aboutTemplate,
       },
       {
-        label: 'Отладка',
+        label: "Отладка",
         submenu: [
           {
-            role: 'toggledevtools',
-            label: 'Консоль приложения',
-            click: () => this._mainWindow.showDevTools()
+            role: "toggledevtools",
+            label: "Консоль приложения",
+            click: () => this._mainWindow.showDevTools(),
           },
           {
-            label: 'Консоль торрент-сервер',
-            click: () => this._torrentWindow.showDevTools()
+            label: "Консоль торрент-сервер",
+            click: () => this._torrentWindow.showDevTools(),
           },
           {
-            type: 'separator'
+            type: "separator",
           },
           {
-            label: 'Добавить уведомление в хранилище',
-            click: () => store.dispatch('notifications/setRelease', store.state.releases.data[0])
+            label: "Добавить уведомление в хранилище",
+            click: () =>
+              store.dispatch(
+                "notifications/setRelease",
+                store.state.releases.data[0]
+              ),
           },
           {
-            label: 'Показать данные хранилища в консоли',
-            click: () => console.log(store.state)
+            label: "Показать данные хранилища в консоли",
+            click: () => console.log(store.state),
           },
           {
-            type: 'separator'
+            type: "separator",
           },
           {
-            role: 'forcereload',
-            label: 'Перезагрузить приложение'
-          }
-        ]
+            role: "forcereload",
+            label: "Перезагрузить приложение",
+          },
+        ],
       },
       {
-        label: 'Окно',
+        label: "Окно",
         submenu: [
-          { role: 'cut' },
-          { role: 'copy' },
-          { role: 'paste' },
-          { role: 'selectall' }
-        ]
-      }
-    ]
+          { role: "cut" },
+          { role: "copy" },
+          { role: "paste" },
+          { role: "selectall" },
+        ],
+      },
+    ];
   }
-};
+}

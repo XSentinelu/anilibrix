@@ -41,6 +41,12 @@
             <v-btn v-bind="{loading}" text @click="toBack">Назад</v-btn>
           </v-layout>
 
+          <v-divider class="my-6" />
+
+          <v-layout justify-center>
+            <v-btn :color="'blue darken-1'" @click="authorizeWithVK">Вход через VK</v-btn>
+          </v-layout>
+
         </v-card>
       </v-col>
 
@@ -52,7 +58,7 @@
 
 // Images
 import LibriaTyan03 from '@assets/images/libria-tyan/LibriaTyan03.svg'
-
+import { ipcRenderer } from "electron";
 // Utils
 import { required } from 'vuelidate/lib/validators'
 import { BackViewMixin } from '@mixins/views'
@@ -76,9 +82,48 @@ export default {
     login: { required },
     password: { required },
   },
+  mounted () {
+    ipcRenderer.on('VK_CODE', async (event, session) => {
+      try {
+        this.loading = true
+        await this.$store.dispatchPromise('app/account/setSession', session)
 
+        // Get profile data
+        await this.$store.dispatchPromise('app/account/getProfile')
+        await this.toBack()
+
+        // Get user favorites
+        this.$store.dispatchPromise('favorites/getFavorites')
+        this.loading = false
+      } catch (e) {
+        console.error(e)
+
+        if (e.response.status === 401) {
+          this.$toasted.error('Пользователь не зарегистрирован')
+        }
+        this.loading = false
+      }
+    })
+  },
+  beforeDestroy() {
+    ipcRenderer.removeAllListeners('VK_CODE')
+  },
   methods: {
 
+    authorizeWithVK () {
+      window.open(
+        'https://oauth.vk.com/authorize?client_id=5315207&redirect_uri=https://www.anilibria.tv/public/vk.php'
+        ,'targetWindow',
+        `toolbar=no,
+                location=no,
+                status=no,
+                menubar=no,
+                scrollbars=yes,
+                resizable=yes,
+                width=SomeSize,
+                height=SomeSize`
+      )
+    },
     /**
      * Authorize
      *
@@ -96,6 +141,12 @@ export default {
             password: this.password
           }
           const session = await this.$store.dispatchPromise('app/account/login', payload)
+
+
+          if (!session) {
+            return
+          }
+
           await Promise.allSettled([
             await invokeSafeStorageEncrypt('user.login', this.login),
             await invokeSafeStorageEncrypt('user.password', this.password)

@@ -25,6 +25,7 @@ export default class ReleaseTransformer extends BaseTransformer {
       voices: this.get(release, 'voices') || [],
       genres: this.get(release, 'genres') || [],
       poster: this.get(release, 'poster'),
+      torrents: this.get(release, 'torrents') || [],
       status: this.get(release, 'status'),
       statusCode: this.get(release, 'statusCode'),
       favoriteRating: this._getFavoriteRating(release),
@@ -63,8 +64,16 @@ export default class ReleaseTransformer extends BaseTransformer {
    */
   _getFavoriteRating (release) {
     const rating = this.get(release, 'favorite.rating')
+    const fuckingAPIBrokenRating = this.get(release, 'rating')
 
-    return { count: rating, text: humanFormat(rating) }
+    return {
+      count: rating,
+      text: humanFormat(
+        rating || // If api wor  fine
+            fuckingAPIBrokenRating || // Fallback to "new api" xD
+            0 // Oni-chan kill me,  it makes me want to cry
+      )
+    }
   }
 
   /**

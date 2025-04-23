@@ -10,6 +10,7 @@ import __camelCase from 'lodash/camelCase'
 
 // Handlers
 import { catchTorrentParsedData, sendTorrentParse } from '@main/handlers/torrents/torrentsHandler'
+import { catGirlFetch } from '@utils/fetch';
 
 export default class EpisodesTransformer extends BaseTransformer {
   constructor ({
@@ -53,6 +54,12 @@ export default class EpisodesTransformer extends BaseTransformer {
     try {
       const episodes = {}
 
+      for (const ep in playlist) {
+        if (playlist[ep].sources.is_rutube) {
+          playlist[ep].fullhd = 'http://localhost:9384/rutube/' + playlist[ep].rutube_id  + '/main.m3u8'
+        }
+      }
+        
       // Parse playlist
       // Parse upscale
       // Parse torrents
@@ -148,6 +155,8 @@ export default class EpisodesTransformer extends BaseTransformer {
       // Set episode data
       episodes[episode].id = episode
       episodes[episode].title = this.get(item, 'title')
+      episodes[episode].name = this.get(item, 'name')
+      episodes[episode].updated_at = this.get(item, 'updated_at')
 
       // Push sources
       if (fhdSource.payload.playlist) episodes[episode].sources.push(fhdSource)

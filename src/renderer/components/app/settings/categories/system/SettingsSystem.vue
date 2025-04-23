@@ -49,6 +49,50 @@
       </v-card-text>
     </v-card>
 
+    <v-card class="mt-2">
+      <v-list-item dense @click="_setIgnoreCerts(!_ignore_certs)">
+        <v-list-item-title>Игнорировать ошибки сертификатов</v-list-item-title>
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_ignore_certs" @change="_setIgnoreCerts"/>
+        </v-list-item-action>
+      </v-list-item>
+      <v-card-text class="pt-2 caption">
+        Игнорирование проверки доверенных сертификатов
+      </v-card-text>
+    </v-card>
+
+    <v-card class="mt-2">
+      <v-list-item dense @click="toggleOperaProxy">
+        <v-list-item-title>Использовать Opera Proxy</v-list-item-title>
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_proxy === 'http://opera'" @click="toggleOperaProxy"/>
+        </v-list-item-action>
+      </v-list-item>
+    </v-card>
+
+    <v-card>
+      <v-card-text class="mt-2">
+        <v-text-field
+          v-if="_proxy !== 'http://opera'"
+          outlined
+          class="mb-2"
+          :value="_proxy"
+          @input="setProxyServer($event)"
+          label="Прокси сервер"
+          persistent-hint
+        />
+
+        <div class="caption">
+          <div>
+            Прокси для подключения к серверу статики и API. Поддерживается HTTP и HTTPS
+          </div>
+          <div>
+            <b>После изменения точки доступа рекомендуется перезагрузить приложение</b>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
+
     <!-- API Endpoint -->
     <v-card>
       <v-card-text class="mt-2">
@@ -56,7 +100,7 @@
           outlined
           :value="_api_endpoint"
           @input="_setAPIEndpoint($event ? $event : process.env.API_ENDPOINT_URL)"
-          :items="['https://anilibria.tv/', 'https://wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/']"
+          :items="['https://anilibria.tv/', 'https://wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/', 'https://anilibria.animehaze.me/']"
           label="Точка подключения к API"
           persistent-hint
         />
@@ -66,7 +110,7 @@
           class="mb-2"
           :value="_static_endpoint"
           @input="_setAPIStaticEndpoint($event ? $event : process.env.STATIC_ENDPOINT_URL)"
-          :items="['https://static-libria.weekstorm.one/', 'https://static.anilibria.tv/', 'https://static.wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/']"
+          :items="['https://static-libria.weekstorm.one/', 'https://static.anilibria.tv/', 'https://static.wwnd.space/', 'https://anilibriaqt.anilib.top/', 'https://anilibrix.anilib.top/', 'https://anilibria.animehaze.me/']"
           label="Точка подключения к серверу статики"
           persistent-hint
         />
@@ -75,10 +119,25 @@
           Вы можете использовать основной домен, если он не заблокирован вашим провайдером, или использовать
           дополнительные домены
 
+          Вы можете ввесли свю точку подключения к API и серверу статики в поле "Точка подключения к API" и "Точка подключения к серверу статики"
+
           <b>После изменения точки доступа рекомендуется перезагрузить приложение</b>
         </div>
       </v-card-text>
     </v-card>
+
+    <v-card class="mt-2">
+      <v-list-item dense @click="_setDRPC(!_drpc_enabled)">
+        <v-list-item-title>Discord Rich Presence</v-list-item-title>
+        <v-list-item-action class="mr-2">
+          <v-switch :input-value="_drpc_enabled" @change="_setDRPC"/>
+        </v-list-item-action>
+      </v-list-item>
+      <v-card-text class="pt-2 caption">
+        Приложение будет выводть информацию о просматриваемом релизе в Discord Rich Presence
+      </v-card-text>
+    </v-card>
+    <v-divider/>
 
     <!-- System Notifications -->
     <v-card>
@@ -134,25 +193,25 @@
 
 
     <!-- Ads -->
-    <v-card class="mt-2">
-      <v-list-item dense @click="_setAds(!_ads)">
-        <v-list-item-title>Показывать рекламу</v-list-item-title>
-        <v-list-item-action class="mr-2">
-          <v-switch :input-value="_ads" @change="_setAds"/>
-        </v-list-item-action>
-      </v-list-item>
-      <v-card-text class="pt-2 caption">
-        <div>Спасибо, что выбрали <b>Анилибрию!</b></div>
-        <div>
-          Мы понимаем, что реклама никому не нравится, но это бесплатный способ поддержать проект.
-          Отключение рекламы - абсолютно бесплатно, но, если вы хотите поддержать нас, то оставьте рекламу включенной.
-          Обещаем, что не будем сильно навязчивыми (✿◠‿◠)
-        </div>
-      </v-card-text>
-    </v-card>
+<!--    <v-card class="mt-2">-->
+<!--      <v-list-item dense @click="_setAds(!_ads)">-->
+<!--        <v-list-item-title>Показывать рекламу</v-list-item-title>-->
+<!--        <v-list-item-action class="mr-2">-->
+<!--          <v-switch :input-value="_ads" @change="_setAds"/>-->
+<!--        </v-list-item-action>-->
+<!--      </v-list-item>-->
+<!--      <v-card-text class="pt-2 caption">-->
+<!--        <div>Спасибо, что выбрали <b>Анилибрию!</b></div>-->
+<!--        <div>-->
+<!--          Мы понимаем, что реклама никому не нравится, но это бесплатный способ поддержать проект.-->
+<!--          Отключение рекламы - абсолютно бесплатно, но, если вы хотите поддержать нас, то оставьте рекламу включенной.-->
+<!--          Обещаем, что не будем сильно навязчивыми (✿◠‿◠)-->
+<!--        </div>-->
+<!--      </v-card-text>-->
+<!--    </v-card>-->
 
     <!-- Ads Maximum -->
-    <v-card class="mt-2">
+<!--    <v-card class="mt-2">
       <v-list-item dense @click="_setAdsMaximum(!_ads_maximum)">
         <v-list-item-title>Показывать рекламу перед каждым эпизодом</v-list-item-title>
         <v-list-item-action class="mr-2">
@@ -163,7 +222,7 @@
         <div>Максимальная поддержка проекта!</div>
         <div>Реклама будет показываться перед каждым просмотром любого эпизода</div>
       </v-card-text>
-    </v-card>
+    </v-card>-->
 
     <div v-show="_isAuthorized" class="pa-4 caption grey--text">
       <div class="body-1">Снапшоты</div>
@@ -201,6 +260,8 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import Confirm from '@components/app/settings/categories/system/dialogs/confirm.vue'
 import snapshotsList from '@components/app/settings/categories/system/dialogs/snapshotsList.vue'
 import { AppPlatformMixin } from '@mixins/app'
+import {debounce} from "lodash";
+import {invokeUpdateProxy} from "@main/handlers/app/appHandlers";
 
 export default {
   mixins: [AppPlatformMixin],
@@ -219,15 +280,31 @@ export default {
       _ads_maximum: s => s.ads.maximum,
       _updates_enabled: s => s.updates.enabled,
       _updates_timeout: s => s.updates.timeout,
-      _api_endpoint: s => s.api.endpoint,
-      _static_endpoint: s => s.api.static_endpoint,
+      _api_endpoint: s => s.api._endpoint,
+      _static_endpoint: s => s.api._static_endpoint,
       _notifications_system: s => s.notifications.system,
       _appbar_right: s => s.appbar_right,
-      _filter_notify: s => s.filter_notify
+      _filter_notify: s => s.filter_notify,
+      _drpc_enabled: s => s.drpc_enabled,
+      _proxy: s => s.proxy,
+      _ignore_certs: s => s.ignore_certs
     }),
   },
 
   methods: {
+    toggleOperaProxy: function () {
+      if (this._proxy === 'http://opera') {
+        this.setProxyServer('')
+        console.log('opera proxy disabled')
+      } else {
+        this.setProxyServer('http://opera')
+        console.log('opera proxy enabled')
+      }
+    },
+    setProxyServer: function ($event) {
+      this._setProxy($event)
+      invokeUpdateProxy($event)
+    },
     showSnapshotsList: function () {
       this.$refs.confirm.hideDialog()
       this.$refs.snapshotsList.showDialog()
@@ -246,6 +323,9 @@ export default {
       _setAPIStaticEndpoint: 'setAPIStaticEndpoint',
       _setAppbarRight: 'setAppbarRight',
       _setFilterNotify: 'setFilterNotify',
+      _setDRPC: 'setDRPC',
+      _setProxy: 'setProxy',
+      _setIgnoreCerts: 'setIgnoreCerts'
     })
   },
 
