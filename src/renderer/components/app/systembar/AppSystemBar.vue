@@ -2,12 +2,23 @@
   <v-layout
     v-if="is_fullscreen === false"
     align-center
-    class="black system-bar white--text px-2"
-    :class="{'is-mac--fullscreen': this.isMacOnFullscreen, 'right': this.controlsRight}"
-    @dblclick="() => maximizeApp()">
+    class="system-bar white--text px-2"
+    style="color: #1d1d1d"
+    :class="{
+      'is-mac--fullscreen': this.isMacOnFullscreen,
+      right: this.controlsRight,
+    }"
+    @dblclick="() => maximizeApp()"
+  >
     <template v-if="!this.isMac">
       <template v-for="(control, k) in controls">
-        <v-btn icon small class="system-bar__button" :key="k" @click="control.action">
+        <v-btn
+          icon
+          small
+          class="system-bar__button"
+          :key="k"
+          @click="control.action"
+        >
           <v-icon small color="grey">{{ control.icon }}</v-icon>
         </v-btn>
       </template>
@@ -16,30 +27,29 @@
 </template>
 
 <script>
-
-import { AppPlatformMixin } from '@mixins/app'
-import { mapState } from 'vuex'
+import { AppPlatformMixin } from "@mixins/app";
+import { mapState } from "vuex";
 
 export default {
   mixins: [AppPlatformMixin],
-  data () {
+  data() {
     return {
       minimize: {
-        icon: 'mdi-minus',
+        icon: "mdi-minus",
         action: () => this.minimizeApp(),
       },
       maximize: {
-        icon: 'mdi-window-maximize',
+        icon: "mdi-window-maximize",
         action: () => this.maximizeApp(),
       },
       close: {
-        icon: 'mdi-close',
+        icon: "mdi-close",
         action: () => this.closeApp(),
-      }
-    }
+      },
+    };
   },
   computed: {
-    controlsRight () {
+    controlsRight() {
       return !!(this.appbarRight || this.isWindows);
     },
     /**
@@ -47,16 +57,16 @@ export default {
      *
      * @return Array
      */
-    controls () {
+    controls() {
       if (this.controlsRight) {
-        return [this.close, this.maximize, this.minimize]
+        return [this.close, this.maximize, this.minimize];
       } else {
-        return [this.close, this.minimize, this.maximize]
+        return [this.close, this.minimize, this.maximize];
       }
     },
-    ...mapState('app/settings/system', {
-      appbarRight: s => s.appbar_right
-    })
+    ...mapState("app/settings/system", {
+      appbarRight: (s) => s.appbar_right,
+    }),
   },
 
   methods: {
@@ -65,8 +75,8 @@ export default {
      *
      * @return void
      */
-    closeApp () {
-      require('@electron/remote').app.quit()
+    closeApp() {
+      require("@electron/remote").app.quit();
     },
 
     /**
@@ -74,8 +84,8 @@ export default {
      *
      * @return void
      */
-    minimizeApp () {
-      require('@electron/remote').getCurrentWindow().minimize()
+    minimizeApp() {
+      require("@electron/remote").getCurrentWindow().minimize();
     },
 
     /**
@@ -83,21 +93,16 @@ export default {
      *
      * @return void
      */
-    maximizeApp () {
+    maximizeApp() {
+      const window = require("@electron/remote").getCurrentWindow();
 
-      const window = require('@electron/remote').getCurrentWindow()
-
-      window.isMaximized()
-        ? window.unmaximize()
-        : window.maximize()
-    }
-  }
-
-}
+      window.isMaximized() ? window.unmaximize() : window.maximize();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 .system-bar {
   top: 0;
   height: 40px;
@@ -120,5 +125,4 @@ export default {
     flex-direction: row-reverse;
   }
 }
-
 </style>
