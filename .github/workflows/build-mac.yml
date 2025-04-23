@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-13]
         node-version: [14.x]
 
     env:
@@ -26,6 +26,7 @@ jobs:
       EXT_API_SERVER: ${{ secrets.EXT_API_SERVER }}
       PYTHON: python3.10
       NODE_GYP_FORCE_PYTHON: python3.10
+      OPERA_PROXY_RELEASE_URL: https://github.com/Snawoot/opera-proxy/releases/download/v1.3.1
 
     steps:
       - name: Check out Git repository
@@ -72,6 +73,9 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+
+      - name: Download opera proxy
+        run: yarn run operaproxy-download
 
       - name: Run build
         run: npm run release:mac
