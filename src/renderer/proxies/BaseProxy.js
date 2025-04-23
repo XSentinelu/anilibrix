@@ -25,7 +25,7 @@ export default class BaseProxy {
       url,
       method, ...parameters,
       headers,
-      timeout: 15000
+      timeout: 6000
     })
   }
 
@@ -53,25 +53,25 @@ export default class BaseProxy {
    * @return {string}
    */
   getApiEndpoint () {
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
-    console.log('Endpoint', endpoint)
+    const endpoint = store.getters['app/settings/system/apiEndpoint']
+    console.log('Endpoint for api', endpoint)
     return endpoint + '/public/api/index.php'
   }
 
   getTorrentEndpoint () {
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    const endpoint = store.getters['app/settings/system/apiEndpoint']
     console.log('Endpoint for torrent', endpoint)
     return endpoint
   }
 
   getApiLoginEndpoint () {
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    const endpoint = store.getters['app/settings/system/apiEndpoint']
     console.log('Endpoint for login', endpoint)
     return endpoint + '/public/login.php'
   }
 
   getApiLogoutEndpoint () {
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    const endpoint = store.getters['app/settings/system/apiEndpoint']
     console.log('Endpoint for logout', endpoint)
     return endpoint + '/public/logout.php'
   }
@@ -83,7 +83,7 @@ export default class BaseProxy {
    */
   getStaticEndpoint () {
     // eslint-disable-next-line camelcase
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.static_endpoint
+    const endpoint = store.getters['app/settings/system/staticEndpoint']
     console.log('Endpoint for static', endpoint)
     return endpoint
   }

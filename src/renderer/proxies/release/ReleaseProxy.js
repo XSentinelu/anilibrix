@@ -14,7 +14,8 @@ export default class ReleaseProxy extends BaseProxy {
     })
     const params = {
       data,
-      headers: data.getHeaders(), ...parameters
+      headers: data.getHeaders(),
+      ...parameters
     }
     const response = await this.submit('POST', this.getApiEndpoint(), params)
 
@@ -35,18 +36,16 @@ export default class ReleaseProxy extends BaseProxy {
     })
     const params = {
       data,
-      headers: data.getHeaders(), ...parameters
+      headers: data.getHeaders(),
+      ...parameters
     }
     const response = await this.submit('POST', this.getApiEndpoint(), params)
     const { playlist } = response.data.data
     for (const ep in playlist) {
       if (playlist[ep].sources.is_rutube) {
-        playlist[ep].fullhd = await catGirlFetch(`https://rutube.ru/api/play/options/${playlist[ep].rutube_id}/?no_404=true&referer&pver=v2`)
-          .then(x => x.video_balancer.m3u8)
-          .catch(x => console.log(x))
+        playlist[ep].fullhd = 'http://localhost:9384/rutube/' + playlist[ep].rutube_id + '/main.m3u8'
       }
     }
-
     return this.handleResponse(response.data)
   }
 
@@ -64,7 +63,8 @@ export default class ReleaseProxy extends BaseProxy {
     })
     const params = {
       data,
-      headers: data.getHeaders(), ...parameters
+      headers: data.getHeaders(),
+      ...parameters
     }
     const response = await this.submit('POST', this.getApiEndpoint(), params)
 

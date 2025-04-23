@@ -2,13 +2,23 @@ import { Main, Torrent } from '@main/utils/windows'
 import { app, ipcMain, ipcRenderer } from 'electron'
 import { start as startSystemSleepBlocker, stop as stopSystemSleepBlocker } from '../../utils/powerSaveBlocker'
 import { setEncrypted } from '@main/utils/safeStorage'
-import axios from 'axios'
+import axios from '@plugins/axios'
 import axiosRetry from 'axios-retry';
+import parseTorrent from 'parse-torrent';
+import qs from 'querystring';
+import { catGirlFetch } from '@utils/fetch';
+import { parse } from 'content-disposition-attachment';
 
 axiosRetry(axios, {
-  retryDelay: 1500,
+  retryDelay: () => 1500,
   retries: 10,
-  retryCondition: () => true
+  retryCondition: function (response) {
+    if (response.status === 404) return false
+    if (response.status === 401) return false
+
+    return true
+    // return axiosRetry.isNetworkOrIdempotentRequestError(response)
+  }
 })
 
 const { shell } = require('electron')
@@ -29,7 +39,13 @@ export const APP_SHOW_CONFIG = 'app:show_config'
 export const APP_CHECK_API_ENDPOINT = 'app:check_api_endpoint'
 
 export const APP_RAND = 'app:rand'
+export const APP_GET_TITLE_V2 = 'app:get_title_v2'
 
+export const APP_GET_TITLE_V1_NEW = 'app:get_title_v1new'
+export const APP_GET_TITLE_V3 = 'app:get_title_v3'
+
+export const APP_TORRENT_PARSE = 'app:torrent_parse'
+export const APP_UPDATE_PROXY = 'app:update_proxy'
 /**
  * Send app about event
  *
@@ -203,7 +219,8 @@ export const invokeRand = () => ipcRenderer.invoke(APP_RAND)
  */
 export const handleRand = () => {
   ipcMain.handle(APP_RAND, async (event) => {
-    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api?.endpoint
+    const endpoint = require('@store/index').default?.state?.app?.settings?.system?.api._endpoint
+
     const { hostname } = new URL(endpoint)
     const parts = hostname.split('.')
     if (parts.length > 2) {
@@ -215,16 +232,81 @@ export const handleRand = () => {
       console.log('Rand:', data.id)
       return { id: data.id, name: data.names.en }
     } catch (e) {
-      if (e.response.status === 404) {
-        const { data: { data: { code } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({ query: 'random_release' }))
-        const { data: { data: { id, names } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({
-          query: 'release',
-          code: code
-        }))
-        return { id: id, name: names.pop() }
-      }
-      throw e
+      const { data: { data: { code } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({ query: 'random_release' }))
+      const { data: { data: { id, names } } } = await axios.post(`https://${hostname}/public/api/index.php`, new URLSearchParams({
+        query: 'release',
+        code: code
+      }))
+      return { id: id, name: names.pop() }
+    }
+  })
+}
+
+export const invokeGetTitleV3 = (url) => ipcRenderer.invoke(APP_GET_TITLE_V3, url)
+export const handleGetTitleV3 = () => {
+  ipcMain.handle(APP_GET_TITLE_V3, async (event, filter) => {
+    let response
+    try {
+      response = await axios.get('https://api.anilibria.tv/v3/title?' + filter).then(x => x.data)
+    } catch (e) {
+      response = await axios.get('https://api.wwnd.space/v3/title?' + filter).then(x => x.data)
     }
 
+    return response
+  })
+}
+
+export const invokeGetTitleV2 = (url) => ipcRenderer.invoke(APP_GET_TITLE_V2, url)
+export const handleGetTitleV2 = () => {
+  ipcMain.handle(APP_GET_TITLE_V2, async (event, rId) => {
+    let response
+
+    try {
+      response = await axios.get(`https://api.wwnd.space/v2/getTitle?id=${rId}&filter=player.playlist&playlist_type=array`).then(x => x.data)
+    } catch (e) {
+      response = await axios.get(`https://api.anilibria.tv/v2/getTitle?id=${rId}&filter=player.playlist&playlist_type=array`).then(x => x.data)
+    }
+
+    return response
+  })
+}
+
+export const invokeGetTitleV1New = (url) => ipcRenderer.invoke(APP_GET_TITLE_V1_NEW, url)
+export const handleGetTitleV1New = () => {
+  ipcMain.handle(APP_GET_TITLE_V1_NEW, async (event, rId) => {
+    return await axios.get('https://anilibria.top/api/v1/anime/releases/' + rId).then(x => x.data)
+  })
+}
+
+export const invokeUpdateProxy = (url) => ipcRenderer.invoke(APP_UPDATE_PROXY, url)
+export const handleUpdateProxy = (cb) => {
+  ipcMain.handle(APP_UPDATE_PROXY, async (event, url) => {
+    return cb(url)
+  })
+}
+
+export const invokeTorrentParse = (url) => ipcRenderer.invoke(APP_TORRENT_PARSE, url)
+
+export const handleTorrentParse = () => {
+  ipcMain.handle(APP_TORRENT_PARSE, async (event, url) => {
+    const { file, name } = await catGirlFetch(url, { raw: true })
+      .then(async x => {
+        return {
+          name: parse(x.headers.get('content-disposition')).filename || 'unknown.torrent',
+          file: Buffer.from(await x.arrayBuffer())
+        }
+      })
+
+    const data = parseTorrent(file);
+
+    return {
+      file: file.toString('base64'),
+      name,
+      magnet: 'magnet:?' + qs.stringify({
+        xt: `urn:btih:${data.infoHash}`,
+        dn: data.name,
+        tr: data.announce
+      })
+    }
   })
 }
